@@ -1,0 +1,5 @@
+*.o
+*.bin
+*.img
+src/output/*
+.vscode/
