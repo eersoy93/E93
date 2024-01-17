@@ -1,6 +1,6 @@
 # E93
 
-Erdem Ersoy's (eersoy93's) monolithic operating system for PCs.
+Erdem Ersoy's (eersoy93's) hobby operating system for old PCs.
 
 ## Building and Running
 
