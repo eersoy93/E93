@@ -42,20 +42,25 @@ void command_input(char * input)
     if (strcmp(input, "BEEP") == 0)
     {
         kernel_mode = COMMAND_MODE;
+
         beep();
+
         kernel_mode = SHELL_MODE;
         show_prompt();
     }
     else if (strcmp(input, "CLS") == 0)
     {
         kernel_mode = COMMAND_MODE;
+
         clear_screen();
+
         kernel_mode = SHELL_MODE;
         show_prompt();
     }
     else if (strcmp(input, "END") == 0)
     {
         kernel_mode = COMMAND_MODE;
+
         printk_color("Halting the CPU...\n", HALT_COLOR);
         asm volatile("hlt");
     }
