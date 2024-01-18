@@ -14,8 +14,16 @@
 #include "../libc/memory.h"
 #include "../libc/string.h"
 
+enum kernel_modes
+{
+    SHELL_MODE,
+    COMMAND_MODE
+};
+
+enum kernel_modes kernel_mode = SHELL_MODE;
+
 void printk_help(void);
 void show_prompt(void);
-void user_input(char * input);
+void command_input(char * input);
 
 #endif

@@ -12,27 +12,30 @@ static void keyboard_callback(registers_struct_type * registers)
 {
     uint8_t scancode = port_byte_in(0x60);
 
-    if (scancode > SCANCODE_MAX)
+    if (kernel_mode == SHELL_MODE)
     {
-        return;
-    }
-    else if (scancode == BACKSPACE)
-    {
-        backspace(key_buffer);
-        printk_backspace();
-    }
-    else if (scancode == ENTER)
-    {
-        printk("\n");
-        user_input(key_buffer);
-        key_buffer[0] = '\0';
-    }
-    else
-    {
-        char letter = scancode_ascii[(int)scancode];
-        char str[2] = {letter, '\0'};
-        append(key_buffer, letter);
-        printk_color(str, COMMAND_COLOR);
+        if (scancode > SCANCODE_MAX)
+        {
+            return;
+        }
+        else if (scancode == BACKSPACE)
+        {
+            backspace(key_buffer);
+            printk_backspace();
+        }
+        else if (scancode == ENTER)
+        {
+            printk("\n");
+            command_input(key_buffer);
+            key_buffer[0] = '\0';
+        }
+        else
+        {
+            char letter = scancode_ascii[(int)scancode];
+            char str[2] = {letter, '\0'};
+            append(key_buffer, letter);
+            printk_color(str, COMMAND_COLOR);
+        }
     }
 
     UNUSED(registers);

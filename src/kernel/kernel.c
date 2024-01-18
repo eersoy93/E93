@@ -37,30 +37,39 @@ void show_prompt(void)
     printk_color(">", PROMPT_COLOR);
 }
 
-void user_input(char * input)
+void command_input(char * input)
 {
     if (strcmp(input, "BEEP") == 0)
     {
+        kernel_mode = COMMAND_MODE;
         beep();
+        kernel_mode = SHELL_MODE;
         show_prompt();
     }
     else if (strcmp(input, "CLS") == 0)
     {
+        kernel_mode = COMMAND_MODE;
         clear_screen();
+        kernel_mode = SHELL_MODE;
         show_prompt();
     }
     else if (strcmp(input, "END") == 0)
     {
+        kernel_mode = COMMAND_MODE;
         printk_color("Halting the CPU...\n", HALT_COLOR);
         asm volatile("hlt");
     }
     else if (strcmp(input, "HELP") == 0)
     {
+        kernel_mode = COMMAND_MODE;
         printk_help();
+        kernel_mode = SHELL_MODE;
         show_prompt();
     }
     else if (strcmp(input, "PAGE") == 0)
     {
+        kernel_mode = COMMAND_MODE;
+
         uint32_t physical_address = 0;
         uint32_t page = kmalloc(1000, 1, &physical_address);
 
@@ -76,6 +85,8 @@ void user_input(char * input)
         printk_color("\nPhysical Address: ", OUTPUT_COLOR);
         printk_color(physical_address_str, VARIABLE_COLOR);
         printk_color("\n", OUTPUT_COLOR);
+
+        kernel_mode = SHELL_MODE;
         show_prompt();
     }
     else if (strcmp(input, "") == 0)
