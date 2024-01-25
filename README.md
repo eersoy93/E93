@@ -6,7 +6,7 @@ Erdem Ersoy's (eersoy93's) hobby operating system for old PCs.
 
 In [Pardus 23](https://www.pardus.org.tr/), clone this repository. After that, install GCC x86 cross compiler, NASM and QEMU:
 
-`sudo apt install nasm qemu-system-x86 gcc-i686-linux-gnu`
+`sudo apt install nasm qemu-system-x86 gcc-i686-linux-gnu xorriso`
 
 After that, move to the src directory:
 
@@ -20,7 +20,7 @@ After building, you can run:
 
 `make run`
 
-## TODO
+## Studying TODOs
 
 - [X] Finish studying [os-tutorial](https://github.com/cfenollosa/os-tutorial).
 - [ ] Finish studying [The Little Book About OS Development](https://littleosbook.github.io/).
@@ -28,19 +28,13 @@ After building, you can run:
 
 ## ROADMAP
 
-### 0.0.2
+### 0.1.0
 
-- [ ] Make bootloader GRUB
+- [ ] Rewrite the OS with [The Little Book About OS Development](https://littleosbook.github.io/).
 
 ## References
 
-- [https://github.com/cfenollosa/os-tutorial](https://github.com/cfenollosa/os-tutorial)
-- [https://wiki.osdev.org/PC_Speaker](https://wiki.osdev.org/PC_Speaker)
-- [https://www.felixcloutier.com/x86/index.html](https://www.felixcloutier.com/x86/index.html)
-- [https://www.fountainware.com/EXPL/vga_color_palettes.htm](https://www.fountainware.com/EXPL/vga_color_palettes.htm)
-- [https://en.wikipedia.org/wiki/VGA_text_mode](https://en.wikipedia.org/wiki/VGA_text_mode)
-- [https://www.rapidtables.com/code/text/ascii-table.html](https://www.rapidtables.com/code/text/ascii-table.html)
-- [Pardus's Calculator :)](https://apps.pardus.org.tr/app/gnome-calculator)
+- [The Little Book About OS Development](https://littleosbook.github.io/)
 
 ## Copyright and License
 
