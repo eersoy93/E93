@@ -23,6 +23,7 @@ After building, you can run:
 ## TODO
 
 - [X] Finish studying [os-tutorial](https://github.com/cfenollosa/os-tutorial).
+- [ ] Finish studying [The Little Book About OS Development](https://littleosbook.github.io/).
 - [ ] Finish studying [OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/).
 
 ## References
