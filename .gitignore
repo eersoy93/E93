@@ -1,5 +1,10 @@
 *.o
-*.bin
+*.elf
+*.iso
 *.img
-src/output/*
+*.bin
+*.tar.gz
+src/grub-0.97/
+iso/
+
 .vscode/
