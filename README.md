@@ -35,6 +35,7 @@ After building, you can run:
 ## References
 
 - [The Little Book About OS Development](https://littleosbook.github.io/)
+- [GRUB 0.97 stage2_eltorito Binary File](https://github.com/pasandevin/carbonOS/blob/setup_booting_os/stage2_eltorito)
 
 ## Copyright and License
 
