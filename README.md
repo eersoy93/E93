@@ -26,6 +26,12 @@ After building, you can run:
 - [ ] Finish studying [The Little Book About OS Development](https://littleosbook.github.io/).
 - [ ] Finish studying [OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/).
 
+## ROADMAP
+
+### 0.0.2
+
+- [ ] Make bootloader GRUB
+
 ## References
 
 - [https://github.com/cfenollosa/os-tutorial](https://github.com/cfenollosa/os-tutorial)
