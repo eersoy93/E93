@@ -43,9 +43,10 @@ Copyright (c) 2022-2024 Erdem Ersoy (eersoy93).
 
 Licensed with MIT License. See LICENSE file for details.
 
-NOTE: bin/stage2_eltorito is GNU GPLv2 licensed because GRUB 0.97 is licensed with GNU GPLv2.
+**NOTE:** bin/stage2_eltorito is GNU GPLv2 licensed because GRUB 0.97 is licensed with GNU GPLv2.
 
-NOTE 2: The copyright of GNU GRUB 0.97:
+**NOTE 2:** The copyright of GNU GRUB 0.97:(from https://www.gnu.org/software/grub/)
 
-Copyright © 2010-2018 Free Software Foundation, Inc.
-Copyright © 1999,2000,2001,2002,2003,2004,2005,2006 Yoshinori K. Okuji
+    Copyright © 2010-2018 Free Software Foundation, Inc.
+
+    Copyright © 1999,2000,2001,2002,2003,2004,2005,2006 Yoshinori K. Okuji
