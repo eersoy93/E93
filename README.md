@@ -14,11 +14,11 @@ After that, move to the src directory:
 
 After that, build the OS:
 
-`./build.sh`
+`make iso`
 
 After building, you can run:
 
-`./run.sh`
+`make run`
 
 ## Studying TODOs
 
