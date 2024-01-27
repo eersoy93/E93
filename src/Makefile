@@ -20,7 +20,7 @@ E93.iso: kernel/kernel.elf
 	mkdir -p iso/boot/grub
 	cp $< iso/boot/kernel.elf
 	cp menu.lst iso/boot/grub/menu.lst
-	cp stage2_eltorito iso/boot/grub/stage2_eltorito
+	cp ../bin/stage2_eltorito iso/boot/grub/stage2_eltorito
 	xorriso -as mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4 -boot-info-table -o $@ iso/
 
 iso: E93.iso
