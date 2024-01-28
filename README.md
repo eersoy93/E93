@@ -36,6 +36,13 @@ After building, you can run:
 
 - [The Little Book About OS Development](https://littleosbook.github.io/)
 - [GRUB 0.97 stage2_eltorito Binary File](https://github.com/pasandevin/carbonOS/blob/setup_booting_os/stage2_eltorito)
+- [cfenollosa's OS Tutorial](https://github.com/cfenollosa/os-tutorial)
+- [OSDev Wiki PC Speaker Page](https://wiki.osdev.org/PC_Speaker)
+- [x86 and amd64 Instruction Reference](https://www.felixcloutier.com/x86/index.html)
+- [VGA Color Palettes](https://www.fountainware.com/EXPL/vga_color_palettes.htm)
+- [VGA Text Mode (Wikipedia)](https://en.wikipedia.org/wiki/VGA_text_mode)
+- [RapidTables ASCII Table](https://www.rapidtables.com/code/text/ascii-table.html)
+- [Pardus's Calculator :)](https://apps.pardus.org.tr/app/gnome-calculator)
 
 ## Copyright and License
 
