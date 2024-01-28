@@ -30,7 +30,7 @@ After building, you can run:
 
 ### 0.1.0
 
-- [ ] Rewrite the OS with [The Little Book About OS Development](https://littleosbook.github.io/).
+- [X] Rewrite the bootloader with [The Little Book About OS Development](https://littleosbook.github.io/).
 
 ## References
 
