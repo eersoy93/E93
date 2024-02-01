@@ -7,8 +7,6 @@
 #ifndef IDT_H
 #define IDT_H
 
-#include "../cpu/types.h"
-
 #include <stdint.h>
 
 // Segment selectors

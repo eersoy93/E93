@@ -7,6 +7,8 @@
 #ifndef REGISTERS_H
 #define REGISTERS_H
 
+#include <stdint.h>
+
 // Registers struct
 typedef struct
 {

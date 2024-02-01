@@ -6,6 +6,14 @@
 
 #include "keyboard.h"
 
+#include "../cpu/ports.h"
+#include "../cpu/isr.h"
+#include "screen.h"
+#include "../libc/string.h"
+#include "../libc/function.h"
+#include "../kernel/kernel_main.h"
+#include "../kernel/command.h"
+
 static char key_buffer[256];
 
 static void keyboard_callback(registers_struct_type * registers)

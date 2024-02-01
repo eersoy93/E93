@@ -7,14 +7,6 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include "../cpu/ports.h"
-#include "../cpu/isr.h"
-#include "screen.h"
-#include "../libc/string.h"
-#include "../libc/function.h"
-#include "../kernel/kernel_main.h"
-#include "../kernel/command.h"
-
 #include <stdint.h>
 
 #define BACKSPACE 0x0E

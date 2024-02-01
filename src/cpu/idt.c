@@ -6,6 +6,8 @@
 
 #include "idt.h"
 
+#include "../cpu/types.h"
+
 void set_idt_gate(int n, uint32_t handler)
 {
     idt[n].offset_handler_function_address_low = low16(handler);

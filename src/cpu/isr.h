@@ -7,15 +7,9 @@
 #ifndef ISR_H
 #define ISR_H
 
-#include "idt.h"
-#include "ports.h"
-#include "../drivers/screen.h"
-#include "../drivers/keyboard.h"
-#include "../libc/string.h"
-#include "registers.h"
-#include "timer.h"
-
 #include <stdint.h>
+
+#include "registers.h"
 
 // Reserved ISRs
 extern void isr0(void);

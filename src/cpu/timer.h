@@ -7,13 +7,6 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "ports.h"
-#include "isr.h"
-#include "../drivers/screen.h"
-#include "../libc/function.h"
-#include "../libc/string.h"
-#include "registers.h"
-
 #include <stdint.h>
 
 void set_PIT_2(uint32_t frequency);

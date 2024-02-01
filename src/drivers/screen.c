@@ -6,6 +6,11 @@
 
 #include "screen.h"
 
+#include "../cpu/ports.h"
+#include "../libc/memory.h"
+
+#include <stdint.h>
+
 // Private Kernel API Declarations
 
 int get_cursor_offset(void);

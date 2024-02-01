@@ -6,6 +6,8 @@
 
 #include "end.h"
 
+#include "../drivers/screen.h"
+
 void end(void)
 {
     printk_color("Halting the CPU...\n", HALT_COLOR);

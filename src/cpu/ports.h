@@ -7,7 +7,6 @@
 #ifndef PORTS_H
 #define PORTS_H
 
-
 // Port Driver Declarations
 
 unsigned char port_byte_in(unsigned short port);

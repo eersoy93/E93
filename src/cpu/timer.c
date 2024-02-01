@@ -6,6 +6,13 @@
 
 #include "timer.h"
 
+#include "ports.h"
+#include "isr.h"
+#include "../drivers/screen.h"
+#include "../libc/function.h"
+#include "../libc/string.h"
+#include "registers.h"
+
 volatile uint32_t tick = 0;
 
 static void timer_callback(registers_struct_type * registers)

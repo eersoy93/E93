@@ -7,11 +7,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "../cpu/ports.h"
-#include "../libc/memory.h"
 #include "screen_colors.h"
-
-#include <stdint.h>
 
 // Video Constants Definitions
 

@@ -7,8 +7,6 @@
 #ifndef END_H
 #define END_H
 
-#include "../drivers/screen.h"
-
 void end(void);
 
 #endif

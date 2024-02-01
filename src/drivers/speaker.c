@@ -6,6 +6,10 @@
 
 #include "speaker.h"
 
+#include "../cpu/ports.h"
+#include "../cpu/timer.h"
+#include "../cpu/types.h"
+
 static void play_sound(uint32_t frequency)
 {
     set_PIT_2(frequency);
