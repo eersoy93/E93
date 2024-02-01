@@ -7,6 +7,7 @@
 #ifndef KERNEL_MAIN_H
 #define KERNEL_MAIN_H
 
+#include "../cpu/end.h"
 #include "../cpu/isr.h"
 #include "../cpu/timer.h"
 #include "../drivers/screen.h"
@@ -22,8 +23,6 @@ enum kernel_modes
 
 enum kernel_modes kernel_mode = SHELL_MODE;
 
-void printk_help(void);
 void show_prompt(void);
-void command_input(char * input);
 
 #endif

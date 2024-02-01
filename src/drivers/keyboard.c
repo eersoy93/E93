@@ -26,7 +26,7 @@ static void keyboard_callback(registers_struct_type * registers)
         else if (scancode == ENTER)
         {
             printk("\n");
-            command_input(key_buffer);
+            command_execute(key_buffer);
             key_buffer[0] = '\0';
         }
         else

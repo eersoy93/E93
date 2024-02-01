@@ -13,6 +13,7 @@
 #include "../libc/string.h"
 #include "../libc/function.h"
 #include "../kernel/kernel_main.h"
+#include "../kernel/command.h"
 
 #include <stdint.h>
 
