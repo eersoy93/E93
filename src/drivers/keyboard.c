@@ -9,41 +9,21 @@
 #include "../cpu/ports.h"
 #include "../cpu/isr.h"
 #include "screen.h"
-#include "../libc/string.h"
 #include "../libc/function.h"
-#include "../kernel/kernel_main.h"
-#include "../kernel/command.h"
-
-static char key_buffer[256];
+#include "../libc/io.h"
 
 static void keyboard_callback(registers_struct_type * registers)
 {
-    uint8_t scancode = port_byte_in(0x60);
+    volatile uint8_t scancode = port_byte_in(0x60);
 
-    if (kernel_mode == SHELL_MODE)
+    if ((scancode & 0x80) == 0x80)
     {
-        if (scancode > SCANCODE_MAX)
-        {
-            return;
-        }
-        else if (scancode == BACKSPACE)
-        {
-            backspace(key_buffer);
-            printk_backspace();
-        }
-        else if (scancode == ENTER)
-        {
-            printk("\n");
-            command_execute(key_buffer);
-            key_buffer[0] = '\0';
-        }
-        else
-        {
-            char letter = scancode_ascii[(int)scancode];
-            char str[2] = {letter, '\0'};
-            append(key_buffer, letter);
-            printk_color(str, COMMAND_COLOR);
-        }
+        scancode &= 0x7F;
+        keyup_handler(scancode);
+    }
+    else
+    {
+        keydown_handler(scancode);
     }
 
     UNUSED(registers);
