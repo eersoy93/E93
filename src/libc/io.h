@@ -7,7 +7,6 @@
 #ifndef IO_H
 #define IO_H
 
-#include <stddef.h>
 #include <stdint.h>
 
 void keydown_handler(uint8_t scancode);
