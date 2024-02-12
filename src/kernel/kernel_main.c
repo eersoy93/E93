@@ -10,6 +10,7 @@
 void kernel_main(void)
 {
     clear_screen();
+
     printk_color("Executing the kernel...\n", OUTPUT_COLOR);
 
     if (is_video_colored() == 1)
@@ -30,6 +31,7 @@ void kernel_main(void)
 
     printk_color("\nWelcome to E93!\n", OUTPUT_COLOR);
     printk_color("Type HELP for help.\n", OUTPUT_COLOR);
+
     show_prompt();
 }
 
