@@ -9,9 +9,12 @@
 
 #include "screen_colors.h"
 
+#include <stdint.h>
+
 // Video Constants Definitions
 
 #define VIDEO_ADDRESS (char *) 0xb8000
+#define VIDEO_TYPE_ADDRESS (char *) 0x410
 #define ROWS_MAX 25
 #define COLS_MAX 80
 
@@ -23,6 +26,8 @@
 // Public Kernel API Declarations
 
 void clear_screen(void);
+
+uint8_t is_video_colored(void);
 
 void printk(char * message);
 void printk_at(char * message, int col, int row);

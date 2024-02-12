@@ -12,6 +12,16 @@ void kernel_main(void)
     clear_screen();
     printk_color("Executing the kernel...\n", OUTPUT_COLOR);
 
+    if (is_video_colored() == 1)
+    {
+        printk_color("Your video card is colored!\n", OUTPUT_COLOR);
+    }
+    else
+    {
+        printk_color("WARNING: ", WARNING_COLOR);
+        printk_color("Your video card is NOT colored!", OUTPUT_COLOR);
+    }
+
     printk_color("Initializing the ISR...\n", OUTPUT_COLOR);
     isr_install();
 
