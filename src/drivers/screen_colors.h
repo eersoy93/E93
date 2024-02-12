@@ -7,7 +7,7 @@
 #ifndef SCREEN_COLORS_H
 #define SCREEN_COLORS_H
 
-// Video Constants Definitions (Color)
+// Video Color Constants Definitions
 
 #define BLACK_ON_BLACK 0x00
 #define BLUE_ON_BLACK 0x01
@@ -281,6 +281,8 @@
 #define YELLOW_ON_BRIGHTWHITE 0xfe
 #define BRIGHTWHITE_ON_BRIGHTWHITE 0xff
 
+// Output Colors For Video Type
+
 #define COMMAND_COLOR  GREEN_ON_BLACK
 #define CLRSCR_COLOR   WHITE_ON_BLACK
 #define DEFAULT_COLOR  WHITE_ON_BLACK
@@ -291,4 +293,4 @@
 #define PROMPT_COLOR   MAGENTA_ON_BLACK
 #define VARIABLE_COLOR GREEN_ON_BLACK
 
-#endif
+#endif //SCREEN_COLORS_H
