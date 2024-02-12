@@ -7,6 +7,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include "../libc/boolean.h"
 #include "screen_colors.h"
 
 #include <stdint.h>
@@ -27,7 +28,7 @@
 
 void clear_screen(void);
 
-uint8_t is_video_colored(void);
+boolean is_video_colored(void);
 
 void printk(char * message);
 void printk_at(char * message, int col, int row);

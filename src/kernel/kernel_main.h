@@ -12,6 +12,7 @@
 #include "../cpu/timer.h"
 #include "../drivers/screen.h"
 #include "../drivers/speaker.h"
+#include "../libc/boolean.h"
 #include "../libc/memory.h"
 #include "../libc/string.h"
 

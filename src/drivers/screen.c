@@ -39,17 +39,17 @@ void clear_screen(void)
     set_cursor_offset(get_offset(0, 0));
 }
 
-uint8_t is_video_colored(void)
+boolean is_video_colored(void)
 {
     const char * video_type_information = VIDEO_TYPE_ADDRESS;
 
     if (((*video_type_information) & 0x30) == 0x20)
     {
-        return 1;
+        return TRUE;
     }
     else
     {
-        return 0;
+        return FALSE;
     }
 }
 

@@ -13,7 +13,7 @@ void kernel_main(void)
 
     printk_color("Executing the kernel...\n", OUTPUT_COLOR);
 
-    if (is_video_colored() == 1)
+    if (is_video_colored() == TRUE)
     {
         printk_color("Your video card is colored!\n", OUTPUT_COLOR);
     }
