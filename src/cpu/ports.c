@@ -4,6 +4,8 @@
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
  */
 
+#include "ports.h"
+
 // Read byte from port
 unsigned char port_byte_in(unsigned short port)
 {
@@ -19,7 +21,7 @@ void port_byte_out(unsigned short port, unsigned char data)
 }
 
 // Read word from port
-unsigned char port_word_in(unsigned short port)
+unsigned short port_word_in(unsigned short port)
 {
     unsigned char result;
     asm("in %%dx, %%ax": "=a" (result) : "d" (port));
