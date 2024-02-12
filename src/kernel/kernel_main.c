@@ -4,7 +4,6 @@
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
  */
 
-
 #include "kernel_main.h"
 
 void kernel_main(void)
