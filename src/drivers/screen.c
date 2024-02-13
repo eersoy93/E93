@@ -39,6 +39,7 @@ void clear_screen(void)
     set_cursor_offset(get_offset(0, 0));
 }
 
+// Detect if the video is colored
 boolean is_video_colored(void)
 {
     const char * video_type_information = VIDEO_TYPE_ADDRESS;
