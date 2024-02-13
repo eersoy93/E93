@@ -23,8 +23,7 @@ After building, you can run:
 ## Studying TODOs
 
 - [X] Finish studying [os-tutorial](https://github.com/cfenollosa/os-tutorial). (0.0.x)
-- [ ] Finish studying [The Little Book About OS Development](https://littleosbook.github.io/). (0.1.x)
-- [ ] Finish studying [OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/).
+- [X] Finish studying [The Little Book About OS Development](https://littleosbook.github.io/). (0.1.x)
 
 ## ROADMAP
 
