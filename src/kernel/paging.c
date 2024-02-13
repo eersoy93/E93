@@ -5,7 +5,11 @@
  */
 
 #include "paging.h"
+
+#include "../drivers/screen.h"
 #include "kernel_main.h"
+#include "../libc/memory.h"
+#include "../libc/string.h"
 
 void allocate_page(void)
 {

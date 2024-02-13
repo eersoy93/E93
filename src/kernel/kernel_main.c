@@ -6,6 +6,15 @@
 
 #include "kernel_main.h"
 
+#include "../cpu/end.h"
+#include "../cpu/isr.h"
+#include "../cpu/timer.h"
+#include "../drivers/screen.h"
+#include "../drivers/speaker.h"
+#include "../libc/boolean.h"
+#include "../libc/memory.h"
+#include "../libc/string.h"
+
 void kernel_main(void)
 {
     clear_screen();

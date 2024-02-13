@@ -7,15 +7,6 @@
 #ifndef KERNEL_MAIN_H
 #define KERNEL_MAIN_H
 
-#include "../cpu/end.h"
-#include "../cpu/isr.h"
-#include "../cpu/timer.h"
-#include "../drivers/screen.h"
-#include "../drivers/speaker.h"
-#include "../libc/boolean.h"
-#include "../libc/memory.h"
-#include "../libc/string.h"
-
 enum kernel_modes
 {
     SHELL_MODE,

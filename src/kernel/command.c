@@ -5,6 +5,11 @@
  */
 
 #include "command.h"
+
+#include "../cpu/end.h"
+#include "../drivers/screen.h"
+#include "../drivers/speaker.h"
+#include "../libc/string.h"
 #include "kernel_main.h"
 #include "paging.h"
 

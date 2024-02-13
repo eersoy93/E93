@@ -7,6 +7,7 @@
 #include "io.h"
 
 #include "../drivers/keyboard.h"
+#include "../drivers/screen.h"
 #include "function.h"
 #include "string.h"
 #include "../kernel/command.h"

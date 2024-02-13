@@ -7,6 +7,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 struct command
