@@ -28,6 +28,10 @@ After building, you can run:
 
 ## ROADMAP
 
+### 0.1.x
+
+- [ ] Add/Improve device drivers and implementations to the C library as much as possible.
+
 ### 0.1.0
 
 - [X] Rewrite the bootloader with [The Little Book About OS Development](https://littleosbook.github.io/).
