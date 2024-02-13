@@ -27,6 +27,7 @@ void command_execute(char * input_command)
     {
         if (strcmp(commands[i].command_name, input_command) == 0)
         {
+            disable_cursor();
             kernel_mode = COMMAND_MODE;
             commands[i].command_function();
             kernel_mode = SHELL_MODE;

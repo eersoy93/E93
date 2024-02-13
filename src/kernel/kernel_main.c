@@ -46,4 +46,5 @@ void kernel_main(void)
 void show_prompt(void)
 {
     printk_color(">", PROMPT_COLOR);
+    enable_cursor(0, 15);
 }

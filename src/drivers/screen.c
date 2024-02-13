@@ -19,6 +19,7 @@ int get_offset_col(int offset);
 int get_offset_row(int offset);
 int printk_char(char character, int col, int row, char attribute);
 void set_cursor_offset(int offset);
+void set_cursor_shape(void);
 
 
 // Public Kernel API Definitions
@@ -37,6 +38,30 @@ void clear_screen(void)
     }
 
     set_cursor_offset(get_offset(0, 0));
+}
+
+// Disable cursor
+void disable_cursor(void)
+{
+    port_byte_out(PORT_SCREEN_CTRL, 0x0a);
+    port_byte_out(PORT_SCREEN_DATA, 0x20);
+}
+
+// Enable cursor with specific start and end
+void enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
+{
+    port_byte_out(PORT_SCREEN_CTRL, 0x0a);
+    port_byte_out(PORT_SCREEN_DATA, (port_byte_in(PORT_SCREEN_DATA) & 0xc0) | cursor_start);
+    port_byte_out(PORT_SCREEN_CTRL, 0x0b);
+    port_byte_out(PORT_SCREEN_DATA, (port_byte_in(PORT_SCREEN_DATA) & 0xe0) | cursor_end);
+    set_cursor_shape();
+}
+
+// Get cursor column and row
+uint16_t get_cursor_column_and_row(void)
+{
+    int offset = get_cursor_offset();
+    return offset / 2;
 }
 
 // Detect if the video is colored
@@ -109,6 +134,13 @@ void printk_backspace(void)
         printk_char(0x20, col, row, COMMAND_COLOR);
         set_cursor_offset(offset);
     }
+}
+
+// Set cursor column and row
+void set_cursor_column_and_row(int col, int row)
+{
+    int offset = get_offset(col, row);
+    set_cursor_offset(offset);
 }
 
 
@@ -211,4 +243,11 @@ void set_cursor_offset(int offset)
     port_byte_out(PORT_SCREEN_DATA, (unsigned char) (offset >> 8));
     port_byte_out(PORT_SCREEN_CTRL, 15);
     port_byte_out(PORT_SCREEN_DATA, (unsigned char) (offset & 0xff));
+}
+
+// Set cursor shape
+void set_cursor_shape(void)
+{
+    port_byte_out(PORT_SCREEN_CTRL, 0x0a);
+    port_byte_out(PORT_SCREEN_DATA, 0x0F);  // As '_' character shaped cursor
 }
