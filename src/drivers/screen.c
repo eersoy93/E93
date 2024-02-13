@@ -14,10 +14,13 @@
 // Private Kernel API Declarations
 
 int get_cursor_offset(void);
+
 int get_offset(int col, int row);
 int get_offset_col(int offset);
 int get_offset_row(int offset);
+
 int printk_char(char character, int col, int row, char attribute);
+
 void set_cursor_offset(int offset);
 void set_cursor_shape(void);
 
