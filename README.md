@@ -34,7 +34,7 @@ After building, you can run:
 
 ### 0.1.x
 
-- [ ] Add/Improve device drivers and implementations to the C library as much as possible.
+- [X] Add/Improve device drivers and implementations to the C library as much as possible.
 
 ### 0.1.0
 
