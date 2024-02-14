@@ -134,7 +134,7 @@ void printk_backspace(void)
     int col = get_offset_col(offset);
     if (col != 0)
     {
-        printk_char(0x20, col, row, COMMAND_COLOR);
+        printk_char(0x20, col, row, DEFAULT_COLOR);
         set_cursor_offset(offset);
     }
 }
