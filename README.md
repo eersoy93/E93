@@ -24,8 +24,13 @@ After building, you can run:
 
 - [X] Finish studying [os-tutorial](https://github.com/cfenollosa/os-tutorial). (0.0.x)
 - [X] Finish studying [The Little Book About OS Development](https://littleosbook.github.io/). (0.1.x)
+- [ ] Finish studying [Operating Systems Design and Implementation]() (0.2.x)
 
 ## ROADMAP
+
+### 0.2.x
+
+- [ ] Restructure the OS and implement many OS concepts.
 
 ### 0.1.x
 
