@@ -9,8 +9,6 @@
 
 #include <stdint.h>
 
-char key_buffer[256];
-
 void keydown_handler(uint8_t scancode);
 void keyup_handler(uint8_t scancode);
 
