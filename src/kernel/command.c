@@ -9,6 +9,7 @@
 #include "../cpu/end.h"
 #include "../drivers/screen.h"
 #include "../drivers/speaker.h"
+#include "../libc/io.h"
 #include "../libc/string.h"
 #include "kernel_main.h"
 #include "paging.h"
@@ -34,9 +35,9 @@ void command_execute(char * input_command)
 
     if (strcmp(input_command, "") != 0)
     {
-        printk_color("Unrecognized command: ", ERROR_COLOR);
-        printk_color(input_command, INPUT_COLOR);
-        printk_color("\n", OUTPUT_COLOR);
+        print("Unrecognized command: ", ERROR_COLOR);
+        print(input_command, INPUT_COLOR);
+        print("\n", INPUT_COLOR);
     }
 }
 
@@ -44,9 +45,9 @@ void commands_help(void)
 {
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
     {
-        printk_color(commands[i].command_name, INPUT_COLOR);
-        printk_color(": ", INPUT_COLOR);
-        printk_color(commands[i].command_help, OUTPUT_COLOR);
-        printk_color("\n", OUTPUT_COLOR);
+        print(commands[i].command_name, INPUT_COLOR);
+        print(": ", INPUT_COLOR);
+        print(commands[i].command_help, OUTPUT_COLOR);
+        print("\n", OUTPUT_COLOR);
     }
 }

@@ -21,25 +21,25 @@ void kernel_main(void)
 {
     clear_screen();
 
-    printk_color("Executing the kernel...\n", OUTPUT_COLOR);
+    println("Executing the kernel...", OUTPUT_COLOR);
 
     if (is_video_colored() == TRUE)
     {
-        printk_color("Your video card is colored!\n", OUTPUT_COLOR);
+        println("Your video card is colored!", OUTPUT_COLOR);
     }
     else
     {
         end();
     }
 
-    printk_color("Initializing the ISR...\n", OUTPUT_COLOR);
+    println("Initializing the ISR...", OUTPUT_COLOR);
     isr_install();
 
-    printk_color("Initializing the IRQ...\n", OUTPUT_COLOR);
+    println("Initializing the IRQ...", OUTPUT_COLOR);
     irq_install();
 
-    printk_color("\nWelcome to E93!\n", OUTPUT_COLOR);
-    printk_color("Type HELP for help.\n", OUTPUT_COLOR);
+    println("\nWelcome to E93!", OUTPUT_COLOR);
+    println("Type HELP for help.", OUTPUT_COLOR);
 
     while(TRUE)
     {
@@ -51,5 +51,5 @@ void kernel_main(void)
 
 void show_prompt(void)
 {
-    printk_color(">", PROMPT_COLOR);
+    print(">", PROMPT_COLOR);
 }
