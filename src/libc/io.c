@@ -13,8 +13,6 @@
 #include "../kernel/command.h"
 #include "../kernel/kernel_main.h"
 
-static char key_buffer[256];
-
 void keydown_handler(uint8_t scancode)
 {
     if (kernel_mode == SHELL_MODE)
