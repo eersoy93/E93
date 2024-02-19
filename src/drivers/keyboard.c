@@ -10,7 +10,18 @@
 #include "../cpu/isr.h"
 #include "screen.h"
 #include "../libc/function.h"
-#include "../libc/io.h"
+
+void keydown_handler(uint8_t scancode)
+{
+    current_scancode = scancode;
+    current_mode = KEYDOWN;
+}
+
+void keyup_handler(uint8_t scancode)
+{
+    current_scancode = scancode;
+    current_mode = KEYUP;
+}
 
 static void keyboard_callback(registers_struct_type * registers)
 {
@@ -32,5 +43,7 @@ static void keyboard_callback(registers_struct_type * registers)
 void init_keyboard(void)
 {
     printk_color("Initializing the keyboard...\n", OUTPUT_COLOR);
+    current_mode = KEYUP;
+    current_scancode = 0;
     register_interrupt_handler(IRQ1, keyboard_callback); 
 }

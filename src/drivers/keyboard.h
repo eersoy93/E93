@@ -14,6 +14,16 @@
 
 #define SCANCODE_MAX 57
 
+volatile uint8_t current_scancode;
+
+enum current_modes
+{
+    KEYDOWN = 0,
+    KEYUP = 1
+};
+
+volatile enum current_modes current_mode;
+
 const char * scancode_name[] = {"ERROR", "Esc", "1", "2", "3", "4", "5", "6", 
                                 "7", "8", "9", "0", "-", "=", "Backspace",
                                 "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I",
@@ -33,6 +43,9 @@ const char scancode_ascii[] = {'?', '?', '1', '2', '3', '4', '5', '6',
                                'C', 'V', 'B', 'N', 'M', ',', '.', '/',
                                '?', '?', '?',
                                ' '};
+
+void keydown_handler(uint8_t scancode);
+void keyup_handler(uint8_t scancode);
 
 void init_keyboard(void);
 

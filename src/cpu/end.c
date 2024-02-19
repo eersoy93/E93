@@ -11,5 +11,6 @@
 void end(void)
 {
     printk_color("Halting the CPU...\n", HALT_COLOR);
+    asm volatile("cli");
     asm volatile("hlt");
 }

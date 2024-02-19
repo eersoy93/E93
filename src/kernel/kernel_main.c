@@ -11,7 +11,9 @@
 #include "../cpu/timer.h"
 #include "../drivers/screen.h"
 #include "../drivers/speaker.h"
+#include "command.h"
 #include "../libc/boolean.h"
+#include "../libc/io.h"
 #include "../libc/memory.h"
 #include "../libc/string.h"
 
@@ -39,11 +41,15 @@ void kernel_main(void)
     printk_color("\nWelcome to E93!\n", OUTPUT_COLOR);
     printk_color("Type HELP for help.\n", OUTPUT_COLOR);
 
-    show_prompt();
+    while(TRUE)
+    {
+        show_prompt();
+        char * str = input();
+        command_execute(str);
+    }
 }
 
 void show_prompt(void)
 {
     printk_color(">", PROMPT_COLOR);
-    enable_cursor(0, 15);
 }

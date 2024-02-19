@@ -7,14 +7,6 @@
 #ifndef KERNEL_MAIN_H
 #define KERNEL_MAIN_H
 
-enum kernel_modes
-{
-    SHELL_MODE,
-    COMMAND_MODE
-};
-
-enum kernel_modes kernel_mode = SHELL_MODE;
-
 void show_prompt(void);
 
 #endif

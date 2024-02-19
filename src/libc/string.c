@@ -115,3 +115,14 @@ int strcmp(char str_1[], char str_2[])
     }
     return str_1[i] - str_2[i];
 }
+
+void strcpy(char str_1[], char str_2[])
+{
+    int i = 0;
+    while (str_2[i] != '\0')
+    {
+        str_1[i] = str_2[i];
+        i++;
+    }
+    str_1[i] = '\0';
+}

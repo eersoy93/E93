@@ -1,6 +1,6 @@
 /* DESCRIPTION: E93 C Library Input/Output Functions Source File
  * AUTHOR: Erdem Ersoy (eersoy93)
- * COPYRIGHT: Copyright (c) 2022-2024 Erdem Ersoy (eersoy93).
+ * COPYRIGHT: Copyright (c) 2024 Erdem Ersoy (eersoy93).
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
  */
 
@@ -13,38 +13,81 @@
 #include "../kernel/command.h"
 #include "../kernel/kernel_main.h"
 
-static char key_buffer[256];
-
-void keydown_handler(uint8_t scancode)
+void print_char(char character, char attribute)
 {
-    if (kernel_mode == SHELL_MODE)
+    char buffer[2] = {character, '\0'};
+    printk_color(buffer, attribute);
+}
+
+void print(char * str, char attribute)
+{
+    for(int i = 0; str[i] != '\0'; i++)
     {
-        if (scancode > SCANCODE_MAX)
+        print_char(str[i], attribute);
+    }
+}
+
+void println(char * str, char attribute)
+{
+    print(str, attribute);
+    print("\n", attribute);
+}
+
+char read_char(void)
+{
+    while(current_mode == KEYUP);
+
+    if (current_scancode > SCANCODE_MAX)
+    {
+        current_mode = KEYUP;
+        return '?';
+    }
+    else if (current_scancode == ENTER)
+    {
+        current_mode = KEYUP;
+        return ENTER;
+    }
+    else if (current_scancode == BACKSPACE)
+    {
+        current_mode = KEYUP;
+        return BACKSPACE;
+    }
+    else
+    {
+        current_mode = KEYUP;
+        char character = scancode_ascii[(int)current_scancode];
+        return character;
+    }
+}
+
+char * input(void)
+{
+    enable_cursor(0, 15);
+
+    char * key_buffer = "";
+    for(int i = 0; i < strlen(key_buffer); i++)
+    {
+        key_buffer[i] = '\0';
+    }
+
+    while(TRUE)
+    {
+        char c = read_char();
+        if (c != ENTER && c != BACKSPACE)
         {
-            return;
+            append(key_buffer, c);
+            print_char(c, OUTPUT_COLOR);
         }
-        else if (scancode == BACKSPACE)
+        else if (c == BACKSPACE)
         {
             backspace(key_buffer);
             printk_backspace();
         }
-        else if (scancode == ENTER)
+        else if (c == ENTER)
         {
-            printk("\n");
-            command_execute(key_buffer);
-            key_buffer[0] = '\0';
-        }
-        else
-        {
-            char letter = scancode_ascii[(int)scancode];
-            char str[2] = {letter, '\0'};
-            append(key_buffer, letter);
-            printk_color(str, COMMAND_COLOR);
+            disable_cursor();
+            print("\n", OUTPUT_COLOR);
+            return key_buffer;
         }
     }
-}
-
-void keyup_handler(uint8_t scancode)
-{
-    UNUSED(scancode);
 }

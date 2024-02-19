@@ -27,25 +27,16 @@ void command_execute(char * input_command)
     {
         if (strcmp(commands[i].command_name, input_command) == 0)
         {
-            disable_cursor();
-            kernel_mode = COMMAND_MODE;
             commands[i].command_function();
-            kernel_mode = SHELL_MODE;
-            show_prompt();
             return;
         }
     }
 
-    if (strcmp(input_command, "") == 0)
-    {
-        show_prompt();
-    }
-    else
+    if (strcmp(input_command, "") != 0)
     {
         printk_color("Unrecognized command: ", ERROR_COLOR);
-        printk_color(input_command, COMMAND_COLOR);
+        printk_color(input_command, INPUT_COLOR);
         printk_color("\n", OUTPUT_COLOR);
-        show_prompt();
     }
 }
 
@@ -53,8 +44,8 @@ void commands_help(void)
 {
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
     {
-        printk_color(commands[i].command_name, COMMAND_COLOR);
-        printk_color(": ", COMMAND_COLOR);
+        printk_color(commands[i].command_name, INPUT_COLOR);
+        printk_color(": ", INPUT_COLOR);
         printk_color(commands[i].command_help, OUTPUT_COLOR);
         printk_color("\n", OUTPUT_COLOR);
     }
