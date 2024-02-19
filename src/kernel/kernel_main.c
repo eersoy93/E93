@@ -19,7 +19,7 @@ void kernel_main(void)
 {
     clear_screen();
 
-    printk_color("Executing the kernel...\n", DEFAULT_COLOR);
+    printk_color("Executing the kernel...\n", OUTPUT_COLOR);
 
     if (is_video_colored() == TRUE)
     {
@@ -27,8 +27,6 @@ void kernel_main(void)
     }
     else
     {
-        printk_color("Your video card is NOT colored!\n", DEFAULT_COLOR);
-        printk_color("Colored video card is required!\n", DEFAULT_COLOR);
         end();
     }
 
