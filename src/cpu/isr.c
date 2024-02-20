@@ -8,10 +8,10 @@
 
 #include "idt.h"
 #include "ports.h"
-#include "../drivers/screen.h"
-#include "../drivers/keyboard.h"
-#include "../libc/string.h"
 #include "timer.h"
+#include "types.h"
+#include "../drivers/keyboard.h"
+#include "../drivers/screen.h"
 
 isr_t interrupt_handlers[256];
 
