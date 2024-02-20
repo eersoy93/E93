@@ -6,11 +6,10 @@
 
 #include "command.h"
 
-#include "../cpu/end.h"
+#include "../libc/ending.h"
 #include "../libc/io.h"
 #include "../libc/sound.h"
 #include "../libc/string.h"
-#include "../libc/video.h"
 #include "kernel_main.h"
 #include "paging.h"
 

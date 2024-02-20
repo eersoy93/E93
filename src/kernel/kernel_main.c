@@ -6,13 +6,12 @@
 
 #include "kernel_main.h"
 
-#include "../cpu/end.h"
 #include "../cpu/isr.h"
 #include "../cpu/timer.h"
 #include "../drivers/screen.h"
-#include "../drivers/speaker.h"
 #include "command.h"
 #include "../libc/boolean.h"
+#include "../libc/ending.h"
 #include "../libc/io.h"
 #include "../libc/memory.h"
 #include "../libc/string.h"

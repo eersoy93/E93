@@ -1,12 +1,12 @@
-/* DESCRIPTION: E93 Ending Header File
+/* DESCRIPTION: E93 CPU Halting Header File
  * AUTHOR: Erdem Ersoy (eersoy93)
  * COPYRIGHT: Copyright (c) 2024 Erdem Ersoy (eersoy93).
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
  */
 
-#ifndef END_H
-#define END_H
+#ifndef HALT_H
+#define HALT_H
 
-void end(void);
+void halt(void);
 
 #endif
