@@ -20,5 +20,5 @@ void sound(uint32_t frequency, uint32_t duration)
 
 void beep(void)
 {
-    sound(1000, 10);
+    sound(1000, 5);
 }
