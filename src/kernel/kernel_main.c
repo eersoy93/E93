@@ -32,7 +32,8 @@ void kernel_main(void)
 
     init();
 
-    println("\nWelcome to E93!", OUTPUT_COLOR);
+    print("\n", OUTPUT_COLOR);
+    println("Welcome to E93!", OUTPUT_COLOR);
     println("Type HELP for help.", OUTPUT_COLOR);
 
     while(TRUE)
