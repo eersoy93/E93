@@ -3,20 +3,20 @@
 ; COPYRIGHT: Copyright (c) 2024 Erdem Ersoy (eersoy93).
 ; LICENSE: Licensed with MIT License. See LICENSE file for details.
 
-global kernel_entry
+global shell_entry
 
 MAGIC_NUMBER equ 0x1BADB002
 FLAGS        equ 0x0
 CHECKSUM     equ -MAGIC_NUMBER
-KERNEL_STACK_SIZE equ 4096
+SHELL_STACK_SIZE equ 4096
 
-extern kernel_main
+extern shell_main
 
 section .bss
 align 4
 
-kernel_stack:
-    resb KERNEL_STACK_SIZE
+shell_stack:
+    resb SHELL_STACK_SIZE
 
 section .text
 align 4
@@ -24,9 +24,9 @@ align 4
     dd FLAGS
     dd CHECKSUM
 
-kernel_entry:
-    mov esp, kernel_stack + KERNEL_STACK_SIZE
-    call kernel_main
+shell_entry:
+    mov esp, shell_stack + SHELL_STACK_SIZE
+    call shell_main
 
 .loop:
     jmp .loop

@@ -4,7 +4,7 @@
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
  */
 
-#include "kernel_main.h"
+#include "shell_main.h"
 
 #include "command.h"
 #include "../libc/boolean.h"
@@ -15,11 +15,11 @@
 #include "../libc/string.h"
 #include "../libc/video.h"
 
-void kernel_main(void)
+void shell_main(void)
 {
     cls();
 
-    println("Executing the kernel...", OUTPUT_COLOR);
+    println("Executing the shell...", OUTPUT_COLOR);
 
     if (get_video_type() == VIDEO_TYPE_COLOR)
     {

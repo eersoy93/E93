@@ -6,7 +6,7 @@
 
 #include "paging.h"
 
-#include "kernel_main.h"
+#include "shell_main.h"
 #include "../libc/io.h"
 #include "../libc/memory.h"
 #include "../libc/string.h"

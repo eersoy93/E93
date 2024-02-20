@@ -10,7 +10,7 @@
 #include "../libc/io.h"
 #include "../libc/sound.h"
 #include "../libc/string.h"
-#include "kernel_main.h"
+#include "shell_main.h"
 #include "paging.h"
 
 struct command commands[] = {

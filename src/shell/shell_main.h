@@ -4,8 +4,8 @@
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
  */
 
-#ifndef KERNEL_MAIN_H
-#define KERNEL_MAIN_H
+#ifndef SHELL_MAIN_H
+#define SHELL_MAIN_H
 
 void show_prompt(void);
 
