@@ -8,9 +8,8 @@
 
 #include "../cpu/ports.h"
 #include "../cpu/timer.h"
-#include "../cpu/types.h"
 
-static void play_sound(uint32_t frequency)
+void play_sound(uint32_t frequency)
 {
     set_PIT_2(frequency);
 
@@ -21,17 +20,8 @@ static void play_sound(uint32_t frequency)
     }
 }
 
-static void nosound(void)
+void nosound(void)
 {
     uint8_t tmp = port_byte_in(0x61) & 0xFC;
     port_byte_out(0x61, tmp);
-}
-
-void beep(void)
-{
-    asm volatile("sti");
-    play_sound(1000);
-    wait_timer(10);
-    nosound();
-    set_PIT_2(50);
 }
