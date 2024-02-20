@@ -6,19 +6,17 @@
 
 #include "timer.h"
 
-#include "ports.h"
 #include "isr.h"
-#include "../drivers/screen.h"
-#include "../libc/function.h"
-#include "../libc/string.h"
+#include "ports.h"
 #include "registers.h"
+#include "../drivers/screen.h"
 
 volatile uint32_t tick = 0;
 
 static void timer_callback(registers_struct_type * registers)
 {
     tick++;
-    UNUSED(registers);
+    (void)(registers);
 }
 
 void set_PIT_2(uint32_t frequency)
