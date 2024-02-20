@@ -33,7 +33,7 @@ After building, you can run:
 
 ### 0.2.0
 
-- [ ] Restructure the OS.
+- [X] Restructure the OS.
 
 ### 0.1.x
 
