@@ -10,8 +10,6 @@
 #include "../drivers/screen.h"
 #include "function.h"
 #include "string.h"
-#include "../kernel/command.h"
-#include "../kernel/kernel_main.h"
 
 void print_char(char character, char attribute)
 {
