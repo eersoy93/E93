@@ -7,7 +7,6 @@
 #include "kernel_main.h"
 
 #include "../cpu/isr.h"
-#include "../cpu/timer.h"
 #include "command.h"
 #include "../libc/boolean.h"
 #include "../libc/ending.h"
