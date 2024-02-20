@@ -8,13 +8,13 @@
 
 #include "../cpu/isr.h"
 #include "../cpu/timer.h"
-#include "../drivers/screen.h"
 #include "command.h"
 #include "../libc/boolean.h"
 #include "../libc/ending.h"
 #include "../libc/io.h"
 #include "../libc/memory.h"
 #include "../libc/string.h"
+#include "../libc/video.h"
 
 void kernel_main(void)
 {
@@ -22,7 +22,7 @@ void kernel_main(void)
 
     println("Executing the kernel...", OUTPUT_COLOR);
 
-    if (is_video_colored() == TRUE)
+    if (get_video_type() == VIDEO_TYPE_COLOR)
     {
         println("Your video card is colored!", OUTPUT_COLOR);
     }

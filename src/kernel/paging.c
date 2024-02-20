@@ -6,8 +6,8 @@
 
 #include "paging.h"
 
-#include "../drivers/screen.h"
 #include "kernel_main.h"
+#include "../libc/io.h"
 #include "../libc/memory.h"
 #include "../libc/string.h"
 
@@ -22,10 +22,9 @@ void allocate_page(void)
     char physical_address_str[16] = "";
     hex_to_ascii(physical_address, physical_address_str);
 
-    printk_color("Memory has been allocated. ", OUTPUT_COLOR);
-    printk_color("Page: ", OUTPUT_COLOR);
-    printk_color(page_str, VARIABLE_COLOR);
-    printk_color("\nPhysical Address: ", OUTPUT_COLOR);
-    printk_color(physical_address_str, VARIABLE_COLOR);
-    printk_color("\n", OUTPUT_COLOR);
+    print("Memory has been allocated. ", OUTPUT_COLOR);
+    print("Page: ", OUTPUT_COLOR);
+    println(page_str, VARIABLE_COLOR);
+    print("Physical Address: ", OUTPUT_COLOR);
+    println(physical_address_str, VARIABLE_COLOR);
 }
