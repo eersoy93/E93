@@ -7,16 +7,16 @@
 #include "command.h"
 
 #include "../cpu/end.h"
-#include "../drivers/screen.h"
 #include "../libc/io.h"
 #include "../libc/sound.h"
 #include "../libc/string.h"
+#include "../libc/video.h"
 #include "kernel_main.h"
 #include "paging.h"
 
 struct command commands[] = {
     {0, "BEEP", "Beeps from PC speaker.", &beep},
-    {1, "CLS", "Clears the screen.", &clear_screen},
+    {1, "CLS", "Clears the screen.", &cls},
     {2, "END", "Halts the CPU.", &end},
     {3, "HELP", "Shows this help message.", &commands_help},
     {4, "PAGE", "Requests a kernel allocation.", &allocate_page}

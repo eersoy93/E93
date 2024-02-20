@@ -91,3 +91,9 @@ char * input(void)
         }
     }
 }
+
+void cls(void)
+{
+    clear_screen();
+    set_cursor_column_and_row(0, 0);
+}

@@ -16,5 +16,6 @@ void println(char * str, char attribute);
 char read_char(void);
 char * input(void);
 
+void cls(void);
 
 #endif
