@@ -1,4 +1,4 @@
-/* DESCRIPTION: E93 Kernel Paging Source File
+/* DESCRIPTION: E93 Shell Paging Source File
  * AUTHOR: Erdem Ersoy (eersoy93)
  * COPYRIGHT: Copyright (c) 2024 Erdem Ersoy (eersoy93).
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
