@@ -1,4 +1,4 @@
-/* DESCRIPTION: E93 Machine-Dependent (x86-32) Header File
+/* DESCRIPTION: E93 Typing Definitions of CPU Drivers Header File
  * AUTHOR: Erdem Ersoy (eersoy93)
  * COPYRIGHT: Copyright (c) 2022-2024 Erdem Ersoy (eersoy93).
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
