@@ -6,10 +6,10 @@
 
 #include "kernel_main.h"
 
-#include "../cpu/isr.h"
 #include "command.h"
 #include "../libc/boolean.h"
 #include "../libc/ending.h"
+#include "../libc/init.h"
 #include "../libc/io.h"
 #include "../libc/memory.h"
 #include "../libc/string.h"
@@ -30,11 +30,7 @@ void kernel_main(void)
         end();
     }
 
-    println("Initializing the ISR...", OUTPUT_COLOR);
-    isr_install();
-
-    println("Initializing the IRQ...", OUTPUT_COLOR);
-    irq_install();
+    init();
 
     println("\nWelcome to E93!", OUTPUT_COLOR);
     println("Type HELP for help.", OUTPUT_COLOR);

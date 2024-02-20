@@ -17,6 +17,8 @@ isr_t interrupt_handlers[256];
 
 void isr_install()
 {
+    printk_color("Initializing the ISRs...\n", OUTPUT_COLOR);
+
     set_idt_gate(0, (uint32_t) isr0);
     set_idt_gate(1, (uint32_t) isr1);
     set_idt_gate(2, (uint32_t) isr2);
@@ -150,6 +152,7 @@ void irq_handler(registers_struct_type * registers)
 
 void irq_install(void)
 {
+    printk_color("Initializing the IRQs...\n", OUTPUT_COLOR);
     asm volatile("sti");
     init_timer(50);
     init_keyboard();
