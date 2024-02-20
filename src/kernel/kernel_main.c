@@ -18,7 +18,7 @@
 
 void kernel_main(void)
 {
-    clear_screen();
+    cls();
 
     println("Executing the kernel...", OUTPUT_COLOR);
 
