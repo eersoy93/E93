@@ -11,14 +11,14 @@ LDFLAGS = -T link.ld -melf_i386 --allow-multiple-definition -z noexecstack
 AS = nasm
 ASFLAGS = -f elf32
 
-all: kernel.elf
+all: E93.elf
 
-kernel.elf: $(OBJECTS)
+E93.elf: $(OBJECTS)
 	ld $(LDFLAGS) $(OBJECTS) -o $@
 
-E93.iso: kernel.elf
+E93.iso: E93.elf
 	mkdir -p iso/boot/grub
-	cp $< iso/boot/kernel.elf
+	cp $< iso/boot/E93.elf
 	cp menu.lst iso/boot/grub/menu.lst
 	cp ../bin/stage2_eltorito iso/boot/grub/stage2_eltorito
 	xorriso -as mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4 -boot-info-table -o $@ iso/

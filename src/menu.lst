@@ -2,4 +2,4 @@ default=0
 timeout=0
 
 title E93
-kernel /boot/kernel.elf
+kernel /boot/E93.elf
