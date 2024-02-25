@@ -6,7 +6,7 @@
 
 #include "idt.h"
 
-#include "../cpu/types.h"
+#include "../cpu/drvutils.h"
 
 void set_idt_gate(int n, uint32_t handler)
 {

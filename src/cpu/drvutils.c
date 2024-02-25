@@ -1,10 +1,10 @@
-/* DESCRIPTION: E93 Typing Definitions of CPU Drivers Source File
+/* DESCRIPTION: E93 Driver Utility Definitions Source File
  * AUTHOR: Erdem Ersoy (eersoy93)
  * COPYRIGHT: Copyright (c) 2022-2024 Erdem Ersoy (eersoy93).
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
  */
 
-#include "types.h"
+#include "drvutils.h"
 
 void int_to_ascii(int n, char str[])
 {
