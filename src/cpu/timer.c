@@ -32,7 +32,7 @@ void set_PIT_2(uint32_t frequency)
 
 void init_timer(uint32_t frequency)
 {
-    printk_color("Initializing the CPU timer...\n", OUTPUT_COLOR);
+    print_ll_color("Initializing the CPU timer...\n", OUTPUT_COLOR);
 
     uint32_t divisor = 1193180 / frequency;  // Hardware clock frequency is 1193180 Hz.
     uint8_t low = (uint8_t)(divisor & 0xFF);

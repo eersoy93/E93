@@ -17,7 +17,7 @@ isr_t interrupt_handlers[256];
 
 void isr_install()
 {
-    printk_color("Initializing the ISRs...\n", OUTPUT_COLOR);
+    print_ll_color("Initializing the ISRs...\n", OUTPUT_COLOR);
 
     set_idt_gate(0, (uint32_t) isr0);
     set_idt_gate(1, (uint32_t) isr1);
@@ -123,14 +123,14 @@ char * isr_exception_messages[] =
 
 void isr_handler(registers_struct_type * registers)
 {
-    printk_color("Received interrupt: ", OUTPUT_COLOR);
+    print_ll_color("Received interrupt: ", OUTPUT_COLOR);
     char interrupt_no_str[3];
     int_to_ascii(registers->interrupt_no, interrupt_no_str);
-    printk_color(interrupt_no_str, OUTPUT_COLOR);
-    printk_color("\n", OUTPUT_COLOR);
+    print_ll_color(interrupt_no_str, OUTPUT_COLOR);
+    print_ll_color("\n", OUTPUT_COLOR);
 
-    printk_color(isr_exception_messages[registers->interrupt_no], OUTPUT_COLOR);
-    printk_color("\n", OUTPUT_COLOR);
+    print_ll_color(isr_exception_messages[registers->interrupt_no], OUTPUT_COLOR);
+    print_ll_color("\n", OUTPUT_COLOR);
 }
 
 void register_interrupt_handler(uint8_t n, isr_t handler)
@@ -152,7 +152,7 @@ void irq_handler(registers_struct_type * registers)
 
 void irq_install(void)
 {
-    printk_color("Initializing the IRQs...\n", OUTPUT_COLOR);
+    print_ll_color("Initializing the IRQs...\n", OUTPUT_COLOR);
     asm volatile("sti");
     init_timer(50);
     init_keyboard();
