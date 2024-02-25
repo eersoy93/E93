@@ -19,7 +19,7 @@ int get_offset(int col, int row);
 int get_offset_col(int offset);
 int get_offset_row(int offset);
 
-int print_ll_char(char character, int col, int row, char attribute);
+int printl_char(char character, int col, int row, char attribute);
 
 void set_cursor_offset(int offset);
 void set_cursor_shape(void);
@@ -83,25 +83,25 @@ boolean is_video_colored(void)
 }
 
 // Print message at cursor location
-void print_ll(char * message)
+void printl(char * message)
 {
-    print_ll_color(message, DEFAULT_COLOR);
+    printl_color(message, DEFAULT_COLOR);
 }
 
 // Print message at specific location
-void print_ll_at(char * message, int col, int row)
+void printl_at(char * message, int col, int row)
 {
-    print_ll_at_color(message, col, row, DEFAULT_COLOR);
+    printl_at_color(message, col, row, DEFAULT_COLOR);
 }
 
 // Print message at cursor location  with specfific color
-void print_ll_color(char * message, char color)
+void printl_color(char * message, char color)
 {
-    print_ll_at_color(message, -1, -1, color);
+    printl_at_color(message, -1, -1, color);
 }
 
 // Print message at specific location with specfific color
-void print_ll_at_color(char * message, int col, int row, char color)
+void printl_at_color(char * message, int col, int row, char color)
 {
     int offset = 0;
 
@@ -120,21 +120,21 @@ void print_ll_at_color(char * message, int col, int row, char color)
 
     while (message[i] != 0)
     {
-        offset = print_ll_char(message[i++], col, row, color);
+        offset = printl_char(message[i++], col, row, color);
         row = get_offset_row(offset);
         col = get_offset_col(offset);
     }
 }
 
 // Revert printing via backspace
-void print_ll_backspace(void)
+void printl_backspace(void)
 {
     int offset = get_cursor_offset() - 2;
     int row = get_offset_row(offset);
     int col = get_offset_col(offset);
     if (col != 0)
     {
-        print_ll_char(0x20, col, row, DEFAULT_COLOR);
+        printl_char(0x20, col, row, DEFAULT_COLOR);
         set_cursor_offset(offset);
     }
 }
@@ -179,7 +179,7 @@ int get_offset_row(int offset)
 }
 
 // Print specific character with specific attribute at specific loaction
-int print_ll_char(char character, int col, int row, char attribute)
+int printl_char(char character, int col, int row, char attribute)
 {
     unsigned char * video_memory = (unsigned char *) VIDEO_ADDRESS;
     if (!attribute)

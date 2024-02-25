@@ -14,7 +14,7 @@
 void print_char(char character, char attribute)
 {
     char buffer[2] = {character, '\0'};
-    print_ll_color(buffer, attribute);
+    printl_color(buffer, attribute);
 }
 
 void print(char * str, char attribute)
@@ -79,7 +79,7 @@ char * input(void)
         else if (c == BACKSPACE)
         {
             backspace(key_buffer);
-            print_ll_backspace();
+            printl_backspace();
         }
         else if (c == ENTER)
         {

@@ -35,13 +35,13 @@ uint16_t get_cursor_column_and_row(void);
 
 boolean is_video_colored(void);
 
-void print_ll(char * message);
-void print_ll_at(char * message, int col, int row);
+void printl(char * message);
+void printl_at(char * message, int col, int row);
 
-void print_ll_color(char * message, char color);
-void print_ll_at_color(char * message, int col, int row, char color);
+void printl_color(char * message, char color);
+void printl_at_color(char * message, int col, int row, char color);
 
-void print_ll_backspace(void);
+void printl_backspace(void);
 
 void set_cursor_column_and_row(int col, int row);
 

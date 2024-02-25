@@ -42,7 +42,7 @@ static void keyboard_callback(registers_struct_type * registers)
 
 void init_keyboard(void)
 {
-    print_ll_color("Initializing the keyboard...\n", OUTPUT_COLOR);
+    printl_color("Initializing the keyboard...\n", OUTPUT_COLOR);
     current_mode = KEYUP;
     current_scancode = 0;
     register_interrupt_handler(IRQ1, keyboard_callback); 
