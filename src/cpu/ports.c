@@ -33,3 +33,17 @@ void port_word_out(unsigned short port, unsigned short data)
 {
     asm("out %%ax, %%dx": : "a" (data), "d" (port));
 }
+
+// Read double word from port
+unsigned int port_dword_in(unsigned short port)
+{
+    unsigned int result;
+    asm("in %%dx, %%eax": "=a" (result) : "d" (port));
+    return result;
+}
+
+// Write double word to port
+void port_dword_out(unsigned short port, unsigned int data)
+{
+    asm("out %%eax, %%dx": : "a" (data), "d" (port));
+}
