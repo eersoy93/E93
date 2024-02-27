@@ -22,3 +22,15 @@ uint16_t pci_config_read_word(uint8_t bus, uint8_t slot, uint8_t func, uint8_t o
     uint32_t temp = (uint16_t)((port_dword_in(0xcfc) >> ((offset & 2) * 8)) & 0xffff);
     return temp;
 }
+
+uint16_t pci_check_vendor(uint8_t bus, uint8_t slot)
+{
+    uint16_t vendor, device;
+
+    if ((vendor = pci_config_read_word(bus, slot, 0, 0)) != 0xffff)
+    {
+        device = pci_config_read_word(bus, slot, 0, 2);
+    }
+
+    return vendor;
+}
