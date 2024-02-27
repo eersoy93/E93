@@ -6,6 +6,7 @@
 
 #include "timer.h"
 
+#include "drvutils.h"
 #include "isr.h"
 #include "ports.h"
 #include "registers.h"
@@ -16,7 +17,7 @@ volatile uint32_t tick = 0;
 static void timer_callback(registers_struct_type * registers)
 {
     tick++;
-    (void)(registers);
+    UNUSED(registers);
 }
 
 void set_PIT_2(uint32_t frequency)

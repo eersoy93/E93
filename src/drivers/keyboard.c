@@ -6,10 +6,10 @@
 
 #include "keyboard.h"
 
-#include "../cpu/ports.h"
+#include "../cpu/drvutils.h"
 #include "../cpu/isr.h"
+#include "../cpu/ports.h"
 #include "screen.h"
-#include "../libc/function.h"
 
 void keydown_handler(uint8_t scancode)
 {
