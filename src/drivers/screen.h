@@ -33,7 +33,7 @@ void enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
 
 uint16_t get_cursor_column_and_row(void);
 
-boolean is_video_colored(void);
+uint8_t get_video_colored_type(void);
 
 void printl(char * message);
 void printl_at(char * message, int col, int row);

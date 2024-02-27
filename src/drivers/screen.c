@@ -68,18 +68,11 @@ uint16_t get_cursor_column_and_row(void)
 }
 
 // Detect if the video is colored
-boolean is_video_colored(void)
+uint8_t get_video_colored_type(void)
 {
     const char * video_type_information = VIDEO_TYPE_ADDRESS;
 
-    if (((*video_type_information) & 0x30) == 0x20)
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
+    return ((*video_type_information) & 0x30);
 }
 
 // Print message at cursor location
