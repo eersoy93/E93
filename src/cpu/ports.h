@@ -7,15 +7,17 @@
 #ifndef PORTS_H
 #define PORTS_H
 
+#include <stdint.h>
+
 // Port Driver Declarations
 
-unsigned char port_byte_in(unsigned short port);
-void port_byte_out(unsigned short port, unsigned char data);
+uint8_t port_byte_in(uint16_t port);
+void port_byte_out(uint16_t port, uint8_t data);
 
-unsigned short port_word_in(unsigned short port);
-void port_word_out(unsigned short port, unsigned short data);
+uint16_t port_word_in(uint16_t port);
+void port_word_out(uint16_t port, uint16_t data);
 
-unsigned int port_dword_in(unsigned short port);
-void port_dword_out(unsigned short port, unsigned int data);
+uint32_t port_dword_in(uint16_t port);
+void port_dword_out(uint16_t port, uint32_t data);
 
 #endif
