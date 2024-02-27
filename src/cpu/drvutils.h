@@ -9,6 +9,8 @@
 
 #include <stdint.h>
 
+#define UNUSED(x) (void)(x)
+
 #define low16(address) (uint16_t)((address) & 0xFFFF)
 #define high16(address) (uint16_t)(((address) >> 16) & 0xFFFF)
 

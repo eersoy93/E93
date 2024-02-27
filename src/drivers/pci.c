@@ -6,6 +6,7 @@
 
 #include "pci.h"
 
+#include "../cpu/drvutils.h"
 #include "../cpu/ports.h"
 
 uint16_t pci_config_read_word(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset)
@@ -25,11 +26,13 @@ uint16_t pci_config_read_word(uint8_t bus, uint8_t slot, uint8_t func, uint8_t o
 
 uint16_t pci_check_vendor(uint8_t bus, uint8_t slot)
 {
-    uint16_t vendor, device;
+    uint16_t vendor = 0x0000;
+    uint16_t device = 0x0000;
 
     if ((vendor = pci_config_read_word(bus, slot, 0, 0)) != 0xffff)
     {
         device = pci_config_read_word(bus, slot, 0, 2);
+        UNUSED(device);
     }
 
     return vendor;
