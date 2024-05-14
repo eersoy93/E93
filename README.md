@@ -4,7 +4,7 @@ Erdem Ersoy's (eersoy93's) hobby operating system for old PCs.
 
 ## Building and Running
 
-In [Pardus 23](https://www.pardus.org.tr/), clone this repository. After that, install GCC x86 cross compiler, NASM and QEMU:
+In [Pardus 23](https://www.pardus.org.tr/) or Debian 12, clone this repository. After that, install GCC x86 cross compiler, NASM and QEMU:
 
 `sudo apt install nasm qemu-system-x86 gcc-i686-linux-gnu xorriso`
 
