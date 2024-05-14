@@ -37,3 +37,50 @@ uint16_t pci_check_vendor(uint8_t bus, uint8_t slot)
 
     return vendor;
 }
+
+void pci_check_device(uint8_t bus, uint8_t slot, uint16_t vendor)
+{
+    uint16_t device = pci_config_read_word(bus, slot, 0, 2);
+
+    if (vendor != 0xffff)
+    {
+        uint8_t pci_class_id = pci_config_read_word(bus, slot, 0, 0xa) & 0xff;
+        uint8_t pci_subclass_id = pci_config_read_word(bus, slot, 0, 0xa) >> 8;
+
+        uint8_t pci_prog_if = pci_config_read_word(bus, slot, 0, 0x9) & 0xff;
+
+        uint8_t pci_header_type = pci_config_read_word(bus, slot, 0, 0xe) & 0xff;
+
+        if (pci_header_type == 0)
+        {
+            uint8_t irq = pci_config_read_word(bus, slot, 0, 0x3c) & 0xff;
+
+            struct pci_device_type pci_device =
+            {
+                .bus = bus,
+                .slot = slot,
+                .vendor = vendor,
+                .device = device,
+                .pci_class_id = pci_class_id,
+                .pci_subclass_id = pci_subclass_id,
+                .pci_prog_if = pci_prog_if,
+                .irq = irq
+            };
+
+            UNUSED(pci_device);
+        }
+    }
+}
+
+void pci_check_all_devices(void)
+{
+    for (uint8_t bus = 0; bus < 8; bus++)
+    {
+        for (uint8_t slot = 0; slot < 32; slot++)
+        {
+            uint16_t vendor = pci_check_vendor(bus, slot);
+
+            pci_check_device(bus, slot, vendor);
+        }
+    }
+}
