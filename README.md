@@ -59,6 +59,8 @@ After building, you can run:
 - [RapidTables ASCII Table](https://www.rapidtables.com/code/text/ascii-table.html)
 - [Pardus's Calculator :)](https://apps.pardus.org.tr/app/gnome-calculator)
 
+**NOTE:** Also I have being used GitHub Copilot but I don't directly use code completions. Every line has a reference.
+
 ## Copyright and License
 
 Copyright (c) 2022-2024 Erdem Ersoy (eersoy93).
