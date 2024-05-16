@@ -7,6 +7,7 @@
 #ifndef IDE_H
 #define IDE_H
 
+#include "../cpu/drvutils.h"
 #include "pci.h"
 
 #include <stdint.h>
