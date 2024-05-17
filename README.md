@@ -57,6 +57,7 @@ After building, you can run:
 - [x86 and amd64 Instruction Reference](https://www.felixcloutier.com/x86/index.html)
 - [VGA Color Palettes](https://www.fountainware.com/EXPL/vga_color_palettes.htm)
 - [VGA Text Mode (Wikipedia)](https://en.wikipedia.org/wiki/VGA_text_mode)
+- [Device Hunt](https://devicehunt.com/)
 - [RapidTables ASCII Table](https://www.rapidtables.com/code/text/ascii-table.html)
 - [Pardus's Calculator :)](https://apps.pardus.org.tr/app/gnome-calculator)
 
