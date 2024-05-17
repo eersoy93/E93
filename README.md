@@ -52,6 +52,7 @@ After building, you can run:
 - [OSDev Wiki Color/Monochrome Monitors Page](https://wiki.osdev.org/Detecting_Colour_and_Monochrome_Monitors)
 - [OSDev Wiki Text Mode Cursor Page](https://wiki.osdev.org/Text_Mode_Cursor)
 - [OSDev Wiki PCI Page](https://wiki.osdev.org/PCI)
+- [OSDev Wiki PCI IDE Controller Page](https://wiki.osdev.org/PCI_IDE_Controller)
 - [OSDev Forum of Keydown and Keyup Events](https://forum.osdev.org/viewtopic.php?t=9761)
 - [x86 and amd64 Instruction Reference](https://www.felixcloutier.com/x86/index.html)
 - [VGA Color Palettes](https://www.fountainware.com/EXPL/vga_color_palettes.htm)
