@@ -9,16 +9,16 @@
 
 #include <stdint.h>
 
-void int_to_ascii(int n, char str[]);
-void hex_to_ascii(int n, char str[]);
+void int_to_ascii(uint32_t n, char str[]);
+void hex_to_ascii(uint32_t n, char str[]);
 
 void reverse(char str[]);
-int strlen(char str[]);
+uint32_t strlen(char str[]);
 
 void backspace(char str[]);
 void append(char str[], char n);
 void append_str(char str_1[], char str_2[]);
-int strcmp(char str_1[], char str_2[]);
+uint32_t strcmp(char str_1[], char str_2[]);
 void strcpy(char str_1[], char str_2[]);
 
 #endif

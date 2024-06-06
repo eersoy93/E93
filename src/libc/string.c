@@ -6,10 +6,10 @@
 
 #include "string.h"
 
-void int_to_ascii(int n, char str[])
+void int_to_ascii(uint32_t n, char str[])
 {
-    int i = 0;
-    int sign = n;
+    uint32_t i = 0;
+    uint32_t sign = n;
 
     if (sign < 0)
     {
@@ -31,14 +31,14 @@ void int_to_ascii(int n, char str[])
     reverse(str);
 }
 
-void hex_to_ascii(int n, char str[])
+void hex_to_ascii(uint32_t n, char str[])
 {
     append(str, '0');
     append(str, 'x');
 
     char zeroes = 0;
     int32_t temp = 0;
-    for(int i = 28; i > 0; i -= 4)
+    for(uint32_t i = 28; i > 0; i -= 4)
     {
         temp = (n >> i) & 0xF;
 
@@ -71,7 +71,7 @@ void hex_to_ascii(int n, char str[])
 
 void reverse(char s[])
 {
-    int c, i, j;
+    uint32_t c, i, j;
     for (i = 0, j = strlen(s) - 1; i < j; i++, j--)
     {
         c = s[i];
@@ -80,9 +80,9 @@ void reverse(char s[])
     }
 }
 
-int strlen(char s[])
+uint32_t strlen(char s[])
 {
-    int i = 0;
+    uint32_t i = 0;
     while (s[i] != '\0')
     {
         ++i;
@@ -92,16 +92,16 @@ int strlen(char s[])
 
 void append(char str[], char n)
 {
-    int len = strlen(str);
+    uint32_t len = strlen(str);
     str[len] = n;
     str[len + 1] = '\0';
 }
 
 void append_str(char str_1[], char str_2[])
 {
-    int len_1 = strlen(str_1);
-    int len_2 = strlen(str_2);
-    int i = 0;
+    uint32_t len_1 = strlen(str_1);
+    uint32_t len_2 = strlen(str_2);
+    uint32_t i = 0;
 
     while (i < len_2)
     {
@@ -114,13 +114,13 @@ void append_str(char str_1[], char str_2[])
 
 void backspace(char str[])
 {
-    int len = strlen(str);
+    uint32_t len = strlen(str);
     str[len - 1] = '\0';
 }
 
-int strcmp(char str_1[], char str_2[])
+uint32_t strcmp(char str_1[], char str_2[])
 {
-    int i = 0;
+    uint32_t i = 0;
     for (i = 0; str_1[i] == str_2[i]; i++)
     {
         if (str_1[i] == '\0')
@@ -133,7 +133,7 @@ int strcmp(char str_1[], char str_2[])
 
 void strcpy(char str_1[], char str_2[])
 {
-    int i = 0;
+    uint32_t i = 0;
     while (str_2[i] != '\0')
     {
         str_1[i] = str_2[i];
