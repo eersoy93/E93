@@ -20,9 +20,62 @@ char * get_pci_vendor_str(uint8_t bus, uint8_t slot)
             }
             default:
             {
-                return "Unknown";
+                return "Unknown Vendor";
             }
         }
+    }
+    else
+    {
+        return "No Device";
+    }
+}
+
+char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot)
+{
+    uint16_t vendor_id = pci_get_vendor_id(bus, slot);
+    uint16_t device_id = pci_get_device_id(bus, slot);
+
+    if (vendor_id != 0xffff && device_id != 0xffff)
+    {
+        switch (vendor_id)
+        {
+            case 0x8086:
+            {
+                switch (device_id)
+                {
+                    case 0x1237:
+                    {
+                        return "Intel Corporation 440FX - 82441FX PMC [Natoma]";
+                    }
+                    default:
+                    {
+                        return "Unknown Vendor and Device";
+                    }
+                }
+            }
+            default:
+            {
+                return "Unknown Vendor and Device";
+            }
+        }
+    }
+    else
+    {
+        return "No Device";
+    }
+}
+
+char * get_pci_vendor_hex_str(uint8_t bus, uint8_t slot)
+{
+    uint16_t vendor_id = pci_get_vendor_id(bus, slot);
+
+    if (vendor_id != 0xffff)
+    {
+        char * hex_str = "0x";
+        char * hex_str_vendor_id = int_to_hex_str(vendor_id);
+        char * hex_str_vendor_id_with_prefix = concat_str(hex_str, hex_str_vendor_id);
+
+        return hex_str_vendor_id_with_prefix;
     }
     else
     {

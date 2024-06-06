@@ -97,6 +97,21 @@ void append(char str[], char n)
     str[len + 1] = '\0';
 }
 
+void append_str(char str_1[], char str_2[])
+{
+    int len_1 = strlen(str_1);
+    int len_2 = strlen(str_2);
+    int i = 0;
+
+    while (i < len_2)
+    {
+        str_1[len_1 + i] = str_2[i];
+        i++;
+    }
+
+    str_1[len_1 + i] = '\0';
+}
+
 void backspace(char str[])
 {
     int len = strlen(str);

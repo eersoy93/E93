@@ -17,6 +17,7 @@ int strlen(char str[]);
 
 void backspace(char str[]);
 void append(char str[], char n);
+void append_str(char str_1[], char str_2[]);
 int strcmp(char str_1[], char str_2[]);
 void strcpy(char str_1[], char str_2[]);
 

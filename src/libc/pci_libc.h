@@ -10,5 +10,9 @@
 #include "../drivers/pci.h"
 
 char * get_pci_vendor_str(uint8_t bus, uint8_t slot);
+char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot);
+
+char * get_pci_vendor_hex_str(uint8_t bus, uint8_t slot);
+char * get_pci_device_hex_str(uint8_t bus, uint8_t slot);
 
 #endif
