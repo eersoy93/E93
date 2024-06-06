@@ -6,9 +6,9 @@
 
 #include "memory.h"
 
-void memory_copy(uint8_t * source, uint8_t * destination, int n_bytes)
+void memory_copy(uint8_t * source, uint8_t * destination, uint32_t n_bytes)
 {
-    int i = 0;
+    uint32_t i = 0;
     for (i = 0; i < n_bytes; i++)
     {
         *(destination + i) = *(source + i);

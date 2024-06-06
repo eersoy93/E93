@@ -10,7 +10,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-void memory_copy(uint8_t * source, uint8_t * destination, int n_bytes);
+void memory_copy(uint8_t * source, uint8_t * destination, uint32_t n_bytes);
 void memory_set(uint8_t * destination, uint8_t value, uint32_t length);
 
 uint32_t free_memory_address = 0x10000;
