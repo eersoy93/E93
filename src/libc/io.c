@@ -63,7 +63,7 @@ char * input(void)
     enable_cursor(0, 15);
 
     char * key_buffer = "";
-    for(int i = 0; i < strlen(key_buffer); i++)
+    for(uint32_t i = 0; i < strlen(key_buffer); i++)
     {
         key_buffer[i] = '\0';
     }

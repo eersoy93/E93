@@ -6,6 +6,9 @@
 
 #include "pci_libc.h"
 
+#include "../drivers/pci.h"
+#include "string.h"
+
 char * get_pci_vendor_str(uint8_t bus, uint8_t slot)
 {
     uint16_t vendor_id = pci_get_vendor_id(bus, slot);
@@ -72,10 +75,13 @@ char * get_pci_vendor_hex_str(uint8_t bus, uint8_t slot)
     if (vendor_id != 0xffff)
     {
         char * hex_str = "0x";
-        char * hex_str_vendor_id = int_to_hex_str(vendor_id);
-        char * hex_str_vendor_id_with_prefix = concat_str(hex_str, hex_str_vendor_id);
+        char * hex_str_vendor_id = "";
 
-        return hex_str_vendor_id_with_prefix;
+        hex_to_ascii(vendor_id, hex_str_vendor_id);
+
+        append_str(hex_str, hex_str_vendor_id);
+
+        return hex_str;
     }
     else
     {

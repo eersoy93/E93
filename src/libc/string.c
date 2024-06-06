@@ -6,10 +6,10 @@
 
 #include "string.h"
 
-void int_to_ascii(uint32_t n, char str[])
+void int_to_ascii(int32_t n, char str[])
 {
-    uint32_t i = 0;
-    uint32_t sign = n;
+    int32_t i = 0;
+    int32_t sign = n;
 
     if (sign < 0)
     {
@@ -37,7 +37,7 @@ void hex_to_ascii(uint32_t n, char str[])
     append(str, 'x');
 
     char zeroes = 0;
-    int32_t temp = 0;
+    uint32_t temp = 0;
     for(uint32_t i = 28; i > 0; i -= 4)
     {
         temp = (n >> i) & 0xF;

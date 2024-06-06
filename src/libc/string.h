@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 
-void int_to_ascii(uint32_t n, char str[]);
+void int_to_ascii(int32_t n, char str[]);
 void hex_to_ascii(uint32_t n, char str[]);
 
 void reverse(char str[]);

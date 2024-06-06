@@ -7,7 +7,7 @@
 #ifndef PCI_LIBC_H
 #define PCI_LIBC_H
 
-#include "../drivers/pci.h"
+#include <stdint.h>
 
 char * get_pci_vendor_str(uint8_t bus, uint8_t slot);
 char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot);
