@@ -6,10 +6,10 @@
 
 #include "drvutils.h"
 
-void int_to_ascii(int n, char str[])
+void int_to_ascii(int32_t n, char str[])
 {
-    int i = 0;
-    int sign = n;
+    int32_t i = 0;
+    int32_t sign = n;
 
     if (sign < 0)
     {
@@ -33,7 +33,7 @@ void int_to_ascii(int n, char str[])
 
 void reverse(char str[])
 {
-    int c, i, j;
+    uint32_t c, i, j;
     for (i = 0, j = strlen(str) - 1; i < j; i++, j--)
     {
         c = str[i];
@@ -42,9 +42,9 @@ void reverse(char str[])
     }
 }
 
-int strlen(char str[])
+uint32_t strlen(char str[])
 {
-    int i = 0;
+    uint32_t i = 0;
     while (str[i] != '\0')
     {
         ++i;
