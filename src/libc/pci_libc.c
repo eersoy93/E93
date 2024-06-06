@@ -88,3 +88,24 @@ char * get_pci_vendor_hex_str(uint8_t bus, uint8_t slot)
         return "No Device";
     }
 }
+
+char * get_pci_device_hex_str(uint8_t bus, uint8_t slot)
+{
+    uint16_t device_id = pci_get_device_id(bus, slot);
+
+    if (device_id != 0xffff)
+    {
+        char * hex_str = "0x";
+        char * hex_str_device_id = "";
+
+        hex_to_ascii(device_id, hex_str_device_id);
+
+        append_str(hex_str, hex_str_device_id);
+
+        return hex_str;
+    }
+    else
+    {
+        return "No Device";
+    }
+}
