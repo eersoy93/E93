@@ -19,7 +19,7 @@ uint16_t pci_config_read_word(uint8_t bus, uint8_t slot, uint8_t func, uint8_t o
                                   (lfunc << 8) | (offset & 0xfc) |
                                   ((uint32_t)0x80000000));
 
-    port_dword_out(0xcf8, address);
+    port_dword_out((uint16_t)0xcf8, address);
     uint32_t temp = (uint16_t)((port_dword_in(0xcfc) >> ((offset & 2) * 8)) & 0xffff);
     return temp;
 }

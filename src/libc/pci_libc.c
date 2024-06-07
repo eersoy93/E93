@@ -75,14 +75,11 @@ char * get_pci_vendor_hex_str(uint8_t bus, uint8_t slot)
 
     if (vendor_id != 0xffff)
     {
-        char * hex_str = "0x";
         char * hex_str_vendor_id = "";
 
         hex_to_ascii(vendor_id, hex_str_vendor_id);
 
-        strcat(hex_str, hex_str_vendor_id);
-
-        return hex_str;
+        return hex_str_vendor_id;
     }
     else
     {
@@ -96,14 +93,11 @@ char * get_pci_device_hex_str(uint8_t bus, uint8_t slot)
 
     if (device_id != 0xffff)
     {
-        char * hex_str = "0x";
         char * hex_str_device_id = "";
 
         hex_to_ascii(device_id, hex_str_device_id);
 
-        strcat(hex_str, hex_str_device_id);
-
-        return hex_str;
+        return hex_str_device_id;
     }
     else
     {
