@@ -69,43 +69,7 @@ char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot)
     }
 }
 
-char * get_pci_vendor_hex_str(uint8_t bus, uint8_t slot)
-{
-    uint16_t vendor_id = pci_get_vendor_id(bus, slot);
-
-    if (vendor_id != 0xffff)
-    {
-        char * hex_str_vendor_id = "";
-
-        hex_to_ascii(vendor_id, hex_str_vendor_id);
-
-        return hex_str_vendor_id;
-    }
-    else
-    {
-        return "No Device";
-    }
-}
-
-char * get_pci_device_hex_str(uint8_t bus, uint8_t slot)
-{
-    uint16_t device_id = pci_get_device_id(bus, slot);
-
-    if (device_id != 0xffff)
-    {
-        char * hex_str_device_id = "";
-
-        hex_to_ascii(device_id, hex_str_device_id);
-
-        return hex_str_device_id;
-    }
-    else
-    {
-        return "No Device";
-    }
-}
-
-uint16_t get_pci_devices_count_str(void)
+uint16_t get_pci_devices_count(void)
 {
     uint16_t count = 0;
 
@@ -129,21 +93,24 @@ void list_pci_devices(void)
 {
     uint16_t pci_devices_count = 0;
 
-    for (uint8_t bus = 0; bus < 1; bus++)
+    for (uint8_t bus = 0; bus <= 254; bus++)
     {
-        for (uint8_t slot = 0; slot < 1; slot++)
+        for (uint8_t slot = 0; slot < 32; slot++)
         {
             uint16_t vendor_id = pci_get_vendor_id(bus, slot);
 
             if (vendor_id != 0xffff)
             {
-                char * vendor_and_device_str = get_pci_vendor_and_device_str(bus, slot);
-                char * vendor_hex_str = get_pci_vendor_hex_str(bus, slot);
-                char * device_hex_str = get_pci_device_hex_str(bus, slot);
+                uint16_t vendor_id = pci_get_vendor_id(bus, slot);
+                uint16_t device_id = pci_get_device_id(bus, slot);
 
-                println(vendor_and_device_str, ERROR_COLOR);
-                println(vendor_hex_str, ERROR_COLOR);
-                println(device_hex_str, ERROR_COLOR);
+                char vendor_hex_str[7] = "";
+                char device_hex_str[7] = "";
+
+                hex_to_ascii(vendor_id, vendor_hex_str);
+                hex_to_ascii(device_id, device_hex_str);
+
+                char * vendor_and_device_str = get_pci_vendor_and_device_str(bus, slot);
 
                 char line_to_print[256] = "";
                 strcat(line_to_print, vendor_hex_str);
