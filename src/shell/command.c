@@ -8,6 +8,7 @@
 
 #include "../libc/ending.h"
 #include "../libc/io.h"
+#include "../libc/pci_libc.h"
 #include "../libc/sound.h"
 #include "../libc/string.h"
 #include "shell_main.h"
@@ -18,7 +19,8 @@ struct command commands[] = {
     {1, "CLS", "Clears the screen.", &cls},
     {2, "END", "Halts the CPU.", &end},
     {3, "HELP", "Shows this help message.", &commands_help},
-    {4, "PAGE", "Requests a kernel allocation.", &allocate_page}
+    {4, "PAGE", "Requests a kernel allocation.", &allocate_page},
+    {5, "PCIDEVS", "Lists PCI devices.", &list_pci_devices}
 };
 
 void command_execute(char * input_command)

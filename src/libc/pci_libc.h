@@ -15,4 +15,8 @@ char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot);
 char * get_pci_vendor_hex_str(uint8_t bus, uint8_t slot);
 char * get_pci_device_hex_str(uint8_t bus, uint8_t slot);
 
+uint16_t get_pci_devices_count(void);
+
+void list_pci_devices(void);
+
 #endif
