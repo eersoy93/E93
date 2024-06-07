@@ -97,7 +97,7 @@ void append(char str[], char n)
     str[len + 1] = '\0';
 }
 
-void append_str(char str_1[], char str_2[])
+void strcat(char str_1[], char str_2[])
 {
     uint32_t len_1 = strlen(str_1);
     uint32_t len_2 = strlen(str_2);

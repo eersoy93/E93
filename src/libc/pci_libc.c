@@ -79,7 +79,7 @@ char * get_pci_vendor_hex_str(uint8_t bus, uint8_t slot)
 
         hex_to_ascii(vendor_id, hex_str_vendor_id);
 
-        append_str(hex_str, hex_str_vendor_id);
+        strcat(hex_str, hex_str_vendor_id);
 
         return hex_str;
     }
@@ -100,7 +100,7 @@ char * get_pci_device_hex_str(uint8_t bus, uint8_t slot)
 
         hex_to_ascii(device_id, hex_str_device_id);
 
-        append_str(hex_str, hex_str_device_id);
+        strcat(hex_str, hex_str_device_id);
 
         return hex_str;
     }
