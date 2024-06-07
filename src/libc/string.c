@@ -80,9 +80,9 @@ void reverse(char s[])
     }
 }
 
-uint32_t strlen(char s[])
+uint16_t strlen(char s[])
 {
-    uint32_t i = 0;
+    uint16_t i = 0;
     while (s[i] != '\0')
     {
         ++i;
@@ -99,9 +99,9 @@ void append(char str[], char n)
 
 void strcat(char str_1[], char str_2[])
 {
-    uint32_t len_1 = strlen(str_1);
-    uint32_t len_2 = strlen(str_2);
-    uint32_t i = 0;
+    uint16_t len_1 = strlen(str_1);
+    uint16_t len_2 = strlen(str_2);
+    uint16_t i = 0;
 
     while (i < len_2)
     {

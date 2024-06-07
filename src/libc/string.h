@@ -13,7 +13,7 @@ void int_to_ascii(int32_t n, char str[]);
 void hex_to_ascii(uint32_t n, char str[]);
 
 void reverse(char str[]);
-uint32_t strlen(char str[]);
+uint16_t strlen(char str[]);
 
 void backspace(char str[]);
 void append(char str[], char n);

@@ -141,7 +141,8 @@ void list_pci_devices(void)
                 char * vendor_hex_str = get_pci_vendor_hex_str(bus, slot);
                 char * device_hex_str = get_pci_device_hex_str(bus, slot);
 
-                char * line_to_print = vendor_hex_str;
+                char * line_to_print = "";
+                strcat(line_to_print, vendor_hex_str);
                 append(line_to_print, ':');
                 strcat(line_to_print, device_hex_str);
                 append(line_to_print, ' ');

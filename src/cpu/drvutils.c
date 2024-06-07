@@ -42,9 +42,9 @@ void reverse(char str[])
     }
 }
 
-uint32_t strlen(char str[])
+uint16_t strlen(char str[])
 {
-    uint32_t i = 0;
+    uint16_t i = 0;
     while (str[i] != '\0')
     {
         ++i;
