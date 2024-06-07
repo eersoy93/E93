@@ -141,7 +141,11 @@ void list_pci_devices(void)
                 char * vendor_hex_str = get_pci_vendor_hex_str(bus, slot);
                 char * device_hex_str = get_pci_device_hex_str(bus, slot);
 
-                char * line_to_print = "";
+                println(vendor_and_device_str, ERROR_COLOR);
+                println(vendor_hex_str, ERROR_COLOR);
+                println(device_hex_str, ERROR_COLOR);
+
+                char line_to_print[256] = "";
                 strcat(line_to_print, vendor_hex_str);
                 append(line_to_print, ':');
                 strcat(line_to_print, device_hex_str);
@@ -155,11 +159,13 @@ void list_pci_devices(void)
         }
     }
 
-    println("", OUTPUT_COLOR);
+    char line_to_print_2[20] = "PCI Devices Count: ";
 
-    char * line_to_print_2 = "PCI Devices Count: ";
-    char * pci_devices_count_str = "";
+    char pci_devices_count_str[5] = "";
 
-    hex_to_ascii(pci_devices_count, pci_devices_count_str);
+    int_to_ascii(pci_devices_count, pci_devices_count_str);
     strcat(line_to_print_2, pci_devices_count_str);
+
+    println("", OUTPUT_COLOR);
+    println(line_to_print_2, OUTPUT_COLOR);
 }
