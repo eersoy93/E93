@@ -53,7 +53,7 @@ char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot)
                 {
                     case 0x1111:
                     {
-                        return "QEMU Virtual Video Controller";
+                        return "QEMU Virtual Video Controller (-vga=std)";
                     }
                     default:
                     {
