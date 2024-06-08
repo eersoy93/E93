@@ -18,6 +18,10 @@ char * get_pci_vendor_str(uint8_t bus, uint8_t slot)
     {
         switch (vendor_id)
         {
+            case 0x1234:
+            {
+                return "QEMU";
+            }
             case 0x8086:
             {
                 return "Intel Corporation";
@@ -43,13 +47,35 @@ char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot)
     {
         switch (vendor_id)
         {
+            case 0x1234:
+            {
+                switch (device_id)
+                {
+                    case 0x1111:
+                    {
+                        return "QEMU Virtual Video Controller";
+                    }
+                    default:
+                    {
+                        return "Unknown Vendor and Device";
+                    }
+                }
+            }
             case 0x8086:
             {
                 switch (device_id)
                 {
+                    case 0x100E:
+                    {
+                        return "Intel Corporation 82540EM Gigabit Ethernet Controller";
+                    }
                     case 0x1237:
                     {
                         return "Intel Corporation 440FX - 82441FX PMC [Natoma]";
+                    }
+                    case 0x7000:
+                    {
+                        return "Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II]";
                     }
                     default:
                     {
