@@ -93,7 +93,7 @@ void list_pci_devices(void)
 {
     uint16_t pci_devices_count = 0;
 
-    for (uint8_t bus = 0; bus <= 254; bus++)
+    for (uint16_t bus = 0; bus < 256; bus++)
     {
         for (uint8_t slot = 0; slot < 32; slot++)
         {
