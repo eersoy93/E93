@@ -59,6 +59,7 @@ After building, you can run:
 - [VGA Color Palettes](https://www.fountainware.com/EXPL/vga_color_palettes.htm)
 - [VGA Text Mode (Wikipedia)](https://en.wikipedia.org/wiki/VGA_text_mode)
 - [Device Hunt](https://devicehunt.com/)
+- [The PCI ID Repository](https://pci-ids.ucw.cz/)
 - [RapidTables ASCII Table](https://www.rapidtables.com/code/text/ascii-table.html)
 - [Pardus's Calculator :)](https://apps.pardus.org.tr/app/gnome-calculator)
 
