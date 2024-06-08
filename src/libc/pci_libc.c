@@ -77,6 +77,10 @@ char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot)
                     {
                         return "Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II]";
                     }
+                    case 0x7030:
+                    {
+                        return "Intel Corporation 430VX - 82437VX TVX [Triton VX]";
+                    }
                     default:
                     {
                         return "Unknown Vendor and Device";
