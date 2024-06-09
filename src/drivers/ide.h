@@ -116,6 +116,15 @@ struct ide_device {
 } IDEDevices[4];
 
 
+// IDE Variables
+
+uint8_t ide_buffer[2048] = { 0 };
+
+volatile uint8_t ide_irq_invoked = 0;
+
+uint8_t atapi_packet[12] = {0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+
 // IDE Functions
 
 uint8_t ide_read(uint8_t channel, uint8_t reg);
