@@ -9,6 +9,66 @@
 
 #include "ide.h"
 
+uint8_t ide_read(uint8_t channel, uint8_t reg)
+{
+    uint8_t result = 0;
+
+    if (reg > 0x07 && reg < 0x0C)
+    {
+        ide_write(channel, ATA_REG_CONTROL, 0x80 | IDEChannels[channel].nIEN);
+    }
+    if (reg < 0x08)
+    {
+        result = port_byte_in(IDEChannels[channel].base + reg - 0x00);
+    }
+    else if (reg < 0x0C)
+    {
+        result = port_byte_in(IDEChannels[channel].base + reg - 0x06);
+    }
+    else if (reg < 0x0E)
+    {
+        result = port_byte_in(IDEChannels[channel].ctrl + reg - 0x0A);
+    }
+    else if (reg < 0x16)
+    {
+        result = port_byte_in(IDEChannels[channel].bmide + reg - 0x0E);
+    }
+    if (reg > 0x07 && reg < 0x0C)
+    {
+        ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN);
+    }
+
+    return result;
+}
+
+void ide_write(uint8_t channel, uint8_t reg, uint8_t data)
+{
+    if (reg > 0x07 && reg < 0x0C)
+    {
+        ide_write(channel, ATA_REG_CONTROL, 0x80 | IDEChannels[channel].nIEN);
+    }
+    if (reg < 0x08)
+    {
+        port_byte_out(IDEChannels[channel].base + reg - 0x00, data);
+    }
+    else if (reg < 0x0C)
+    {
+        port_byte_out(IDEChannels[channel].base + reg - 0x06, data);
+    }
+    else if (reg < 0x0E)
+    {
+        port_byte_out(IDEChannels[channel].ctrl + reg - 0x0A, data);
+    }
+    else if (reg < 0x16)
+    {
+        port_byte_out(IDEChannels[channel].bmide + reg - 0x0E, data);
+    }
+    if (reg > 0x07 && reg < 0x0C)
+    {
+        ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN);
+    }
+}
+
 void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4)
 {
     UNUSED(BAR0);
