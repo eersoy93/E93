@@ -99,6 +99,24 @@ char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot)
     }
 }
 
+void get_pci_vendor_hex_str(uint8_t bus, uint8_t slot, char * vendor_id_str)
+{
+    uint16_t vendor_id = pci_get_vendor_id(bus, slot);
+
+    hex_to_ascii(vendor_id, vendor_id_str);
+
+    append(vendor_id_str, '\0');
+}
+
+void get_pci_device_hex_str(uint8_t bus, uint8_t slot, char * device_id_str)
+{
+    uint16_t device_id = pci_get_device_id(bus, slot);
+
+    hex_to_ascii(device_id, device_id_str);
+
+    append(device_id_str, '\0');
+}
+
 uint16_t get_pci_devices_count(void)
 {
     uint16_t count = 0;
