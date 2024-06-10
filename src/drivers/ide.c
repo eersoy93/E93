@@ -5,6 +5,7 @@
  */
 
 #include "../cpu/drvutils.h"
+#include "../cpu/ports.h"
 #include "pci.h"
 
 #include "ide.h"
@@ -63,6 +64,56 @@ void ide_write(uint8_t channel, uint8_t reg, uint8_t data)
     {
         port_byte_out(IDEChannels[channel].bmide + reg - 0x0E, data);
     }
+    if (reg > 0x07 && reg < 0x0C)
+    {
+        ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN);
+    }
+}
+
+void ide_read_buffer(uint8_t channel, uint8_t reg, uint32_t buffer, uint32_t quads)
+{
+    if (reg > 0x07 && reg < 0x0C)
+    {
+        ide_write(channel, ATA_REG_CONTROL, 0x80 | IDEChannels[channel].nIEN);
+    }
+
+    __asm__ volatile("pushw %%es; movw %%ds, %%ax; movw %%ax, %%es" : : : "ax");
+
+    if (reg < 0x08)
+    {
+        uint32_t * buf = (uint32_t *)buffer;
+        for (uint32_t i = 0; i < quads; i++)
+        {
+            buf[i] = port_dword_in(IDEChannels[channel].base + reg - 0x00);
+        }
+    }
+    else if (reg < 0x0C)
+    {
+        uint32_t * buf = (uint32_t *)buffer;
+        for (uint32_t i = 0; i < quads; i++)
+        {
+            buf[i] = port_dword_in(IDEChannels[channel].base + reg - 0x06);
+        }
+    }
+    else if (reg < 0x0E)
+    {
+        uint32_t * buf = (uint32_t *)buffer;
+        for (uint32_t i = 0; i < quads; i++)
+        {
+            buf[i] = port_dword_in(IDEChannels[channel].ctrl + reg - 0x0A);
+        }
+    }
+    else if (reg < 0x16)
+    {
+        uint32_t * buf = (uint32_t *)buffer;
+        for (uint32_t i = 0; i < quads; i++)
+        {
+            buf[i] = port_dword_in(IDEChannels[channel].bmide + reg - 0x0E);
+        }
+    }
+
+    __asm__ volatile("popw %%es" : : : "ax");
+
     if (reg > 0x07 && reg < 0x0C)
     {
         ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN);
