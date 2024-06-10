@@ -134,7 +134,7 @@ void ide_read_buffer(uint8_t channel, uint8_t reg, uint32_t buffer, uint32_t qua
 
 uint8_t ide_polling(uint8_t channel, uint8_t advanced_check);
 
-uint8_t ide_print_error(uint32_t drive, uint8_t err);
+uint8_t ide_print_error(uint32_t drive, uint8_t error);
 
 void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4);
 
