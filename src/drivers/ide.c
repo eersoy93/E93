@@ -269,16 +269,16 @@ uint8_t ide_print_error(uint32_t drive, uint8_t error)
 
 void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4)
 {
+    int count = 0;
+
     // Detect IDE Channels
-
-    IDEChannels[ATA_PRIMARY].base = (BAR0 == 0) ? 0x1F0 : BAR0;
-    IDEChannels[ATA_PRIMARY].ctrl = (BAR1 == 0) ? 0x3F6 : BAR1;
-    IDEChannels[ATA_PRIMARY].bmide = (BAR4 == 0) ? 0 : BAR4;
+    IDEChannels[ATA_PRIMARY].base = (BAR0 & 0xFFFFFFFC) + 0x1F0 * (!BAR0);
+    IDEChannels[ATA_PRIMARY].ctrl = (BAR1 & 0xFFFFFFFC) + 0x3F6 * (!BAR1);
+    IDEChannels[ATA_PRIMARY].bmide = (BAR4 & 0xFFFFFFFC) + 0;
     IDEChannels[ATA_PRIMARY].nIEN = 0;
-
-    IDEChannels[ATA_SECONDARY].base = (BAR2 == 0) ? 0x170 : BAR2;
-    IDEChannels[ATA_SECONDARY].ctrl = (BAR3 == 0) ? 0x376 : BAR3;
-    IDEChannels[ATA_SECONDARY].bmide = (BAR4 == 0) ? 0 : BAR4;
+    IDEChannels[ATA_SECONDARY].base = (BAR2 & 0xFFFFFFFC) + 0x170 * (!BAR2);
+    IDEChannels[ATA_SECONDARY].ctrl = (BAR3 & 0xFFFFFFFC) + 0x376 * (!BAR3);
+    IDEChannels[ATA_SECONDARY].bmide = (BAR4 & 0xFFFFFFFC) + 8;
     IDEChannels[ATA_SECONDARY].nIEN = 0;
 
     // Disable IRQs
@@ -294,8 +294,7 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
             uint8_t type = IDE_ATA;
             uint8_t status = 0;
 
-            IDEDevices[ATA_MASTER].Reserved = 0;
-            IDEDevices[ATA_SLAVE].Reserved = 0;
+            IDEDevices[count].Reserved = 0;
 
             // Select Drive
             ide_write(i, ATA_REG_HDDEVSEL, 0xA0 | (j << 4));
@@ -349,69 +348,78 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
             }
 
             // Read Identification Space of the Device
-            ide_read_buffer(i, ATA_REG_DATA, (uint32_t)IDEDevices[i * 2 + j].Model, 40);
+            ide_read_buffer(i, ATA_REG_DATA, (uint32_t)ide_buffer, 128);
 
             // Read Device Parameters
-            ide_read_buffer(i, ATA_REG_DATA, (uint32_t)&IDEDevices[i * 2 + j].Capabilities, 1);
-            ide_read_buffer(i, ATA_REG_DATA, (uint32_t)&IDEDevices[i * 2 + j].CommandSets, 1);
-            ide_read_buffer(i, ATA_REG_DATA, (uint32_t)&IDEDevices[i * 2 + j].Type, 1);
-            ide_read_buffer(i, ATA_REG_DATA, (uint32_t)&IDEDevices[i * 2 + j].Signature, 1);
-            ide_read_buffer(i, ATA_REG_DATA, (uint32_t)&IDEDevices[i * 2 + j].Size, 2);
+            IDEDevices[count].Reserved = 1;
+            IDEDevices[count].Type = type;
+            IDEDevices[count].Channel = i;
+            IDEDevices[count].Drive = j;
+            IDEDevices[count].Signature = *((uint16_t *)(ide_buffer + ATA_IDENT_DEVICETYPE));
+            IDEDevices[count].Capabilities = *((uint16_t *)(ide_buffer + ATA_IDENT_CAPABILITIES));
+            IDEDevices[count].CommandSets = *((uint32_t *)(ide_buffer + ATA_IDENT_COMMANDSETS));
 
-            // Print Device Information
-            if (IDEDevices[i * 2 + j].Type == 0)
+            // Get Size
+            if (IDEDevices[count].CommandSets & (1 << 26))
             {
-                continue;
+                IDEDevices[count].Size = *((uint32_t *)(ide_buffer + ATA_IDENT_MAX_LBA_EXT));
+            }
+            else
+            {
+                IDEDevices[count].Size = *((uint32_t *)(ide_buffer + ATA_IDENT_MAX_LBA));
             }
 
-            if (type == IDE_ATA)
+            // Get Model
+            for (int k = 0; k < 40; k += 2)
             {
-                if (IDEDevices[i * 2 + j].Type == 0x00)
-                {
-                    continue;
-                }
-
-                printl_color("Found ATA Device: ", OUTPUT_COLOR);
+                IDEDevices[count].Model[k] = ide_buffer[ATA_IDENT_MODEL + k + 1];
+                IDEDevices[count].Model[k + 1] = ide_buffer[ATA_IDENT_MODEL + k];
             }
-            else if (type == IDE_ATAPI)
-            {
-                printl_color("Found ATAPI Device: ", OUTPUT_COLOR);
-            }
+            IDEDevices[count].Model[40] = 0;
 
-            char ide_device_number_str[2] = { 0 };
-
-            int_to_ascii(i * 2 + j, ide_device_number_str);
-
-            printl_color(ide_device_number_str, OUTPUT_COLOR);
-
-            printl_color("\n", OUTPUT_COLOR);
-
-            char ide_device_model_str[41] = { 0 };
-
-            for (uint8_t k = 0; k < 40; k += 2)
-            {
-                ide_device_model_str[k] = IDEDevices[i * 2 + j].Model[k + 1];
-                ide_device_model_str[k + 1] = IDEDevices[i * 2 + j].Model[k];
-            }
-
-            printl_color("Model: ", OUTPUT_COLOR);
-            printl_color(ide_device_model_str, OUTPUT_COLOR);
-
-            printl_color("\n", OUTPUT_COLOR);
-
-            char ide_device_size_str[10] = { 0 };
-
-            int_to_ascii(IDEDevices[i * 2 + j].Size, ide_device_size_str);
-
-            printl_color("Size: ", OUTPUT_COLOR);
-
-            printl_color(ide_device_size_str, OUTPUT_COLOR);
-
-            printl_color(" MB\n", OUTPUT_COLOR);
-
-            printl_color("\n", OUTPUT_COLOR);
+            count++;
         }
     }
 
-    printl_color("IDE Initialization Completed!\n", OUTPUT_COLOR);
+    // Print IDE Devices
+    for (int i = 0; i < 4; i++)
+    {
+        if (IDEDevices[i].Reserved == 1)
+        {
+            printl_color("IDE Device:\n", OUTPUT_COLOR);
+
+            char ide_device_number_str[2] = { 0 };
+            int_to_ascii(i, ide_device_number_str);
+
+            printl_color("- Device: ", OUTPUT_COLOR);
+            printl_color(ide_device_number_str, OUTPUT_COLOR);
+            printl_color("\n", OUTPUT_COLOR);
+
+            printl_color("- Type: ", OUTPUT_COLOR);
+            if (IDEDevices[i].Type == IDE_ATA)
+            {
+                printl_color("ATA\n", OUTPUT_COLOR);
+            }
+            else if (IDEDevices[i].Type == IDE_ATAPI)
+            {
+                printl_color("ATAPI\n", OUTPUT_COLOR);
+            }
+            else
+            {
+                printl_color("Unknown\n", OUTPUT_COLOR);
+            }
+
+            printl_color("- Model: ", OUTPUT_COLOR);
+            printl_color(IDEDevices[i].Model, OUTPUT_COLOR);
+            printl_color("\n", OUTPUT_COLOR);
+
+            char ide_device_size_str[10] = { 0 };
+            int_to_ascii(IDEDevices[i].Size, ide_device_size_str);
+
+            printl_color("- Size: ", OUTPUT_COLOR);
+            printl_color(ide_device_size_str, OUTPUT_COLOR);
+            printl_color(" sectors\n", OUTPUT_COLOR);
+            printl_color("\n", OUTPUT_COLOR);
+        }
+    }
 }

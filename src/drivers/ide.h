@@ -112,7 +112,7 @@ struct ide_device {
    unsigned short Capabilities;
    unsigned int   CommandSets;
    unsigned int   Size;
-   unsigned char  Model[41];
+   char  Model[41];
 } IDEDevices[4];
 
 
