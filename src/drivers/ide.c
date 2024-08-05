@@ -423,3 +423,186 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
         }
     }
 }
+
+uint8_t ide_ata_access(uint8_t direction, uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t selector, uint32_t edi)
+{
+    uint8_t lba_mode = 0;
+    uint8_t dma = 0;
+    uint8_t cmd = 0;
+    uint8_t lba_io[6] = { 0 };
+    uint32_t channel = IDEDevices[drive].Channel;
+    uint32_t slavebit = IDEDevices[drive].Drive;
+    uint32_t bus = IDEChannels[channel].base;
+    uint32_t words = 256;
+    uint16_t cyl = 0;
+    uint8_t head = 0;
+    uint8_t sector = 0;
+    uint8_t error = 0;
+
+    ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN = (ide_irq_invoked = 0x00) + 0x02);
+
+    // Select the LBA mode (LBA28, LBA48 or CHS)
+    if (lba >= 0x10000000)
+    {
+        lba_mode  = 2;
+        lba_io[0] = (lba & 0x000000FF) >> 0;
+        lba_io[1] = (lba & 0x0000FF00) >> 8;
+        lba_io[2] = (lba & 0x00FF0000) >> 16;
+        lba_io[3] = (lba & 0xFF000000) >> 24;
+        lba_io[4] = 0;
+        lba_io[5] = 0;
+        head      = 0;
+    }
+    else if (IDEDevices[drive].Capabilities & 0x200)
+    {
+        lba_mode  = 1;
+        lba_io[0] = (lba & 0x000000FF) >> 0;
+        lba_io[1] = (lba & 0x0000FF00) >> 8;
+        lba_io[2] = (lba & 0x00FF0000) >> 16;
+        lba_io[3] = 0;
+        lba_io[4] = 0;
+        lba_io[5] = 0;
+        head      = (lba & 0x0F000000) >> 24;
+    }
+    else {
+        lba_mode  = 0;
+        sector    = (lba % 63) + 1;
+        cyl       = (lba + 1 - sector) / (16 * 63);
+        lba_io[0] = sector;
+        lba_io[1] = (cyl >> 0) & 0xFF;
+        lba_io[2] = (cyl >> 8) & 0xFF;
+        lba_io[3] = 0;
+        lba_io[4] = 0;
+        lba_io[5] = 0;
+        head      = (lba + 1 - sector) % (16 * 63) / (63);
+    }
+
+    // Waitif the drive is busy
+    while (ide_read(channel, ATA_REG_STATUS) & ATA_SR_BSY);
+
+    // Select drive from the controller
+    if (lba_mode == 0)
+    {
+        ide_write(channel, ATA_REG_HDDEVSEL, 0xA0 | (slavebit << 4) | head);
+    }
+    else
+    {
+        ide_write(channel, ATA_REG_HDDEVSEL, 0xE0 | (slavebit << 4) | head);
+    }
+
+    // Write parameters
+    if (lba_mode == 2)
+    {
+        ide_write(channel, ATA_REG_SECCOUNT1, 0);
+        ide_write(channel, ATA_REG_LBA3, lba_io[3]);
+        ide_write(channel, ATA_REG_LBA4, lba_io[4]);
+        ide_write(channel, ATA_REG_LBA5, lba_io[5]);
+    }
+    else
+    {
+        ide_write(channel, ATA_REG_SECCOUNT0, numsects);
+        ide_write(channel, ATA_REG_LBA0, lba_io[0]);
+        ide_write(channel, ATA_REG_LBA1, lba_io[1]);
+        ide_write(channel, ATA_REG_LBA2, lba_io[2]);
+    }
+
+    // Select the command and send to the drive
+    if (lba_mode == 0 && dma == 0 && direction == 0)
+    {
+        cmd = ATA_CMD_READ_PIO;
+    }
+    if (lba_mode == 1 && dma == 0 && direction == 0)
+    {
+        cmd = ATA_CMD_READ_PIO;
+    }
+    if (lba_mode == 2 && dma == 0 && direction == 0)
+    {
+        cmd = ATA_CMD_READ_PIO_EXT;
+    }
+    if (lba_mode == 0 && dma == 1 && direction == 0)
+    {
+        cmd = ATA_CMD_WRITE_DMA;
+    }
+    if (lba_mode == 1 && dma == 1 && direction == 0)
+    {
+        cmd = ATA_CMD_WRITE_DMA;
+    }
+    if (lba_mode == 2 && dma == 1 && direction == 0)
+    {
+        cmd = ATA_CMD_WRITE_DMA_EXT;
+    }
+    if (lba_mode == 0 && dma == 0 && direction == 1)
+    {
+        cmd = ATA_CMD_WRITE_PIO;
+    }
+    if (lba_mode == 1 && dma == 0 && direction == 1)
+    {
+        cmd = ATA_CMD_WRITE_PIO;
+    }
+    if (lba_mode == 2 && dma == 0 && direction == 1)
+    {
+        cmd = ATA_CMD_WRITE_PIO_EXT;
+    }
+    if (lba_mode == 0 && dma == 1 && direction == 1)
+    {
+        cmd = ATA_CMD_WRITE_DMA;
+    }
+    if (lba_mode == 1 && dma == 1 && direction == 1)
+    {
+        cmd = ATA_CMD_WRITE_DMA;
+    }
+    if (lba_mode == 2 && dma == 1 && direction == 1)
+    {
+        cmd = ATA_CMD_WRITE_DMA_EXT;
+    }
+    ide_write(channel, ATA_REG_COMMAND, cmd);
+
+    if (dma)
+    {
+        if (direction == 0)
+        {
+            // DMA Read
+            ide_write(channel, ATA_REG_CONTROL, 0);
+        }
+        else
+        {
+            // DMA Write
+            ide_write(channel, ATA_REG_CONTROL, 0x8);
+        }
+    }
+    else {
+        if (direction == 0)
+        {
+            // PIO Read
+            for (int i = 0; i < numsects; i++)
+            {
+                if ((error = ide_polling(channel, 1)))
+                {
+                    return error;
+                }
+                asm("pushw %es");
+                asm("mov %%ax, %%es" : : "a"(selector));
+                asm("rep insw" : : "c"(words), "d"(bus), "D"(edi));
+                asm("popw %es");
+                edi += (words * 2);
+            }
+        }
+        else
+        {
+            // PIO Write
+            for (int i = 0; i < numsects; i++)
+            {
+                ide_polling(channel, 0);
+                asm("pushw %ds");
+                asm("mov %%ax, %%ds" : : "a"(selector));
+                asm("rep outsw" : : "c"(words), "d"(bus), "S"(edi));
+                asm("popw %ds");
+                edi += (words * 2);
+            }
+            ide_write(channel, ATA_REG_COMMAND, (char []){ ATA_CMD_CACHE_FLUSH, ATA_CMD_CACHE_FLUSH, ATA_CMD_CACHE_FLUSH_EXT }[lba_mode]);
+            ide_polling(channel, 0);
+        }
+    }
+
+    return 0;
+}
