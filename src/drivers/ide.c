@@ -606,3 +606,222 @@ uint8_t ide_ata_access(uint8_t direction, uint8_t drive, uint32_t lba, uint8_t n
 
     return 0;
 }
+
+void ide_wait_irq(void)
+{
+    while (!ide_irq_invoked);
+    ide_irq_invoked = 0;
+}
+
+void ide_irq_handler(void)
+{
+    ide_irq_invoked = 1;
+}
+
+uint8_t ide_atapi_read(uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t selector, uint32_t edi)
+{
+    unsigned int channel  = IDEDevices[drive].Channel;
+    unsigned int slavebit = IDEDevices[drive].Drive;
+    unsigned int bus      = IDEChannels[channel].base;
+    unsigned int words    = 1024;
+    uint8_t error         = 0;
+
+    // Enable IRQs
+    ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN = (ide_irq_invoked = 0x00));
+
+    // Setup SCSI packet
+    atapi_packet[0] = ATAPI_CMD_READ;
+    atapi_packet[1] = 0x00;
+    atapi_packet[2] = (lba >> 24) & 0xFF;
+    atapi_packet[3] = (lba >> 16) & 0xFF;
+    atapi_packet[4] = (lba >> 8) & 0xFF;
+    atapi_packet[5] = (lba >> 0) & 0xFF;
+    atapi_packet[6] = 0x00;
+    atapi_packet[7] = 0x00;
+    atapi_packet[8] = 0x00;
+    atapi_packet[9] = numsects;
+    atapi_packet[10] = 0x00;
+    atapi_packet[11] = 0x00;
+
+    // Select the drive
+    ide_write(channel, ATA_REG_HDDEVSEL, slavebit << 4);
+
+    // Delay 400 nanoseconds for select to complete
+    for (int i = 0; i < 4; i++)
+    {
+        ide_read(channel, ATA_REG_ALTSTATUS);
+    }
+
+    // Inform the controller that we use PIO mode
+    ide_write(channel, ATA_REG_FEATURES, 0);
+
+    // Tell the controller the size of buffer
+    ide_write(channel, ATA_REG_LBA1, (words * 2) & 0xFF);
+    ide_write(channel, ATA_REG_LBA2, (words * 2) >> 8);
+
+    // Send the packet command
+    ide_write(channel, ATA_REG_COMMAND, ATA_CMD_PACKET);
+
+    // Wait for the drive to be ready
+    if ((error = ide_polling(channel, 1)))
+    {
+        return error;
+    }
+
+    // Send the packet data
+    asm("rep outsw" : : "c"(6), "d"(bus), "S"(atapi_packet));
+
+    // Receive data
+    for (int i = 0; i < numsects; i++)
+    {
+        ide_wait_irq();
+        if ((error = ide_polling(channel, 1)))
+        {
+            return error;
+        }
+        asm("pushw %es");
+        asm("mov %%ax, %%es" : : "a"(selector));
+        asm("rep insw" : : "c"(words), "d"(bus), "D"(edi));
+        asm("popw %es");
+        edi += (words * 2);
+    }
+
+    // Waiting for an IRQ
+    ide_wait_irq();
+
+    // Waiting for BSY and DRQ to clear
+    while (ide_read(channel, ATA_REG_STATUS) & (ATA_SR_BSY | ATA_SR_DRQ));
+
+    return 0;
+}
+
+void ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi)
+{
+    uint8_t package = 0;
+
+    if (drive > 3 || IDEDevices[drive].Reserved == 0)  // Check if the drive presents
+    {
+        package = 1;
+    }
+    else if (((lba + numsects) > IDEDevices[drive].Size) && (IDEDevices[drive].Type == IDE_ATA))  // Check if inputs are valid
+    {
+        package = 2;
+    }
+    else  // Read in PIO mode through polling an IRQs
+    {
+        uint8_t error = 0;
+        if (IDEDevices[drive].Type == IDE_ATA)
+        {
+            error = ide_ata_access(ATA_READ, drive, lba, numsects, es, edi);
+        }
+        else if (IDEDevices[drive].Type == IDE_ATAPI)
+        {
+            for (int i = 0; i < numsects; i++)
+            {
+                error = ide_atapi_read(drive, lba + i, 1, es, edi + (i * 2048));
+            }
+        }
+        package = ide_print_error(drive, error);
+    }
+
+    UNUSED(package);
+}
+
+void ide_write_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi)
+{
+    uint8_t package = 0;
+
+    if (drive > 3 || IDEDevices[drive].Reserved == 0)  // Check if the drive presents
+    {
+        package = 1;
+    }
+    else if (((lba + numsects) > IDEDevices[drive].Size) && (IDEDevices[drive].Type == IDE_ATA))  // Check if inputs are valid
+    {
+        package = 2;
+    }
+    else  // Write in PIO mode through polling an IRQs
+    {
+        uint8_t error = 0;
+        if (IDEDevices[drive].Type == IDE_ATA)
+        {
+            error = ide_ata_access(ATA_WRITE, drive, lba, numsects, es, edi);
+        }
+        else if (IDEDevices[drive].Type == IDE_ATAPI)
+        {
+            package = 4;  // Write-protected
+        }
+        package = ide_print_error(drive, error);
+    }
+
+    UNUSED(package);
+}
+
+void ide_atapi_eject(unsigned char drive)
+{
+    uint32_t channel = IDEDevices[drive].Channel;
+    uint32_t slavebit = IDEDevices[drive].Drive;
+    uint32_t bus = IDEChannels[channel].base;
+    uint32_t words = 2048;
+    uint8_t error = 0;
+    uint8_t package = 0;
+
+    ide_irq_invoked = 0;
+
+    if (drive > 3 || IDEDevices[drive].Reserved == 0)  // Check if the drive presents
+    {
+        package = 1;
+    }
+    else if (IDEDevices[drive].Type == IDE_ATA)  // Check the drive isn't ATAPI
+    {
+        package = 20;
+    }
+    else {  // Eject the drive
+        // Enable IRQs
+        ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN = (ide_irq_invoked = 0x00));
+
+        // Select SCSI packet
+        atapi_packet[0] = ATAPI_CMD_EJECT;
+        atapi_packet[1] = 0x00;
+        atapi_packet[2] = 0x00;
+        atapi_packet[3] = 0x00;
+        atapi_packet[4] = 0x02;
+        atapi_packet[5] = 0x00;
+        atapi_packet[6] = 0x00;
+        atapi_packet[7] = 0x00;
+        atapi_packet[8] = 0x00;
+        atapi_packet[9] = 0x00;
+        atapi_packet[10] = 0x00;
+        atapi_packet[11] = 0x00;
+
+        // Select the drive
+        ide_write(channel, ATA_REG_HDDEVSEL, slavebit << 4);
+
+        // Delay 400 nanosecond for select to complete
+        for (int i = 0; i < 4; i++)
+        {
+            ide_read(channel, ATA_REG_ALTSTATUS);
+        }
+
+        // Send the packet command
+        ide_write(channel, ATA_REG_COMMAND, ATA_CMD_PACKET);
+
+        if ((error = ide_polling(channel, 1)))  // Waiting the driver to finish or invoke an error
+        {
+            package = error;
+        }
+        else {  // Send the packet data
+            asm("rep outsw" : : "c"(6), "d"(bus), "S"(atapi_packet));
+            ide_wait_irq();
+            error = ide_polling(channel, 1);
+            if ((error = 3))
+            {
+                error = 0;
+            }
+        }
+
+        package = ide_print_error(drive, error);
+
+        UNUSED(package);
+        UNUSED(words);
+    }
+}
