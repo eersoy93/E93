@@ -697,15 +697,13 @@ uint8_t ide_atapi_read(uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t s
 
 void ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi)
 {
-    uint8_t package = 0;
-
     if (drive > 3 || IDEDevices[drive].Reserved == 0)  // Check if the drive presents
     {
-        package = 1;
+        error_package = 1;
     }
     else if (((lba + numsects) > IDEDevices[drive].Size) && (IDEDevices[drive].Type == IDE_ATA))  // Check if inputs are valid
     {
-        package = 2;
+        error_package = 2;
     }
     else  // Read in PIO mode through polling an IRQs
     {
@@ -721,23 +719,19 @@ void ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es
                 error = ide_atapi_read(drive, lba + i, 1, es, edi + (i * 2048));
             }
         }
-        package = ide_print_error(drive, error);
+        error_package = ide_print_error(drive, error);
     }
-
-    UNUSED(package);
 }
 
 void ide_write_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi)
 {
-    uint8_t package = 0;
-
     if (drive > 3 || IDEDevices[drive].Reserved == 0)  // Check if the drive presents
     {
-        package = 1;
+        error_package = 1;
     }
     else if (((lba + numsects) > IDEDevices[drive].Size) && (IDEDevices[drive].Type == IDE_ATA))  // Check if inputs are valid
     {
-        package = 2;
+        error_package = 2;
     }
     else  // Write in PIO mode through polling an IRQs
     {
@@ -748,12 +742,10 @@ void ide_write_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t e
         }
         else if (IDEDevices[drive].Type == IDE_ATAPI)
         {
-            package = 4;  // Write-protected
+            error_package = 4;  // Write-protected
         }
-        package = ide_print_error(drive, error);
+        error_package = ide_print_error(drive, error);
     }
-
-    UNUSED(package);
 }
 
 void ide_atapi_eject(unsigned char drive)
@@ -763,17 +755,16 @@ void ide_atapi_eject(unsigned char drive)
     uint32_t bus = IDEChannels[channel].base;
     uint32_t words = 2048;
     uint8_t error = 0;
-    uint8_t package = 0;
 
     ide_irq_invoked = 0;
 
     if (drive > 3 || IDEDevices[drive].Reserved == 0)  // Check if the drive presents
     {
-        package = 1;
+        error_package = 1;
     }
     else if (IDEDevices[drive].Type == IDE_ATA)  // Check the drive isn't ATAPI
     {
-        package = 20;
+        error_package = 20;
     }
     else {  // Eject the drive
         // Enable IRQs
@@ -807,7 +798,7 @@ void ide_atapi_eject(unsigned char drive)
 
         if ((error = ide_polling(channel, 1)))  // Waiting the driver to finish or invoke an error
         {
-            package = error;
+            error_package = error;
         }
         else {  // Send the packet data
             asm("rep outsw" : : "c"(6), "d"(bus), "S"(atapi_packet));
@@ -819,9 +810,8 @@ void ide_atapi_eject(unsigned char drive)
             }
         }
 
-        package = ide_print_error(drive, error);
+        error_package = ide_print_error(drive, error);
 
-        UNUSED(package);
         UNUSED(words);
     }
 }

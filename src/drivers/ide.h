@@ -149,4 +149,6 @@ void ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es
 void ide_write_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi);
 void ide_atapi_eject(unsigned char drive);
 
+uint8_t error_package = 0;
+
 #endif
