@@ -133,7 +133,7 @@ uint8_t ide_polling(uint8_t channel, uint8_t advanced_check)
 
     if (advanced_check)
     {
-        unsigned char state = ide_read(channel, ATA_REG_STATUS);
+        uint8_t state = ide_read(channel, ATA_REG_STATUS);
 
         if (state & ATA_SR_ERR)
         {
