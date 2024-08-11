@@ -95,24 +95,24 @@
 
 // IDE Channel Register Struct
 struct IDEChannelRegisters {
-   unsigned short base;
-   unsigned short ctrl;
-   unsigned short bmide;
-   unsigned char  nIEN;
+   uint16_t base;
+   uint16_t ctrl;
+   uint16_t bmide;
+   uint8_t  nIEN;
 } IDEChannels[2];
 
 
 // IDE Device Information Struct
 struct ide_device {
-   unsigned char  Reserved;
-   unsigned char  Channel;
-   unsigned char  Drive;
-   unsigned short Type;
-   unsigned short Signature;
-   unsigned short Capabilities;
-   unsigned int   CommandSets;
-   unsigned int   Size;
-   char           Model[41];
+   uint8_t  Reserved;
+   uint8_t  Channel;
+   uint8_t  Drive;
+   uint16_t Type;
+   uint16_t Signature;
+   uint16_t Capabilities;
+   uint32_t CommandSets;
+   uint32_t Size;
+   char     Model[41];
 } IDEDevices[4];
 
 
@@ -123,6 +123,8 @@ uint8_t ide_buffer[2048] = { 0 };
 volatile uint8_t ide_irq_invoked = 0;
 
 uint8_t atapi_packet[12] = {0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+uint8_t error_package = 0;
 
 
 // IDE Functions
@@ -147,8 +149,6 @@ uint8_t ide_atapi_read(uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t s
 
 void ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi);
 void ide_write_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi);
-void ide_atapi_eject(unsigned char drive);
-
-uint8_t error_package = 0;
+void ide_atapi_eject(uint8_t drive);
 
 #endif

@@ -59,7 +59,7 @@ void ide_write(uint8_t channel, uint8_t reg, uint8_t data)
     }
     else if (reg < 0x0E)
     {
-        port_byte_out(IDEChannels[channel].ctrl + reg - 0x0A, data);
+        port_byte_out(IDEChannels[channel].ctrl + reg - 0x0C, data);
     }
     else if (reg < 0x16)
     {
@@ -78,7 +78,7 @@ void ide_read_buffer(uint8_t channel, uint8_t reg, uint32_t buffer, uint32_t qua
         ide_write(channel, ATA_REG_CONTROL, 0x80 | IDEChannels[channel].nIEN);
     }
 
-    __asm__ volatile("pushw %%es; movw %%ds, %%ax; movw %%ax, %%es" : : : "ax");
+    asm volatile("pushw %es; pushw %ax; movw %ds, %ax; movw %ax, %es; popw %ax;");
 
     if (reg < 0x08)
     {
@@ -113,7 +113,7 @@ void ide_read_buffer(uint8_t channel, uint8_t reg, uint32_t buffer, uint32_t qua
         }
     }
 
-    __asm__ volatile("popw %%es" : : : "ax");
+    asm volatile("popw %es");
 
     if (reg > 0x07 && reg < 0x0C)
     {
@@ -129,7 +129,7 @@ uint8_t ide_polling(uint8_t channel, uint8_t advanced_check)
     }
 
 
-    while (ide_read(channel, ATA_REG_STATUS) & ATA_SR_BSY) {}
+    while (ide_read(channel, ATA_REG_STATUS) & ATA_SR_BSY);
 
     if (advanced_check)
     {
@@ -274,12 +274,10 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
     // Detect IDE Channels
     IDEChannels[ATA_PRIMARY].base = (BAR0 & 0xFFFFFFFC) + 0x1F0 * (!BAR0);
     IDEChannels[ATA_PRIMARY].ctrl = (BAR1 & 0xFFFFFFFC) + 0x3F6 * (!BAR1);
-    IDEChannels[ATA_PRIMARY].bmide = (BAR4 & 0xFFFFFFFC) + 0;
-    IDEChannels[ATA_PRIMARY].nIEN = 0;
     IDEChannels[ATA_SECONDARY].base = (BAR2 & 0xFFFFFFFC) + 0x170 * (!BAR2);
     IDEChannels[ATA_SECONDARY].ctrl = (BAR3 & 0xFFFFFFFC) + 0x376 * (!BAR3);
+    IDEChannels[ATA_PRIMARY].bmide = (BAR4 & 0xFFFFFFFC) + 0;
     IDEChannels[ATA_SECONDARY].bmide = (BAR4 & 0xFFFFFFFC) + 8;
-    IDEChannels[ATA_SECONDARY].nIEN = 0;
 
     // Disable IRQs
     ide_write(ATA_PRIMARY, ATA_REG_CONTROL, 2);
@@ -298,11 +296,11 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
 
             // Select Drive
             ide_write(i, ATA_REG_HDDEVSEL, 0xA0 | (j << 4));
-            wait_timer(100);
+            wait_timer(5);
 
             // Send ATA Identify Command
             ide_write(i, ATA_REG_COMMAND, ATA_CMD_IDENTIFY);
-            wait_timer(100);
+            wait_timer(5);
 
             // Polling
             if (ide_read(i, ATA_REG_STATUS) == 0)
@@ -344,7 +342,7 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
                 }
 
                 ide_write(i, ATA_REG_COMMAND, ATA_CMD_IDENTIFY_PACKET);
-                wait_timer(100);
+                wait_timer(5);
             }
 
             // Read Identification Space of the Device
@@ -413,7 +411,7 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
             printl_color(IDEDevices[i].Model, OUTPUT_COLOR);
             printl_color("\n", OUTPUT_COLOR);
 
-            char ide_device_size_str[10] = { 0 };
+            char ide_device_size_str[12] = "";
             int_to_ascii(IDEDevices[i].Size, ide_device_size_str);
 
             printl_color("- Size: ", OUTPUT_COLOR);

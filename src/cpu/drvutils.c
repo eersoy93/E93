@@ -34,6 +34,7 @@ void int_to_ascii(int32_t n, char str[])
 void reverse(char str[])
 {
     uint32_t c, i, j;
+
     for (i = 0, j = strlen(str) - 1; i < j; i++, j--)
     {
         c = str[i];

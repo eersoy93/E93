@@ -10,6 +10,7 @@
 #include "ports.h"
 #include "timer.h"
 #include "drvutils.h"
+#include "../drivers/ide.h"
 #include "../drivers/keyboard.h"
 #include "../drivers/screen.h"
 
@@ -156,4 +157,5 @@ void irq_install(void)
     asm volatile("sti");
     init_timer(50);
     init_keyboard();
+    ide_init(0x1F0, 0x3F6, 0x170, 0x376, 0x000);
 }
