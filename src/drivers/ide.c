@@ -772,6 +772,7 @@ void ide_atapi_eject(uint8_t drive)
     }
 }
 
+/*
 uint32_t ide_atapi_read_capacity(uint8_t drive)
 {
     uint32_t channel = IDEDevices[drive].Channel;
@@ -858,6 +859,7 @@ uint32_t ide_atapi_read_capacity(uint8_t drive)
 
     return 0;
 }
+*/
 
 void ide_print_devices(void)
 {
@@ -895,18 +897,12 @@ void ide_print_devices(void)
 
             char ide_device_size_str[12] = "";
 
-            if (IDEDevices[i].Type == IDE_ATAPI)
+            if (IDEDevices[i].Type == IDE_ATA)
             {
-                int_to_ascii(ide_atapi_read_capacity(i), ide_device_size_str);
+                printl_color("- Size: ", OUTPUT_COLOR);
+                printl_color(ide_device_size_str, OUTPUT_COLOR);
+                printl_color(" sectors\n", OUTPUT_COLOR);
             }
-            else
-            {
-                int_to_ascii(IDEDevices[i].Size, ide_device_size_str);
-            }
-
-            printl_color("- Size: ", OUTPUT_COLOR);
-            printl_color(ide_device_size_str, OUTPUT_COLOR);
-            printl_color(" sectors\n", OUTPUT_COLOR);
         }
     }
 }
