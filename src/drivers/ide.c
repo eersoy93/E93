@@ -378,48 +378,6 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
             count++;
         }
     }
-
-    // Print IDE Devices
-    for (int i = 0; i < 4; i++)
-    {
-        if (IDEDevices[i].Reserved == 1)
-        {
-            printl_color("IDE Device:\n", OUTPUT_COLOR);
-
-            char ide_device_number_str[2] = { 0 };
-            int_to_ascii(i, ide_device_number_str);
-
-            printl_color("- Device: ", OUTPUT_COLOR);
-            printl_color(ide_device_number_str, OUTPUT_COLOR);
-            printl_color("\n", OUTPUT_COLOR);
-
-            printl_color("- Type: ", OUTPUT_COLOR);
-            if (IDEDevices[i].Type == IDE_ATA)
-            {
-                printl_color("ATA\n", OUTPUT_COLOR);
-            }
-            else if (IDEDevices[i].Type == IDE_ATAPI)
-            {
-                printl_color("ATAPI\n", OUTPUT_COLOR);
-            }
-            else
-            {
-                printl_color("Unknown\n", OUTPUT_COLOR);
-            }
-
-            printl_color("- Model: ", OUTPUT_COLOR);
-            printl_color(IDEDevices[i].Model, OUTPUT_COLOR);
-            printl_color("\n", OUTPUT_COLOR);
-
-            char ide_device_size_str[12] = "";
-            int_to_ascii(IDEDevices[i].Size, ide_device_size_str);
-
-            printl_color("- Size: ", OUTPUT_COLOR);
-            printl_color(ide_device_size_str, OUTPUT_COLOR);
-            printl_color(" sectors\n", OUTPUT_COLOR);
-            printl_color("\n", OUTPUT_COLOR);
-        }
-    }
 }
 
 uint8_t ide_ata_access(uint8_t direction, uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t selector, uint32_t edi)
@@ -876,7 +834,6 @@ uint32_t ide_atapi_read_capacity(uint8_t drive)
         // Waiting the driver to finish or invoke an error
         if ((error = ide_polling(channel, 1)))
         {
-            printl_color("Error occured!\n", ERROR_COLOR);
             error_package = error;
         }
         else
@@ -900,4 +857,56 @@ uint32_t ide_atapi_read_capacity(uint8_t drive)
     }
 
     return 0;
+}
+
+void ide_print_devices(void)
+{
+    // Print IDE Devices
+    for (int i = 0; i < 4; i++)
+    {
+        if (IDEDevices[i].Reserved == 1)
+        {
+            printl_color("IDE Device:\n", OUTPUT_COLOR);
+
+            char ide_device_number_str[2] = { 0 };
+            int_to_ascii(i, ide_device_number_str);
+
+            printl_color("- Device: ", OUTPUT_COLOR);
+            printl_color(ide_device_number_str, OUTPUT_COLOR);
+            printl_color("\n", OUTPUT_COLOR);
+
+            printl_color("- Type: ", OUTPUT_COLOR);
+            if (IDEDevices[i].Type == IDE_ATA)
+            {
+                printl_color("ATA\n", OUTPUT_COLOR);
+            }
+            else if (IDEDevices[i].Type == IDE_ATAPI)
+            {
+                printl_color("ATAPI\n", OUTPUT_COLOR);
+            }
+            else
+            {
+                printl_color("Unknown\n", OUTPUT_COLOR);
+            }
+
+            printl_color("- Model: ", OUTPUT_COLOR);
+            printl_color(IDEDevices[i].Model, OUTPUT_COLOR);
+            printl_color("\n", OUTPUT_COLOR);
+
+            char ide_device_size_str[12] = "";
+
+            if (IDEDevices[i].Type == IDE_ATAPI)
+            {
+                int_to_ascii(ide_atapi_read_capacity(i), ide_device_size_str);
+            }
+            else
+            {
+                int_to_ascii(IDEDevices[i].Size, ide_device_size_str);
+            }
+
+            printl_color("- Size: ", OUTPUT_COLOR);
+            printl_color(ide_device_size_str, OUTPUT_COLOR);
+            printl_color(" sectors\n", OUTPUT_COLOR);
+        }
+    }
 }

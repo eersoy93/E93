@@ -26,4 +26,5 @@ void init(void)
     isr_install();
     irq_install();
     ide_init(0x1F0, 0x3F6, 0x170, 0x376, 0x000);
+    ide_print_devices();
 }

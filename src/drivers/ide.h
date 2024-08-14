@@ -154,4 +154,6 @@ void ide_atapi_eject(uint8_t drive);
 
 uint32_t ide_atapi_read_capacity(uint8_t drive);
 
+void ide_print_devices(void);
+
 #endif
