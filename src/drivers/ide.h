@@ -27,6 +27,7 @@
 
 #define ATAPI_CMD_READ            0xA8
 #define ATAPI_CMD_EJECT           0x1B
+#define ATAPI_CMD_READ_CAPACITY   0x25
 
 #define ATA_IDENT_DEVICETYPE      0
 #define ATA_IDENT_CYLINDERS       2
@@ -150,5 +151,7 @@ uint8_t ide_atapi_read(uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t s
 void ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi);
 void ide_write_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi);
 void ide_atapi_eject(uint8_t drive);
+
+uint32_t ide_atapi_read_capacity(uint8_t drive);
 
 #endif

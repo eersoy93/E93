@@ -269,7 +269,7 @@ uint8_t ide_print_error(uint32_t drive, uint8_t error)
 
 void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4)
 {
-    int count = 0;
+    uint8_t count = 0;
 
     // Detect IDE Channels
     IDEChannels[ATA_PRIMARY].base = (BAR0 & 0xFFFFFFFC) + 0x1F0 * (!BAR0);
@@ -802,7 +802,7 @@ void ide_atapi_eject(uint8_t drive)
             asm("rep outsw" : : "c"(6), "d"(bus), "S"(atapi_packet));
             ide_wait_irq();
             error = ide_polling(channel, 1);
-            if ((error = 3))
+            if ((error == 3))
             {
                 error = 0;
             }
@@ -812,4 +812,92 @@ void ide_atapi_eject(uint8_t drive)
 
         UNUSED(words);
     }
+}
+
+uint32_t ide_atapi_read_capacity(uint8_t drive)
+{
+    uint32_t channel = IDEDevices[drive].Channel;
+    uint32_t slavebit = IDEDevices[drive].Drive;
+    uint32_t lba = 0;
+    uint32_t bus = IDEChannels[channel].base;
+    uint32_t words = 2048;
+    uint8_t error = 0;
+
+    ide_irq_invoked = 0;
+
+    if (drive > 3 || IDEDevices[drive].Reserved == 0)  // Check if the drive presents
+    {
+        printl_color("Drive not present!\n", ERROR_COLOR);
+        error_package = 1;
+    }
+    else if (IDEDevices[drive].Type == IDE_ATA)  // Check the drive isn't ATAPI
+    {
+        printl_color("Drive is not ATAPI!\n", ERROR_COLOR);
+        error_package = 20;
+    }
+    else
+    {   // Read the capacity of the drive
+        // Enable IRQs
+        ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN = (ide_irq_invoked = 0x00));
+
+        // Make ATAPI packet
+        atapi_packet[0]  = ATAPI_CMD_READ_CAPACITY;
+        atapi_packet[1]  = 0x00;
+        atapi_packet[2]  = (lba >> 24) & 0xFF;
+        atapi_packet[3]  = (lba >> 16) & 0xFF;
+        atapi_packet[4]  = (lba >> 8) & 0xFF;
+        atapi_packet[5]  = (lba >> 0) & 0xFF;
+        atapi_packet[6]  = 0x00;
+        atapi_packet[7]  = 0x00;
+        atapi_packet[8]  = 0x00;
+        atapi_packet[9]  = 0x00;
+        atapi_packet[10] = 0x00;
+        atapi_packet[11] = 0x00;
+
+        // Select the drive
+        ide_write(channel, ATA_REG_HDDEVSEL, slavebit << 4);
+
+        // Delay 400 nanosecond for select to complete
+        for (int i = 0; i < 4; i++)
+        {
+            ide_read(channel, ATA_REG_ALTSTATUS);
+        }
+
+        // Set FEATURES register to zero
+        ide_write(channel, ATA_REG_FEATURES, 0);
+
+        // Set LBA1 and LBA2 registers to 0x08
+        ide_write(channel, ATA_REG_LBA1, 0x08);
+        ide_write(channel, ATA_REG_LBA2, 0x08);
+
+        // Send the packet command
+        ide_write(channel, ATA_REG_COMMAND, ATA_CMD_PACKET);
+
+        // Waiting the driver to finish or invoke an error
+        if ((error = ide_polling(channel, 1)))
+        {
+            printl_color("Error occured!\n", ERROR_COLOR);
+            error_package = error;
+        }
+        else
+        {   // Send the packet data
+            asm("rep outsw" : : "c"(6), "d"(bus), "S"(atapi_packet));
+            ide_wait_irq();
+            error = ide_polling(channel, 1);
+            if ((error == 3))
+            {
+                error = 0;
+            }
+        }
+
+        error_package = ide_print_error(drive, error);
+
+        // Read the data
+        ide_read_buffer(channel, ATA_REG_DATA, (uint32_t)ide_buffer, words);
+
+        // Return the capacity
+        return *((uint32_t *)(ide_buffer + 0));
+    }
+
+    return 0;
 }
