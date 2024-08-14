@@ -746,7 +746,7 @@ void ide_write_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t e
     }
 }
 
-void ide_atapi_eject(unsigned char drive)
+void ide_atapi_eject(uint8_t drive)
 {
     uint32_t channel = IDEDevices[drive].Channel;
     uint32_t slavebit = IDEDevices[drive].Drive;
