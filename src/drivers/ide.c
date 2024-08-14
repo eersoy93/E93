@@ -269,6 +269,8 @@ uint8_t ide_print_error(uint32_t drive, uint8_t error)
 
 void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4)
 {
+    printl_color("Detecting IDE Devices...\n", OUTPUT_COLOR);
+
     uint8_t count = 0;
 
     // Detect IDE Channels
