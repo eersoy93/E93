@@ -21,8 +21,6 @@ void shell_main(void)
 
     init();
 
-    print("\n", OUTPUT_COLOR);
-
     println("Welcome to E93!", OUTPUT_COLOR);
     println("Type HELP for help.", OUTPUT_COLOR);
 
