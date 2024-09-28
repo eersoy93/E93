@@ -865,13 +865,12 @@ uint32_t ide_atapi_read_capacity(uint8_t drive)
 
 void ide_print_devices(void)
 {
-    // Print IDE Devices
+    printl_color("IDE Devices:\n", OUTPUT_COLOR);
+
     for (int i = 0; i < 4; i++)
     {
         if (IDEDevices[i].Reserved == 1)
         {
-            printl_color("IDE Device:\n", OUTPUT_COLOR);
-
             char ide_device_number_str[2] = { 0 };
             int_to_ascii(i, ide_device_number_str);
 
@@ -898,6 +897,7 @@ void ide_print_devices(void)
             printl_color("\n", OUTPUT_COLOR);
 
             char ide_device_size_str[12] = "";
+            int_to_ascii(IDEDevices[i].Size, ide_device_size_str);
 
             if (IDEDevices[i].Type == IDE_ATA)
             {
@@ -905,6 +905,8 @@ void ide_print_devices(void)
                 printl_color(ide_device_size_str, OUTPUT_COLOR);
                 printl_color(" sectors\n", OUTPUT_COLOR);
             }
+
+            printl_color("\n", OUTPUT_COLOR);
         }
     }
 }
