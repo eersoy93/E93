@@ -6,8 +6,8 @@
 
 #include "screen.h"
 
+#include "../cpu/drvutils.h"
 #include "../cpu/ports.h"
-#include "../libc/memory.h"
 
 #include <stdint.h>
 

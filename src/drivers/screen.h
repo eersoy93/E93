@@ -7,7 +7,6 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "../libc/boolean.h"
 #include "screen_colors.h"
 
 #include <stdint.h>

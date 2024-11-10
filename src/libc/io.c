@@ -8,6 +8,7 @@
 
 #include "../drivers/keyboard.h"
 #include "../drivers/screen.h"
+#include "boolean.h"
 #include "function.h"
 #include "string.h"
 

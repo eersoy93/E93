@@ -11,11 +11,18 @@
 
 #define UNUSED(x) (void)(x)
 
+typedef uint8_t boolean;
+
+#define FALSE (boolean)0
+#define TRUE (boolean)1
+
 #define low16(address) (uint16_t)((address) & 0xFFFF)
 #define high16(address) (uint16_t)(((address) >> 16) & 0xFFFF)
 
 void int_to_ascii(int32_t n, char str[]);
 void reverse(char str[]);
 uint16_t strlen(char str[]);
+
+void memory_copy(uint8_t * source, uint8_t * destination, uint32_t n_bytes);
 
 #endif
