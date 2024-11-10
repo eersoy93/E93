@@ -6,7 +6,7 @@ Erdem Ersoy's (eersoy93's) hobby operating system for old PCs.
 
 In [Pardus 23](https://www.pardus.org.tr/) or Debian 12 or Linux Mint 21.3, clone this repository. After that, install GCC x86 cross compiler, NASM and QEMU:
 
-`sudo apt install nasm qemu-system-x86 gcc-i686-linux-gnu xorriso`
+`sudo apt install build-essential nasm qemu-system-x86 gcc-i686-linux-gnu xorriso`
 
 After that, move to the src directory:
 
