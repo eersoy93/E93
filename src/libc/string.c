@@ -169,29 +169,30 @@ char * strstr(char str[], char substr[])
     return 0;
 }
 
-int atoi(const char * str)
+int atoi(char str[])
 {
-    int result = 0;
-    int sign = 1;
-    char ch = 0;
+    uint32_t result = 0;
+    uint32_t sign = 1;
+    uint8_t ch = 0;
+    uint32_t i = 0;
 
-    while (*str == ' ' || *str == '\t' || *str == '\n' ||
-           *str == '\v' || *str == '\f' || *str == '\r')
+    while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' ||
+           str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
     {
-        str++;
+        i++;
     }
 
-    if (*str == '-')
+    if (str[i] == '-')
     {
         sign = -1;
-        str++;
+        i++;
     }
-    else if (*str == '+')
+    else if (str[i] == '+')
     {
-        str++;
+        i++;
     }
 
-    while ((ch = *str++) != '\0')
+    while ((ch = str[i++]) != '\0')
     {
         if (ch >= '0' && ch <= '9')
         {
