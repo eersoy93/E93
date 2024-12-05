@@ -67,6 +67,10 @@ After building, you can run:
 - [RapidTables ASCII Table](https://www.rapidtables.com/code/text/ascii-table.html)
 - [Pardus's Calculator :)](https://apps.pardus.org.tr/app/gnome-calculator)
 
+### Win32 References
+
+- [Win32 Data Types](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types)
+
 **NOTE:** Also I have being used GitHub Copilot and ChatGPT but I don't directly use code completions.
 
 ## Copyright and License
