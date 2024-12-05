@@ -36,7 +36,7 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
     }
 
     char * cmdline = (char *)(mb_info->cmdline);
-    char *mode_str = strstr(cmdline, "mode=");
+    char * mode_str = strstr(cmdline, "mode=");
 
     if (mode_str != NULL)
     {
