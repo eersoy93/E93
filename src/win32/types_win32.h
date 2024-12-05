@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 
-#define UNICODE
+#define UNICODE  // Unicode are default in Windows Mode.
 
 #define APIENTRY WINAPI
 #define CALLBACK __stdcall
@@ -181,7 +181,11 @@ typedef SIZE_T * PSIZE_T;
 typedef SSIZE_T * PSSIZE_T;
 typedef TBYTE * PTBYTE;
 typedef TCHAR * PTCHAR;
+typedef TCHAR * LPTCH;
+typedef TCHAR * LPTSTR;
 typedef LPWSTR PTSTR;  // UNICODE
+typedef CHAR *LPCH;
+typedef WCHAR *LPWCH;
 
 typedef HICON HCURSOR;
 typedef LONG HRESULT;
