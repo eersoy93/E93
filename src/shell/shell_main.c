@@ -68,6 +68,10 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
     }
     else
     {
+        println("Executing the Windows mode...", OUTPUT_COLOR);
+
+        init();
+
         println("Windows mode has not implemented yet!", ERROR_COLOR);
 
         while(TRUE);
