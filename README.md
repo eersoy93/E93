@@ -70,6 +70,7 @@ After building, you can run:
 ### Win32 References
 
 - [Win32 Data Types](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types)
+- [Win32 Data Types for Strings](https://learn.microsoft.com/en-us/windows/win32/intl/windows-data-types-for-strings)
 
 **NOTE:** Also I have being used GitHub Copilot and ChatGPT but I don't directly use code completions.
 
