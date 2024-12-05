@@ -1,5 +1,5 @@
 default=0
-timeout=0
+timeout=10
 
 title E93
 kernel /boot/E93.elf
