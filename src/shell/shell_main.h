@@ -7,6 +7,8 @@
 #ifndef SHELL_MAIN_H
 #define SHELL_MAIN_H
 
+#include <stdint.h>
+
 void show_prompt(void);
 
 #endif

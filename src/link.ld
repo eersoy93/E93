@@ -1,27 +1,32 @@
 ENTRY(shell_entry)
-
 SECTIONS
 {
+    /* Load the kernel at 1 MB */
     . = 0x00100000;
 
-    .text ALIGN (0x1000) :
-    {
+    /* Place the Multiboot header at the very beginning */
+    .multiboot ALIGN(4) : {
+        KEEP(*(.multiboot))
+    }
+
+    /* Include the .text section */
+    .text ALIGN(4) : {
         *(.text)
     }
 
-    .rodata ALIGN (0x1000) :
-    {
-        *(.rodata*)
+    /* Read-only data */
+    .rodata ALIGN(4) : {
+        *(.rodata)
     }
 
-    .data ALIGN (0x1000) :
-    {
+    /* Data */
+    .data ALIGN(4) : {
         *(.data)
     }
 
-    .bss ALIGN (0x1000) :
-    {
-        *(COMMON)
+    /* BSS */
+    .bss ALIGN(4) : {
         *(.bss)
+        *(COMMON)
     }
 }

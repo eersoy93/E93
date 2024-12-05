@@ -141,3 +141,72 @@ void strcpy(char str_1[], char str_2[])
     }
     str_1[i] = '\0';
 }
+
+char * strstr(const char * str, const char * substr)
+{
+    if (!*substr)
+    {
+        return (char *)str;
+    }
+
+    const char *p1 = str;
+    const char *p2 = substr;
+
+    while (*str)
+    {
+        p1 = str;
+        p2 = substr;
+
+        while (*p1 && *p2 && (*p1 == *p2))
+        {
+            p1++;
+            p2++;
+        }
+
+        if (!*p2)
+        {
+            return (char *)str;
+        }
+
+        str++;
+    }
+
+    return 0;
+}
+
+int atoi(const char * str)
+{
+    int result = 0;
+    int sign = 1;
+    char ch = 0;
+
+    while (*str == ' ' || *str == '\t' || *str == '\n' ||
+           *str == '\v' || *str == '\f' || *str == '\r')
+    {
+        str++;
+    }
+
+    if (*str == '-')
+    {
+        sign = -1;
+        str++;
+    }
+    else if (*str == '+')
+    {
+        str++;
+    }
+
+    while ((ch = *str++) != '\0')
+    {
+        if (ch >= '0' && ch <= '9')
+        {
+            result = result * 10 + (ch - '0');
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return sign * result;
+}
