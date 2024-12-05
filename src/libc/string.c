@@ -142,33 +142,28 @@ void strcpy(char str_1[], char str_2[])
     str_1[i] = '\0';
 }
 
-char * strstr(const char * str, const char * substr)
+char * strstr(char str[], char substr[])
 {
-    if (!*substr)
+    if (!(substr[0]))
     {
         return (char *)str;
     }
 
-    const char *p1 = str;
-    const char *p2 = substr;
-
-    while (*str)
+    for (int32_t i = 0; i < strlen(str); i++)
     {
-        p1 = str;
-        p2 = substr;
-
-        while (*p1 && *p2 && (*p1 == *p2))
+        if (str[i] == substr[0])
         {
-            p1++;
-            p2++;
-        }
+            int32_t j = 0;
+            while (str[i + j] == substr[j])
+            {
+                j++;
 
-        if (!*p2)
-        {
-            return (char *)str;
+                if (substr[j] == '\0')
+                {
+                    return (char *)&str[i];
+                }
+            }
         }
-
-        str++;
     }
 
     return 0;

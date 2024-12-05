@@ -20,7 +20,7 @@ void append(char str[], char n);
 void strcat(char str_1[], char str_2[]);
 uint32_t strcmp(char str_1[], char str_2[]);
 void strcpy(char str_1[], char str_2[]);
-char * strstr(const char * str, const char * substr);
+char * strstr(char str[], char substr[]);
 int atoi(const char * str);
 
 #endif
