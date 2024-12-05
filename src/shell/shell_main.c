@@ -36,12 +36,13 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
     }
 
     char * cmdline = (char *)(mb_info->cmdline);
-    char * mode_str = strstr(cmdline, "mode=");
+    char * win_mode_parameter = "win_mode=";
+    char * win_mode_str = strstr(cmdline, win_mode_parameter);
 
-    if (mode_str != NULL)
+    if (win_mode_str != NULL)
     {
-        mode_str += 5;
-        win_mode = atoi(mode_str);
+        win_mode_str += strlen(win_mode_parameter);
+        win_mode = atoi(win_mode_str);
     }
     else
     {
