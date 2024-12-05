@@ -27,9 +27,13 @@ After building, you can run:
 
 ## ROADMAP
 
+### 0.3.0
+
+- [ ] Make initial Windows mode. 
+
 ### 0.2.x
 
-- [ ] Add/Improve device drivers and implementations to the C library as much as possible.
+- [X] Add/Improve device drivers and implementations to the C library as much as possible.
 
 ### 0.2.0
 
