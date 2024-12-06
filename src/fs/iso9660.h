@@ -122,7 +122,7 @@ typedef struct {
     uint16_t volume_sequence_number_le;
     uint16_t volume_sequence_number_be;
     uint8_t file_identifier_length;
-    uint8_t file_identifier[1]; // Variable length
+    uint8_t file_identifier[32]; // Variable length
 } iso9660_dir_record_t;
 
 // File Flags
