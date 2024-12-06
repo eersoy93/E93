@@ -21,6 +21,7 @@ E93.iso: E93.elf
 	cp $< iso/boot/E93.elf
 	cp menu.lst iso/boot/grub/menu.lst
 	cp ../bin/stage2_eltorito iso/boot/grub/stage2_eltorito
+	echo "Test\n" > iso/boot/test.txt
 	xorriso -as mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4 -boot-info-table -o $@ iso/
 
 iso: E93.iso

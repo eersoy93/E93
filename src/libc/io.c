@@ -6,8 +6,10 @@
 
 #include "io.h"
 
+#include "../drivers/ide.h"
 #include "../drivers/keyboard.h"
 #include "../drivers/screen.h"
+#include "../fs/iso9660.h"
 #include "boolean.h"
 #include "function.h"
 #include "string.h"
