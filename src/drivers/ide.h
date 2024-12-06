@@ -152,7 +152,7 @@ void ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es
 void ide_write_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi);
 void ide_atapi_eject(uint8_t drive);
 
-uint32_t ide_atapi_read_capacity(uint8_t drive);
+// uint32_t ide_atapi_read_capacity(uint8_t drive);
 
 void ide_print_devices(void);
 
