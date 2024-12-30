@@ -3,7 +3,7 @@ SOURCES_C = $(wildcard cpu/*.c drivers/*.c shell/*.c libc/*.c)
 OBJECTS = ${SOURCES_ASM:.asm=.o} ${SOURCES_C:.c=.o}
 
 CC = i686-linux-gnu-gcc
-CFLAGS = -m32 -nostdlib -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
+CFLAGS = -m32 -nostdlib -ffreestanding -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
 
 LD = i686-linux-gnu-ld
 LDFLAGS = -T link.ld -melf_i386 --allow-multiple-definition -z noexecstack
