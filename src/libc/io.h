@@ -20,4 +20,8 @@ char * input(void);
 
 void cls(void);
 
+uint8_t open_file(char filename[]);
+uint8_t read_file(uint8_t file_descriptor, uint32_t offset, uint32_t size, char buffer[]);
+uint8_t close_file(uint8_t file_descriptor);
+
 #endif

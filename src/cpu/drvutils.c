@@ -113,6 +113,19 @@ char * strtok(char str[], char delim[])
     return token;
 }
 
+int32_t strcmp(char str_1[], char str_2[])
+{
+    uint32_t i = 0;
+    for (i = 0; str_1[i] == str_2[i]; i++)
+    {
+        if (str_1[i] == '\0')
+        {
+            return 0;
+        }
+    }
+    return str_1[i] - str_2[i];
+}
+
 void memory_copy(uint8_t * source, uint8_t * destination, uint32_t n_bytes)
 {
     uint32_t i = 0;

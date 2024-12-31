@@ -19,7 +19,7 @@ uint16_t strlen(char str[]);
 void backspace(char str[]);
 void append(char str[], char n);
 void strcat(char str_1[], char str_2[]);
-uint32_t strcmp(char str_1[], char str_2[]);
+int32_t strcmp(char str_1[], char str_2[]);
 void strcpy(char str_1[], char str_2[]);
 char * strstr(char str[], char substr[]);
 char * strchr(char str[], int c);

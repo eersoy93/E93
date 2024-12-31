@@ -98,3 +98,42 @@ void cls(void)
     clear_screen();
     set_cursor_column_and_row(0, 0);
 }
+
+uint8_t open_file(char filename[])
+{
+    uint8_t file_descriptor = iso9660_open(filename);
+
+    if (file_descriptor == 0xFF) // Assuming 0xFF indicates an error
+    {
+        println("Error: File not found or could not be opened!", ERROR_COLOR);
+        return 0xFF;
+    }
+
+    return file_descriptor;
+}
+
+uint8_t read_file(uint8_t file_descriptor, uint32_t offset, uint32_t size, char buffer[])
+{
+    uint8_t read_status = iso9660_read(file_descriptor, offset, size, buffer);
+
+    if (read_status == 0xFF) // Assuming 0xFF indicates an error
+    {
+        println("Error: File could not be read!", ERROR_COLOR);
+        return 0xFF;
+    }
+
+    return 0;
+}
+
+uint8_t close_file(uint8_t file_descriptor)
+{
+    uint8_t close_status = iso9660_close(file_descriptor);
+
+    if (close_status == 0xFF) // Assuming 0xFF indicates an error
+    {
+        println("Error: File could not be closed!", ERROR_COLOR);
+        return 0xFF;
+    }
+
+    return 0;
+}

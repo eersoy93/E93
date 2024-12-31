@@ -1,5 +1,5 @@
 SOURCES_ASM = $(wildcard cpu/*.asm shell/*.asm)
-SOURCES_C = $(wildcard cpu/*.c drivers/*.c shell/*.c libc/*.c)
+SOURCES_C = $(wildcard cpu/*.c drivers/*.c shell/*.c libc/*.c fs/*.c)
 OBJECTS = ${SOURCES_ASM:.asm=.o} ${SOURCES_C:.c=.o}
 
 CC = i686-linux-gnu-gcc

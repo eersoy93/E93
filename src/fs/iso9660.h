@@ -135,4 +135,8 @@ typedef struct {
 #define ISO9660_FILE_FLAG_RESERVED_2         0x06
 #define ISO9660_FILE_FLAG_MULTI_EXTENT       0x07
 
+uint8_t iso9660_open(char filename[]);
+uint8_t iso9660_read(uint8_t file_descriptor, uint32_t offset, uint32_t size, char buffer[]);
+uint8_t iso9660_close(uint8_t file_descriptor);
+
 #endif

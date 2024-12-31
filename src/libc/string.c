@@ -118,7 +118,7 @@ void backspace(char str[])
     str[len - 1] = '\0';
 }
 
-uint32_t strcmp(char str_1[], char str_2[])
+int32_t strcmp(char str_1[], char str_2[])
 {
     uint32_t i = 0;
     for (i = 0; str_1[i] == str_2[i]; i++)
