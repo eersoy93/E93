@@ -53,6 +53,66 @@ uint16_t strlen(char str[])
     return i;
 }
 
+char * strchr(char str[], int c)
+{
+    while (*str != '\0')
+    {
+        if (*str == (char)c)
+        {
+            return (char *)str;
+        }
+
+        str++;
+    }
+
+    return NULL;
+}
+
+char * strtok(char str[], char delim[])
+{
+    static char *last;
+    if (str == NULL)
+    {
+        str = last;
+    }
+    if (str == NULL)
+    {
+        return NULL;
+    }
+
+    // Skip leading delimiters
+    while (*str && strchr(delim, *str))
+    {
+        str++;
+    }
+
+    if (*str == '\0')
+    {
+        last = NULL;
+        return NULL;
+    }
+
+    char *token = str;
+
+    // Find the end of the token
+    while (*str && !strchr(delim, *str))
+    {
+        str++;
+    }
+
+    if (*str)
+    {
+        *str = '\0';
+        last = str + 1;
+    }
+    else
+    {
+        last = NULL;
+    }
+
+    return token;
+}
+
 void memory_copy(uint8_t * source, uint8_t * destination, uint32_t n_bytes)
 {
     uint32_t i = 0;

@@ -169,6 +169,66 @@ char * strstr(char str[], char substr[])
     return 0;
 }
 
+char * strchr(char str[], int c)
+{
+    while (*str != '\0')
+    {
+        if (*str == (char)c)
+        {
+            return str;
+        }
+
+        str++;
+    }
+
+    return NULL;
+}
+
+char * strtok(char str[], char delim[])
+{
+    static char * last;
+
+    if (str == NULL)
+    {
+        str = last;
+    }
+    if (str == NULL)
+    {
+        return NULL;
+    }
+
+    // Skip leading delimiters
+    while (*str && strchr(delim, *str))
+    {
+        str++;
+    }
+    if (*str == '\0')
+    {
+        last = NULL;
+        return NULL;
+    }
+
+    char * token_start = str;
+
+    // Find the end of the token
+    while (*str && !strchr(delim, *str))
+    {
+        str++;
+    }
+
+    if (*str)
+    {
+        *str = '\0';
+        last = str + 1;
+    }
+    else
+    {
+        last = NULL;
+    }
+
+    return token_start;
+}
+
 int atoi(char str[])
 {
     uint32_t result = 0;

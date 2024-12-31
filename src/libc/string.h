@@ -7,6 +7,7 @@
 #ifndef STRING_H
 #define STRING_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 void int_to_ascii(int32_t n, char str[]);
@@ -21,6 +22,8 @@ void strcat(char str_1[], char str_2[]);
 uint32_t strcmp(char str_1[], char str_2[]);
 void strcpy(char str_1[], char str_2[]);
 char * strstr(char str[], char substr[]);
+char * strchr(char str[], int c);
+char * strtok(char str[], char delim[]);
 int atoi(char str[]);
 
 #endif
