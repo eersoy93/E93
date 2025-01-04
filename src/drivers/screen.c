@@ -213,7 +213,7 @@ int printl_char(char character, int col, int row, char attribute)
         int i = 0;
         for (i = 1; i < ROWS_MAX; i++)
         {
-            memory_copy((uint8_t *)(get_offset(0, i) + VIDEO_ADDRESS),
+            memcpy((uint8_t *)(get_offset(0, i) + VIDEO_ADDRESS),
                         (uint8_t *)(get_offset(0, i - 1) + VIDEO_ADDRESS),
                         COLS_MAX * 2);
         }

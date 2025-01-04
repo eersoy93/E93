@@ -126,7 +126,7 @@ int32_t strcmp(char str_1[], char str_2[])
     return str_1[i] - str_2[i];
 }
 
-void memory_copy(uint8_t * source, uint8_t * destination, uint32_t n_bytes)
+void memcpy(uint8_t * source, uint8_t * destination, uint32_t n_bytes)
 {
     uint32_t i = 0;
     for (i = 0; i < n_bytes; i++)

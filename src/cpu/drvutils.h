@@ -27,6 +27,6 @@ char * strchr(char str[], int c);
 char * strtok(char str[], char delim[]);
 int32_t strcmp(char str1[], char str2[]);
 
-void memory_copy(uint8_t * source, uint8_t * destination, uint32_t n_bytes);
+void memcpy(uint8_t * source, uint8_t * destination, uint32_t n_bytes);
 
 #endif
