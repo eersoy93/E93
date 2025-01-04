@@ -121,6 +121,7 @@ void backspace(char str[])
 int32_t strcmp(char str_1[], char str_2[])
 {
     uint32_t i = 0;
+
     for (i = 0; str_1[i] == str_2[i]; i++)
     {
         if (str_1[i] == '\0')
@@ -128,6 +129,27 @@ int32_t strcmp(char str_1[], char str_2[])
             return 0;
         }
     }
+
+    return str_1[i] - str_2[i];
+}
+
+int32_t strncmp(char str_1[], char str_2[], uint32_t n)
+{
+    uint32_t i = 0;
+
+    for (i = 0; i < n && str_1[i] == str_2[i]; i++)
+    {
+        if (str_1[i] == '\0')
+        {
+            return 0;
+        }
+    }
+
+    if (i == n)
+    {
+        return 0;
+    }
+
     return str_1[i] - str_2[i];
 }
 
@@ -181,6 +203,36 @@ char * strchr(char str[], int c)
         str++;
     }
 
+    return NULL;
+}
+
+char * strrchr(char str[], int c)
+{
+    char * last_occurrence = NULL;
+    
+    while (*str != '\0')
+    {
+        if (*str == (char)c)
+        {
+            last_occurrence = str;
+        }
+
+        str++;
+    }
+
+    return last_occurrence;
+}
+
+char * strpbrk(char str[], char accept[])
+{
+    while (*str != '\0')
+    {
+        if (strchr(accept, *str))
+        {
+            return str;
+        }
+        str++;
+    }
     return NULL;
 }
 

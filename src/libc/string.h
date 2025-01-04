@@ -21,8 +21,11 @@ void append(char str[], char n);
 void strcat(char str_1[], char str_2[]);
 int32_t strcmp(char str_1[], char str_2[]);
 void strcpy(char str_1[], char str_2[]);
+int32_t strncmp(char str_1[], char str_2[], uint32_t n);
 char * strstr(char str[], char substr[]);
 char * strchr(char str[], int c);
+char * strrchr(char str[], int c);
+char * strpbrk(char str[], char accept[]);
 char * strtok(char str[], char delim[]);
 int atoi(char str[]);
 
