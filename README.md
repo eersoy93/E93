@@ -77,7 +77,7 @@ After building, you can run:
 
 ## Copyright and License
 
-Copyright (c) 2022-2024 Erdem Ersoy (eersoy93).
+Copyright (c) 2022-2025 Erdem Ersoy (eersoy93).
 
 Licensed with MIT License. See LICENSE file for details.
 
