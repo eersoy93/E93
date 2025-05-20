@@ -2,7 +2,4 @@ default=0
 timeout=10
 
 title E93
-kernel /boot/E93.elf win_mode=0
-
-title E93 (Windows Mode)
-kernel /boot/E93.elf win_mode=1
+kernel /boot/E93.elf

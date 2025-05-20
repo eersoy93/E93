@@ -27,13 +27,9 @@ After building, you can run:
 
 ## ROADMAP
 
-### 0.3.0
-
-- [ ] Make initial Windows mode. 
-
 ### 0.2.x
 
-- [X] Add/Improve device drivers and implementations to the C library as much as possible.
+- [ ] Add/Improve device drivers and implementations to the C library as much as possible.
 
 ### 0.2.0
 
@@ -67,11 +63,6 @@ After building, you can run:
 - [The PCI ID Repository](https://pci-ids.ucw.cz/)
 - [RapidTables ASCII Table](https://www.rapidtables.com/code/text/ascii-table.html)
 - [Pardus's Calculator :)](https://apps.pardus.org.tr/app/gnome-calculator)
-
-### Win32 References
-
-- [Win32 Data Types](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types)
-- [Win32 Data Types for Strings](https://learn.microsoft.com/en-us/windows/win32/intl/windows-data-types-for-strings)
 
 **NOTE:** Also I have being used Cursor AI, GitHub Copilot and ChatGPT but I don't directly use code completions.
 

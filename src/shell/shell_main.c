@@ -10,6 +10,7 @@
 #include "mb_header.h"
 #include "mb_info.h"
 #include "../libc/boolean.h"
+#include "../libc/function.h"
 #include "../libc/init.h"
 #include "../libc/io.h"
 #include "../libc/memory.h"
@@ -18,8 +19,6 @@
 void shell_main(uint32_t magic, struct multiboot_info * mb_info)
 {
     cls();
-
-    uint32_t win_mode = 0;
 
     if (magic != MULTIBOOT_VALID)
     {
@@ -35,48 +34,23 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
         while(TRUE);
     }
 
-    char * cmdline = (char *)(mb_info->cmdline);
-    char * win_mode_parameter = "win_mode=";
-    char * win_mode_str = strstr(cmdline, win_mode_parameter);
+    char * boot_cmdline = (char *)(mb_info->cmdline);
 
-    if (win_mode_str != NULL)
+    println("Executing the shell...", OUTPUT_COLOR);
+
+    init();
+
+    println("Welcome to E93!", OUTPUT_COLOR);
+    println("Type HELP for help.", OUTPUT_COLOR);
+
+    while(TRUE)
     {
-        win_mode_str += strlen(win_mode_parameter);
-        win_mode = atoi(win_mode_str);
-    }
-    else
-    {
-        println("Mode parameter not found in command line!", ERROR_COLOR);
-
-        while(TRUE);
+        show_prompt();
+        char * str = input();
+        command_execute(str);
     }
 
-    if (win_mode == 0)
-    {
-        println("Executing the shell...", OUTPUT_COLOR);
-
-        init();
-
-        println("Welcome to E93!", OUTPUT_COLOR);
-        println("Type HELP for help.", OUTPUT_COLOR);
-
-        while(TRUE)
-        {
-            show_prompt();
-            char * str = input();
-            command_execute(str);
-        }
-    }
-    else
-    {
-        println("Executing the Windows mode...", OUTPUT_COLOR);
-
-        init();
-
-        println("Windows mode has not implemented yet!", ERROR_COLOR);
-
-        while(TRUE);
-    }
+    UNUSED(boot_cmdline);
 }
 
 void show_prompt(void)
