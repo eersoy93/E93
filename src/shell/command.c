@@ -12,6 +12,7 @@
 #include "../libc/pci_libc.h"
 #include "../libc/sound.h"
 #include "../libc/string.h"
+#include "../libc/vga.h"
 #include "shell_main.h"
 #include "paging.h"
 
@@ -22,7 +23,8 @@ struct command commands[] = {
     {3, "HELP", "Shows this help message.", &commands_help},
     {4, "IDEDEVS", "Lists IDE devices.", &list_ide_devices},
     {5, "PAGE", "Requests a kernel allocation.", &allocate_page},
-    {6, "PCIDEVS", "Lists PCI devices.", &list_pci_devices}
+    {6, "PCIDEVS", "Lists PCI devices.", &list_pci_devices},
+    {7, "VGADEMO", "Shows a VGA 12h mode demo.", &show_vga_demo}
 };
 
 void command_execute(char * input_command)
