@@ -120,12 +120,11 @@ void draw_filled_circle(int32_t x0, int32_t y0, int32_t radius, uint8_t color)
 void show_vga_demo(void)
 {
     switch_vga_mode(0x12);
-    clear_screen();
 
     draw_filled_rectangle(50, 50, 100, 100, VGA_RED);
     draw_filled_circle(200, 200, 100, VGA_GREEN);
     draw_filled_rectangle(300, 300, 100, 100, VGA_BLUE);
-    draw_line(350, 320, 150, 0, VGA_YELLOW);
+    draw_line(150, 0, 300, 320, VGA_YELLOW);
 
     wait_timer(100);
 
