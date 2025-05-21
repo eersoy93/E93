@@ -59,6 +59,7 @@ After building, you can run:
 - [x86 and amd64 Instruction Reference](https://www.felixcloutier.com/x86/index.html)
 - [VGA Color Palettes](https://www.fountainware.com/EXPL/vga_color_palettes.htm)
 - [VGA Text Mode (Wikipedia)](https://en.wikipedia.org/wiki/VGA_text_mode)
+- [VGA Font Data Array (GitHub)](https://raw.githubusercontent.com/torvalds/linux/refs/heads/master/lib/fonts/font_8x16.c)
 - [Device Hunt](https://devicehunt.com/)
 - [The PCI ID Repository](https://pci-ids.ucw.cz/)
 - [RapidTables ASCII Table](https://www.rapidtables.com/code/text/ascii-table.html)

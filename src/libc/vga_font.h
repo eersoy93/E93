@@ -7,6 +7,7 @@
 #ifndef VGA_FONT_H
 #define VGA_FONT_H
 
+// The font data is from https://raw.githubusercontent.com/torvalds/linux/refs/heads/master/lib/fonts/font_8x16.c
 const uint8_t vga_font_8x16[4096] = {
     /* 0 0x00 '^@' */
     0x00, /* 00000000 */
