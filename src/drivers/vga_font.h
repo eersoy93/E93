@@ -1,4 +1,4 @@
-/* DESCRIPTION: E93 VGA Font Header File
+/* DESCRIPTION: E93 VGA Driver Font Definitions Header File
  * AUTHOR: Erdem Ersoy (eersoy93)
  * COPYRIGHT: Copyright (c) 2025 Erdem Ersoy (eersoy93).
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
@@ -4618,4 +4618,4 @@ const uint8_t vga_font_8x16[4096] = {
     0x00, /* 00000000 */
 };
 
-#endif //VGA_FONT_H
+#endif // VGA_FONT_H

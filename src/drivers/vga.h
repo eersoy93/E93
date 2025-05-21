@@ -1,4 +1,4 @@
-/* DESCRIPTION: E93 VGA Functions Header File
+/* DESCRIPTION: E93 VGA Driver Definitions Header File
  * AUTHOR: Erdem Ersoy (eersoy93)
  * COPYRIGHT: Copyright (c) 2025 Erdem Ersoy (eersoy93).
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
@@ -11,6 +11,9 @@
 
 // VGA memory variables
 extern volatile uint8_t * VGA_MODE_PTR; // VGA mem begins here.
+
+// VGA current mode variable
+extern volatile uint8_t current_vga_mode;
 
 // C-VGA font data
 // The font data is stored in a 256x16 pixel bitmap, where each character is 8x16 pixels.
@@ -54,8 +57,29 @@ uint8_t mode_12h_regs_values[] =
     0x01, 0x00, 0x0F, 0x00, 0x00
 };
 
+// VGA text mode (3h mode) register values (from https://files.osdev.org/mirrors/geezer/osd/graphics/modes.c)
+uint8_t mode_3h_regs_values[] =
+{
+/* MISC */
+	0x67,
+/* SEQ */
+	0x03, 0x00, 0x03, 0x00, 0x02,
+/* CRTC */
+	0x5F, 0x4F, 0x50, 0x82, 0x55, 0x81, 0xBF, 0x1F,
+	0x00, 0x4F, 0x0D, 0x0E, 0x00, 0x00, 0x00, 0x50,
+	0x9C, 0x0E, 0x8F, 0x28, 0x1F, 0x96, 0xB9, 0xA3,
+	0xFF,
+/* GC */
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x0E, 0x00,
+	0xFF,
+/* AC */
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x14, 0x07,
+	0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F,
+	0x0C, 0x00, 0x0F, 0x08, 0x00
+};
+
 /* 
-    Assumes mode_12h_regs_values layout:
+    Assumes VGA registers layout:
     [0]           : Miscellaneous Output Register
     [1-5]         : Sequencer Registers (5 registers)
     [6-30]        : CRT Controller Registers (25 registers)
@@ -73,19 +97,19 @@ uint8_t mode_12h_regs_values[] =
 void switch_to_vga_12h_mode(uint8_t * regs_values);
 void clear_screen_vga_12h_mode(void);
 
-void put_pixel_vga_12h_mode(int x, int y, uint8_t color);
+void put_pixel_vga_12h_mode(int32_t x, int32_t y, uint8_t color);
 
-void draw_line_vga_12h_mode(int x0, int y0, int x1, int y1, uint8_t color);
+void draw_line_vga_12h_mode(int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint8_t color);
 
-void draw_rectangle_vga_12h_mode(int x, int y, int width, int height, uint8_t color);
-void draw_filled_rectangle_vga_12h_mode(int x, int y, int width, int height, uint8_t color);
+void draw_rectangle_vga_12h_mode(int32_t x, int32_t y, int32_t width, int32_t height, uint8_t color);
+void draw_filled_rectangle_vga_12h_mode(int32_t x, int32_t y, int32_t width, int32_t height, uint8_t color);
 
-void draw_circle_vga_12h_mode(int x0, int y0, int radius, uint8_t color);
-void draw_filled_circle_vga_12h_mode(int x0, int y0, int radius, uint8_t color);
+void draw_circle_vga_12h_mode(int32_t x0, int32_t y0, int32_t radius, uint8_t color);
+void draw_filled_circle_vga_12h_mode(int32_t x0, int32_t y0, int32_t radius, uint8_t color);
 
 void wait_vsync(void);
 
-void switch_to_text_mode(void);
+void switch_to_vga_3h_mode(uint8_t * regs_values);
 
 void vga_upload_font(const uint8_t * font);
 void vga_reset_palette(void);
@@ -111,7 +135,5 @@ void vga_reset_palette(void);
 #define VGA_LIGHT_MAGENTA   0x0D
 #define VGA_YELLOW          0x0E
 #define VGA_WHITE           0x0F
-
-void show_vga_demo(void);
 
 #endif // VGA_H

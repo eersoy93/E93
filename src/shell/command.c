@@ -12,7 +12,7 @@
 #include "../libc/pci_libc.h"
 #include "../libc/sound.h"
 #include "../libc/string.h"
-#include "../libc/vga.h"
+#include "../libc/vga_libc.h"
 #include "shell_main.h"
 #include "paging.h"
 

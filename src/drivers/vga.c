@@ -1,4 +1,4 @@
-/* DESCRIPTION: E93 VGA Functions Source File
+/* DESCRIPTION: E93 VGA Driver Functions Source File
  * AUTHOR: Erdem Ersoy (eersoy93)
  * COPYRIGHT: Copyright (c) 2025 Erdem Ersoy (eersoy93).
  * LICENSE: Licensed with MIT License. See LICENSE file for details.
@@ -8,15 +8,17 @@
 
 #include "../cpu/ports.h"
 #include "../cpu/timer.h"
-#include "ending.h"
-#include "io.h"
+#include "screen.h"
 #include "vga_font.h"
 
 volatile uint8_t * VGA_MODE_PTR;
 
+volatile uint8_t current_vga_mode;
+
 void switch_to_vga_12h_mode(uint8_t * regs_values)
 {
     VGA_MODE_PTR = (volatile uint8_t *)0xA0000;
+    current_vga_mode = 0x12; // Set current mode to 12h
     int32_t index = 0;
     int32_t i = 0;
 
@@ -35,9 +37,6 @@ void switch_to_vga_12h_mode(uint8_t * regs_values)
     port_byte_out(VGA_CRTC_DATA, port_byte_in(VGA_CRTC_DATA) | 0x80);
     port_byte_out(VGA_CRTC_INDEX, 0x11);
     port_byte_out(VGA_CRTC_DATA, port_byte_in(VGA_CRTC_DATA) & ~0x80);
-
-    regs_values[0x03] |= 0x80;
-    regs_values[0x11] &= ~0x80;
 
     // Write CRTC registers
     for (i = 0; i < NUM_CRTC; i++)
@@ -64,10 +63,13 @@ void switch_to_vga_12h_mode(uint8_t * regs_values)
     // Finalize attribute controller write
     (void)port_byte_in(VGA_INSTAT_READ);
     port_byte_out(VGA_AC_INDEX, 0x20);
+
+    clear_screen_vga_12h_mode(); // Clear screen after mode switch
 }
 
 void clear_screen_vga_12h_mode(void)
 {
+    wait_vsync(); // Wait for vertical retrace to avoid tearing
     volatile uint8_t * vga = (volatile uint8_t *)VGA_MODE_PTR;
     int32_t plane = 0;
     int32_t i = 0;
@@ -78,7 +80,7 @@ void clear_screen_vga_12h_mode(void)
         // Select the current plane by writing to the Sequencer Map Mask Register (index 2)
         port_byte_out(VGA_SEQ_INDEX, 2);
         port_byte_out(VGA_SEQ_DATA, 1 << plane);
-        
+
         // Clear the current plane by setting all bytes to 0
         for (i = 0; i < plane_size; i++)
         {
@@ -166,12 +168,12 @@ void draw_line_vga_12h_mode(int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint
     }
 
     // Bresenham line algorithm for calculating differences
-    int dx = (x1 > x0) ? (x1 - x0) : (x0 - x1);
-    int dy = (y1 > y0) ? (y1 - y0) : (y0 - y1);
-    int sx = (x0 < x1) ? 1 : -1;
-    int sy = (y0 < y1) ? 1 : -1;
-    int err = dx - dy;
-    int e2;
+    int32_t dx = (x1 > x0) ? (x1 - x0) : (x0 - x1);
+    int32_t dy = (y1 > y0) ? (y1 - y0) : (y0 - y1);
+    int32_t sx = (x0 < x1) ? 1 : -1;
+    int32_t sy = (y0 < y1) ? 1 : -1;
+    int32_t err = dx - dy;
+    int32_t e2;
     
     while (1) {
         put_pixel_vga_12h_mode(x0, y0, color);
@@ -204,8 +206,8 @@ void draw_rectangle_vga_12h_mode(int32_t x, int32_t y, int32_t width, int32_t he
     }
 
     // Draw the four lines
-    int x2 = x + width - 1;
-    int y2 = y + height - 1;
+    int32_t x2 = x + width - 1;
+    int32_t y2 = y + height - 1;
 
     // Top horizontal line
     draw_line_vga_12h_mode(x, y, x2, y, color);
@@ -369,50 +371,47 @@ void wait_vsync(void)
     while (!(port_byte_in(VGA_INSTAT_READ) & 8));
 }
 
-void switch_to_text_mode(void)
+void switch_to_vga_3h_mode(uint8_t * regs_values)
 {
-    // 1. Misc register
-    port_byte_out(VGA_MISC_WRITE, 0x67);
+    current_vga_mode = 0x03; // Set current mode to 3h
+    VGA_MODE_PTR = (volatile uint8_t *)0xB8000;
+    int32_t index = 0;
+    int32_t i = 0;
 
-    // 2. Sequencer (with sync reset)
-    port_byte_out(VGA_SEQ_INDEX, 0x00); port_byte_out(VGA_SEQ_DATA, 0x01);
-    port_byte_out(VGA_SEQ_INDEX, 0x01); port_byte_out(VGA_SEQ_DATA, 0x00);
-    port_byte_out(VGA_SEQ_INDEX, 0x02); port_byte_out(VGA_SEQ_DATA, 0x03);
-    port_byte_out(VGA_SEQ_INDEX, 0x03); port_byte_out(VGA_SEQ_DATA, 0x00);
-    port_byte_out(VGA_SEQ_INDEX, 0x04); port_byte_out(VGA_SEQ_DATA, 0x02);
-    port_byte_out(VGA_SEQ_INDEX, 0x00); port_byte_out(VGA_SEQ_DATA, 0x03); // End sync reset
+    // 1. Misc register
+    port_byte_out(VGA_MISC_WRITE, regs_values[index++]);
+
+    // 2. Sequencer registers
+    for (i = 0; i < NUM_SEQ; i++)
+    {
+        port_byte_out(VGA_SEQ_INDEX, i);
+        port_byte_out(VGA_SEQ_DATA, regs_values[index++]);
+    }
 
     // 3. Unlock CRTC reg 0x11
     port_byte_out(VGA_CRTC_INDEX, 0x11);
     port_byte_out(VGA_CRTC_DATA, port_byte_in(VGA_CRTC_DATA) & ~0x80);
 
-    // 4. CRTC regs for 80x25 text
-    static const uint8_t crtc_regs[25] = {
-        0x5F,0x4F,0x50,0x82,0x55,0x81,0xBF,0x1F,0x00,0x4F,
-        0x0D,0x0E,0x00,0x00,0x00,0x50,0x9C,0x0E,0x8F,0x28,
-        0x40,0x96,0xB9,0xA3,0xFF
-    };
-    for (int i = 0; i < 25; i++) {
+    // 4. CRTC registers
+    for (i = 0; i < NUM_CRTC; i++)
+    {
         port_byte_out(VGA_CRTC_INDEX, i);
-        port_byte_out(VGA_CRTC_DATA, crtc_regs[i]);
+        port_byte_out(VGA_CRTC_DATA, regs_values[index++]);
     }
 
     // 5. Graphics controller
-    static const uint8_t gc_regs[9] = {0x00,0x00,0x00,0x00,0x00,0x10,0x0E,0x00,0xFF};
-    for (int i = 0; i < 9; i++) {
+    for (i = 0; i < NUM_GC; i++)
+    {
         port_byte_out(VGA_GC_INDEX, i);
-        port_byte_out(VGA_GC_DATA, gc_regs[i]);
+        port_byte_out(VGA_GC_DATA, regs_values[index++]);
     }
 
     // 6. Attribute controller
-    static const uint8_t ac_regs[21] = {
-        0x00,0x01,0x02,0x03,0x04,0x05,0x14,0x07,0x38,0x39,
-        0x3A,0x3B,0x3C,0x3D,0x3E,0x3F,0x0C,0x00,0x0F,0x08,0x00
-    };
-    for (int i = 0; i < 21; i++) {
+    for (int32_t i = 0; i < NUM_AC; i++)
+    {
         (void)port_byte_in(VGA_INSTAT_READ);
         port_byte_out(VGA_AC_INDEX, i);
-        port_byte_out(VGA_AC_INDEX, ac_regs[i]);
+        port_byte_out(VGA_AC_INDEX, regs_values[index++]);
     }
     (void)port_byte_in(VGA_INSTAT_READ);
     port_byte_out(VGA_AC_INDEX, 0x20); // enable output
@@ -423,24 +422,10 @@ void switch_to_text_mode(void)
     // 8. Reset DAC/palette
     vga_reset_palette();
 
-    // 9. Clear text screen
-    cls();
+    // Clear screen after mode switch
+    clear_screen();
 }
 
-void show_vga_demo(void)
-{
-    switch_to_vga_12h_mode(mode_12h_regs_values);
-    clear_screen_vga_12h_mode();
-
-    draw_filled_rectangle_vga_12h_mode(50, 50, 100, 100, VGA_RED);
-    draw_filled_circle_vga_12h_mode(200, 200, 100, VGA_GREEN);
-    draw_filled_rectangle_vga_12h_mode(300, 300, 100, 100, VGA_BLUE);
-    draw_line_vga_12h_mode(450, 80, 450, 450, VGA_YELLOW);
-
-    wait_timer(100);
-
-    switch_to_text_mode();
-}
 
 // --- Upload standard 8x16 font (plane 2) ---
 void vga_upload_font(const uint8_t * font)
@@ -452,9 +437,9 @@ void vga_upload_font(const uint8_t * font)
     port_byte_out(VGA_GC_INDEX, 0x06); port_byte_out(VGA_GC_DATA, 0x04);
 
     volatile uint8_t * fontmem = (uint8_t *)0xA0000;
-    for (int ch = 0; ch < 256; ch++)
+    for (int32_t ch = 0; ch < 256; ch++)
     {
-        for (int row = 0; row < 16; row++)
+        for (int32_t row = 0; row < 16; row++)
         {
             fontmem[ch * 32 + row] = *font++;
         }
@@ -479,7 +464,7 @@ void vga_reset_palette(void)
     };
 
     port_byte_out(VGA_DAC_WRITE_INDEX, 0);
-    for (int i = 0; i < 48; i++)
+    for (int32_t i = 0; i < 48; i++)
     {
         port_byte_out(VGA_DAC_DATA, vga_palette[i]);
     }
