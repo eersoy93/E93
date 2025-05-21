@@ -9,9 +9,14 @@
 #include "../cpu/ports.h"
 #include "../cpu/timer.h"
 #include "ending.h"
+#include "io.h"
+#include "vga_font.h"
+
+volatile uint8_t * VGA_MODE_PTR;
 
 void switch_to_vga_12h_mode(uint8_t * regs_values)
 {
+    VGA_MODE_PTR = (volatile uint8_t *)0xA0000;
     int32_t index = 0;
     int32_t i = 0;
 
@@ -364,6 +369,64 @@ void wait_vsync(void)
     while (!(port_byte_in(VGA_INSTAT_READ) & 8));
 }
 
+void switch_to_text_mode(void)
+{
+    // 1. Misc register
+    port_byte_out(VGA_MISC_WRITE, 0x67);
+
+    // 2. Sequencer (with sync reset)
+    port_byte_out(VGA_SEQ_INDEX, 0x00); port_byte_out(VGA_SEQ_DATA, 0x01);
+    port_byte_out(VGA_SEQ_INDEX, 0x01); port_byte_out(VGA_SEQ_DATA, 0x00);
+    port_byte_out(VGA_SEQ_INDEX, 0x02); port_byte_out(VGA_SEQ_DATA, 0x03);
+    port_byte_out(VGA_SEQ_INDEX, 0x03); port_byte_out(VGA_SEQ_DATA, 0x00);
+    port_byte_out(VGA_SEQ_INDEX, 0x04); port_byte_out(VGA_SEQ_DATA, 0x02);
+    port_byte_out(VGA_SEQ_INDEX, 0x00); port_byte_out(VGA_SEQ_DATA, 0x03); // End sync reset
+
+    // 3. Unlock CRTC reg 0x11
+    port_byte_out(VGA_CRTC_INDEX, 0x11);
+    port_byte_out(VGA_CRTC_DATA, port_byte_in(VGA_CRTC_DATA) & ~0x80);
+
+    // 4. CRTC regs for 80x25 text
+    static const uint8_t crtc_regs[25] = {
+        0x5F,0x4F,0x50,0x82,0x55,0x81,0xBF,0x1F,0x00,0x4F,
+        0x0D,0x0E,0x00,0x00,0x00,0x50,0x9C,0x0E,0x8F,0x28,
+        0x40,0x96,0xB9,0xA3,0xFF
+    };
+    for (int i = 0; i < 25; i++) {
+        port_byte_out(VGA_CRTC_INDEX, i);
+        port_byte_out(VGA_CRTC_DATA, crtc_regs[i]);
+    }
+
+    // 5. Graphics controller
+    static const uint8_t gc_regs[9] = {0x00,0x00,0x00,0x00,0x00,0x10,0x0E,0x00,0xFF};
+    for (int i = 0; i < 9; i++) {
+        port_byte_out(VGA_GC_INDEX, i);
+        port_byte_out(VGA_GC_DATA, gc_regs[i]);
+    }
+
+    // 6. Attribute controller
+    static const uint8_t ac_regs[21] = {
+        0x00,0x01,0x02,0x03,0x04,0x05,0x14,0x07,0x38,0x39,
+        0x3A,0x3B,0x3C,0x3D,0x3E,0x3F,0x0C,0x00,0x0F,0x08,0x00
+    };
+    for (int i = 0; i < 21; i++) {
+        (void)port_byte_in(VGA_INSTAT_READ);
+        port_byte_out(VGA_AC_INDEX, i);
+        port_byte_out(VGA_AC_INDEX, ac_regs[i]);
+    }
+    (void)port_byte_in(VGA_INSTAT_READ);
+    port_byte_out(VGA_AC_INDEX, 0x20); // enable output
+
+    // 7. Upload 8x16 font
+    vga_upload_font(vga_font_8x16);
+
+    // 8. Reset DAC/palette
+    vga_reset_palette();
+
+    // 9. Clear text screen
+    cls();
+}
+
 void show_vga_demo(void)
 {
     switch_to_vga_12h_mode(mode_12h_regs_values);
@@ -374,5 +437,50 @@ void show_vga_demo(void)
     draw_filled_rectangle_vga_12h_mode(300, 300, 100, 100, VGA_BLUE);
     draw_line_vga_12h_mode(450, 80, 450, 450, VGA_YELLOW);
 
-    end();
+    wait_timer(100);
+
+    switch_to_text_mode();
+}
+
+// --- Upload standard 8x16 font (plane 2) ---
+void vga_upload_font(const uint8_t * font)
+{
+    port_byte_out(VGA_SEQ_INDEX, 0x02); port_byte_out(VGA_SEQ_DATA, 0x04);
+    port_byte_out(VGA_SEQ_INDEX, 0x04); port_byte_out(VGA_SEQ_DATA, 0x06);
+    port_byte_out(VGA_GC_INDEX, 0x04); port_byte_out(VGA_GC_DATA, 0x02);
+    port_byte_out(VGA_GC_INDEX, 0x05); port_byte_out(VGA_GC_DATA, 0x00);
+    port_byte_out(VGA_GC_INDEX, 0x06); port_byte_out(VGA_GC_DATA, 0x04);
+
+    volatile uint8_t * fontmem = (uint8_t *)0xA0000;
+    for (int ch = 0; ch < 256; ch++)
+    {
+        for (int row = 0; row < 16; row++)
+        {
+            fontmem[ch * 32 + row] = *font++;
+        }
+    }
+
+    // Restore normal access
+    port_byte_out(VGA_SEQ_INDEX, 0x02); port_byte_out(VGA_SEQ_DATA, 0x03);
+    port_byte_out(VGA_SEQ_INDEX, 0x04); port_byte_out(VGA_SEQ_DATA, 0x02);
+    port_byte_out(VGA_GC_INDEX, 0x04); port_byte_out(VGA_GC_DATA, 0x00);
+    port_byte_out(VGA_GC_INDEX, 0x05); port_byte_out(VGA_GC_DATA, 0x10);
+    port_byte_out(VGA_GC_INDEX, 0x06); port_byte_out(VGA_GC_DATA, 0x0E);
+}
+
+// --- Reset 16-color DAC/palette (standard VGA) ---
+void vga_reset_palette(void)
+{
+    static const uint8_t vga_palette[48] = {
+        0x00,0x00,0x00,   0x00,0x00,0x2A,   0x00,0x2A,0x00,   0x00,0x2A,0x2A,
+        0x2A,0x00,0x00,   0x2A,0x00,0x2A,   0x2A,0x15,0x00,   0x2A,0x2A,0x2A,
+        0x15,0x15,0x15,   0x15,0x15,0x3F,   0x15,0x3F,0x15,   0x15,0x3F,0x3F,
+        0x3F,0x15,0x15,   0x3F,0x15,0x3F,   0x3F,0x3F,0x15,   0x3F,0x3F,0x3F
+    };
+
+    port_byte_out(VGA_DAC_WRITE_INDEX, 0);
+    for (int i = 0; i < 48; i++)
+    {
+        port_byte_out(VGA_DAC_DATA, vga_palette[i]);
+    }
 }

@@ -9,8 +9,12 @@
 
 #include <stdint.h>
 
-// VGA memory constants
-volatile uint8_t * VGA_MODE_PTR = (volatile uint8_t *)0xA0000; // VGA mem begins here.
+// VGA memory variables
+extern volatile uint8_t * VGA_MODE_PTR; // VGA mem begins here.
+
+// C-VGA font data
+// The font data is stored in a 256x16 pixel bitmap, where each character is 8x16 pixels.
+extern const uint8_t vga_font_8x16[4096];
 
 // VGA register constants (from https://files.osdev.org/mirrors/geezer/osd/graphics/modes.c)
 #define VGA_AC_INDEX         0x3C0
@@ -80,6 +84,11 @@ void draw_circle_vga_12h_mode(int x0, int y0, int radius, uint8_t color);
 void draw_filled_circle_vga_12h_mode(int x0, int y0, int radius, uint8_t color);
 
 void wait_vsync(void);
+
+void switch_to_text_mode(void);
+
+void vga_upload_font(const uint8_t * font);
+void vga_reset_palette(void);
 
 // VGA 12h mode constants
 #define VGA_12H_WIDTH 640
