@@ -34,6 +34,8 @@ uint16_t get_cursor_column_and_row(void);
 
 uint8_t get_video_colored_type(void);
 
+int printl_char(char character, int col, int row, char attribute);
+
 void printl(char * message);
 void printl_at(char * message, int col, int row);
 

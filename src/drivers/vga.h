@@ -107,6 +107,8 @@ void draw_filled_rectangle_vga_12h_mode(int32_t x, int32_t y, int32_t width, int
 void draw_circle_vga_12h_mode(int32_t x0, int32_t y0, int32_t radius, uint8_t color);
 void draw_filled_circle_vga_12h_mode(int32_t x0, int32_t y0, int32_t radius, uint8_t color);
 
+void draw_char_vga_12h_mode(int32_t x, int32_t y, uint8_t c, uint8_t color, uint8_t bgcolor);
+
 void wait_vsync(void);
 
 void switch_to_vga_3h_mode(uint8_t * regs_values);

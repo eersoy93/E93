@@ -19,8 +19,6 @@ int get_offset(int col, int row);
 int get_offset_col(int offset);
 int get_offset_row(int offset);
 
-int printl_char(char character, int col, int row, char attribute);
-
 void set_cursor_offset(int offset);
 void set_cursor_shape(void);
 
@@ -73,6 +71,66 @@ uint8_t get_video_colored_type(void)
     const char * video_type_information = VIDEO_TYPE_ADDRESS;
 
     return ((*video_type_information) & 0x30);
+}
+
+// Print specific character with specific attribute at specific loaction
+int printl_char(char character, int col, int row, char attribute)
+{
+    unsigned char * video_memory = (unsigned char *) VIDEO_ADDRESS;
+    if (!attribute)
+    {
+        attribute = DEFAULT_COLOR;
+    }
+
+    if (col >= COLS_MAX || row >= ROWS_MAX)
+    {
+        video_memory[2 * COLS_MAX * ROWS_MAX - 2] = 'E';
+        video_memory[2 * COLS_MAX * ROWS_MAX - 1] = ERROR_COLOR_2;
+        return get_offset(col, row);
+    }
+
+    int offset = 0;
+    if (col >= 0 && row >= 0)
+    {
+        offset = get_offset(col, row);
+    }
+    else {
+        offset = get_cursor_offset();
+    }
+
+    if (character == '\n')
+    {
+        row = get_offset_row(offset);
+        offset = get_offset(0, row + 1) ;
+    }
+    else
+    {
+        video_memory[offset] = character;
+        video_memory[offset + 1] = attribute;
+        offset += 2;
+    }
+
+    if (offset >= ROWS_MAX * COLS_MAX * 2)
+    {
+        int i = 0;
+        for (i = 1; i < ROWS_MAX; i++)
+        {
+            memcpy((uint8_t *)(get_offset(0, i) + VIDEO_ADDRESS),
+                        (uint8_t *)(get_offset(0, i - 1) + VIDEO_ADDRESS),
+                        COLS_MAX * 2);
+        }
+
+    char * lastline = get_offset(0, ROWS_MAX - 1) + VIDEO_ADDRESS;
+    for (i = 0; i < COLS_MAX * 2; i++)
+    {
+        lastline[i] = 0;
+    }
+
+    offset -= COLS_MAX * 2;
+    }
+
+    set_cursor_offset(offset);
+    return offset;
 }
 
 // Print message at cursor location
@@ -169,66 +227,6 @@ int get_offset_col(int offset)
 int get_offset_row(int offset)
 {
     return offset / (2 * COLS_MAX);
-}
-
-// Print specific character with specific attribute at specific loaction
-int printl_char(char character, int col, int row, char attribute)
-{
-    unsigned char * video_memory = (unsigned char *) VIDEO_ADDRESS;
-    if (!attribute)
-    {
-        attribute = DEFAULT_COLOR;
-    }
-
-    if (col >= COLS_MAX || row >= ROWS_MAX)
-    {
-        video_memory[2 * COLS_MAX * ROWS_MAX - 2] = 'E';
-        video_memory[2 * COLS_MAX * ROWS_MAX - 1] = ERROR_COLOR_2;
-        return get_offset(col, row);
-    }
-
-    int offset = 0;
-    if (col >= 0 && row >= 0)
-    {
-        offset = get_offset(col, row);
-    }
-    else {
-        offset = get_cursor_offset();
-    }
-
-    if (character == '\n')
-    {
-        row = get_offset_row(offset);
-        offset = get_offset(0, row + 1) ;
-    }
-    else
-    {
-        video_memory[offset] = character;
-        video_memory[offset + 1] = attribute;
-        offset += 2;
-    }
-
-    if (offset >= ROWS_MAX * COLS_MAX * 2)
-    {
-        int i = 0;
-        for (i = 1; i < ROWS_MAX; i++)
-        {
-            memcpy((uint8_t *)(get_offset(0, i) + VIDEO_ADDRESS),
-                        (uint8_t *)(get_offset(0, i - 1) + VIDEO_ADDRESS),
-                        COLS_MAX * 2);
-        }
-
-    char * lastline = get_offset(0, ROWS_MAX - 1) + VIDEO_ADDRESS;
-    for (i = 0; i < COLS_MAX * 2; i++)
-    {
-        lastline[i] = 0;
-    }
-
-    offset -= COLS_MAX * 2;
-    }
-
-    set_cursor_offset(offset);
-    return offset;
 }
 
 // Set cursor video memory offset

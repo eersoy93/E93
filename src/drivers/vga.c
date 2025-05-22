@@ -361,6 +361,33 @@ void draw_filled_circle_vga_12h_mode(int32_t x0, int32_t y0, int32_t radius, uin
     }
 }
 
+void draw_char_vga_12h_mode(int32_t x, int32_t y, uint8_t c, uint8_t color, uint8_t bgcolor)
+{
+    // Clip coordinates to VGA boundaries
+    if (x < 0) x = 0;
+    if (x >= VGA_12H_WIDTH) x = VGA_12H_WIDTH - 1;
+    if (y < 0) y = 0;
+    if (y >= VGA_12H_HEIGHT) y = VGA_12H_HEIGHT - 1;
+
+    // Draw character using the font data
+    const uint8_t * font = vga_font_8x16 + (c * 16);
+    for (int32_t row = 0; row < 16; row++)
+    {
+        uint8_t line = font[row];
+        for (int32_t col = 0; col < 8; col++)
+        {
+            if (line & (0x80 >> col))
+            {
+                put_pixel_vga_12h_mode(x + col, y + row, color);
+            }
+            else
+            {
+                put_pixel_vga_12h_mode(x + col, y + row, bgcolor);
+            }
+        }
+    }
+}
+
 // Wait for vertical sync to avoid screen tearing
 void wait_vsync(void)
 {
