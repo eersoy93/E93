@@ -13,13 +13,13 @@
 
 // Private Kernel API Declarations
 
-int get_cursor_offset(void);
+int32_t get_cursor_offset(void);
 
-int get_offset(int col, int row);
-int get_offset_col(int offset);
-int get_offset_row(int offset);
+int32_t get_offset(int32_t col, int32_t row);
+int32_t get_offset_col(int32_t offset);
+int32_t get_offset_row(int32_t offset);
 
-void set_cursor_offset(int offset);
+void set_cursor_offset(int32_t offset);
 void set_cursor_shape(void);
 
 
@@ -28,9 +28,9 @@ void set_cursor_shape(void);
 // Clear entire screen with black
 void clear_screen(void)
 {
-    int screen_size = COLS_MAX * ROWS_MAX;
-    int i = 0;
-    char * screen = VIDEO_ADDRESS;
+    int32_t screen_size = COLS_MAX * ROWS_MAX;
+    int32_t i = 0;
+    uint8_t * screen = VIDEO_ADDRESS;
 
     for (i = 0; i < screen_size; i++)
     {
@@ -61,22 +61,22 @@ void enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
 // Get cursor column and row
 uint16_t get_cursor_column_and_row(void)
 {
-    int offset = get_cursor_offset();
+    int32_t offset = get_cursor_offset();
     return offset / 2;
 }
 
 // Detect if the video is colored
 uint8_t get_video_colored_type(void)
 {
-    const char * video_type_information = VIDEO_TYPE_ADDRESS;
+    const uint8_t * video_type_information = VIDEO_TYPE_ADDRESS;
 
     return ((*video_type_information) & 0x30);
 }
 
 // Print specific character with specific attribute at specific loaction
-int printl_char(char character, int col, int row, char attribute)
+int32_t printl_char(uint8_t character, int32_t col, int32_t row, uint8_t attribute)
 {
-    unsigned char * video_memory = (unsigned char *) VIDEO_ADDRESS;
+    volatile uint8_t * video_memory = (volatile uint8_t *) VIDEO_ADDRESS;
     if (!attribute)
     {
         attribute = DEFAULT_COLOR;
@@ -89,7 +89,7 @@ int printl_char(char character, int col, int row, char attribute)
         return get_offset(col, row);
     }
 
-    int offset = 0;
+    int32_t offset = 0;
     if (col >= 0 && row >= 0)
     {
         offset = get_offset(col, row);
@@ -112,7 +112,7 @@ int printl_char(char character, int col, int row, char attribute)
 
     if (offset >= ROWS_MAX * COLS_MAX * 2)
     {
-        int i = 0;
+        int32_t i = 0;
         for (i = 1; i < ROWS_MAX; i++)
         {
             memcpy((uint8_t *)(get_offset(0, i) + VIDEO_ADDRESS),
@@ -120,7 +120,7 @@ int printl_char(char character, int col, int row, char attribute)
                         COLS_MAX * 2);
         }
 
-    char * lastline = get_offset(0, ROWS_MAX - 1) + VIDEO_ADDRESS;
+    uint8_t * lastline = get_offset(0, ROWS_MAX - 1) + VIDEO_ADDRESS;
     for (i = 0; i < COLS_MAX * 2; i++)
     {
         lastline[i] = 0;
@@ -134,27 +134,27 @@ int printl_char(char character, int col, int row, char attribute)
 }
 
 // Print message at cursor location
-void printl(char * message)
+void printl(uint8_t * message)
 {
     printl_color(message, DEFAULT_COLOR);
 }
 
 // Print message at specific location
-void printl_at(char * message, int col, int row)
+void printl_at(uint8_t * message, int32_t col, int32_t row)
 {
     printl_at_color(message, col, row, DEFAULT_COLOR);
 }
 
 // Print message at cursor location  with specfific color
-void printl_color(char * message, char color)
+void printl_color(uint8_t * message, uint8_t color)
 {
     printl_at_color(message, -1, -1, color);
 }
 
 // Print message at specific location with specfific color
-void printl_at_color(char * message, int col, int row, char color)
+void printl_at_color(uint8_t * message, int32_t col, int32_t row, uint8_t color)
 {
-    int offset = 0;
+    int32_t offset = 0;
 
     if (col >= 0 && row >= 0)
     {
@@ -167,7 +167,7 @@ void printl_at_color(char * message, int col, int row, char color)
         col = get_offset_col(offset);
     }
 
-    int i = 0;
+    int32_t i = 0;
 
     while (message[i] != 0)
     {
@@ -180,9 +180,9 @@ void printl_at_color(char * message, int col, int row, char color)
 // Revert printing via backspace
 void printl_backspace(void)
 {
-    int offset = get_cursor_offset() - 2;
-    int row = get_offset_row(offset);
-    int col = get_offset_col(offset);
+    int32_t offset = get_cursor_offset() - 2;
+    int32_t row = get_offset_row(offset);
+    int32_t col = get_offset_col(offset);
     if (col != 0)
     {
         printl_char(0x20, col, row, DEFAULT_COLOR);
@@ -191,9 +191,9 @@ void printl_backspace(void)
 }
 
 // Set cursor column and row
-void set_cursor_column_and_row(int col, int row)
+void set_cursor_column_and_row(int32_t col, int32_t row)
 {
-    int offset = get_offset(col, row);
+    int32_t offset = get_offset(col, row);
     set_cursor_offset(offset);
 }
 
@@ -201,10 +201,10 @@ void set_cursor_column_and_row(int col, int row)
 // Private Kernel API Definitions
 
 // Get cursor video memory offset
-int get_cursor_offset()
+int32_t get_cursor_offset()
 {
     port_byte_out(PORT_SCREEN_CTRL, 14);
-    int offset = port_byte_in(PORT_SCREEN_DATA) << 8;
+    int32_t offset = port_byte_in(PORT_SCREEN_DATA) << 8;
     port_byte_out(PORT_SCREEN_CTRL, 15);
     offset += port_byte_in(PORT_SCREEN_DATA);
 
@@ -212,31 +212,31 @@ int get_cursor_offset()
 }
 
 // Get specific location video memory offset
-int get_offset(int col, int row)
+int32_t get_offset(int32_t col, int32_t row)
 {
     return 2 * (row * COLS_MAX + col);
 }
 
 // Get specific column of video memory offset
-int get_offset_col(int offset)
+int32_t get_offset_col(int32_t offset)
 {
     return (offset - (get_offset_row(offset) * 2 * COLS_MAX)) / 2;
 }
 
 // Get specific row of video memory offset
-int get_offset_row(int offset)
+int32_t get_offset_row(int32_t offset)
 {
     return offset / (2 * COLS_MAX);
 }
 
 // Set cursor video memory offset
-void set_cursor_offset(int offset)
+void set_cursor_offset(int32_t offset)
 {
     offset /= 2;
     port_byte_out(PORT_SCREEN_CTRL, 14);
-    port_byte_out(PORT_SCREEN_DATA, (unsigned char) (offset >> 8));
+    port_byte_out(PORT_SCREEN_DATA, (uint8_t) (offset >> 8));
     port_byte_out(PORT_SCREEN_CTRL, 15);
-    port_byte_out(PORT_SCREEN_DATA, (unsigned char) (offset & 0xff));
+    port_byte_out(PORT_SCREEN_DATA, (uint8_t) (offset & 0xff));
 }
 
 // Set cursor shape

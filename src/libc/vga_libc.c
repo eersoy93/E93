@@ -147,7 +147,7 @@ void draw_string(int32_t x, int32_t y, uint8_t * str, uint8_t color, uint8_t bgc
     }
     else if (current_vga_mode == 0x03)
     {
-        printl_at_color((char *)str, x, y, (bgcolor << 4) | (color & 0x0F));
+        printl_at_color(str, x, y, (bgcolor << 4) | (color & 0x0F));
     }
     else
     {

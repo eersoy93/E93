@@ -21,40 +21,40 @@ void print_ide_device_information(uint8_t device_number)
 
     if (ide_device_got.Reserved == 1)
     {
-        char ide_device_got_number_str[2] = {0};
+        uint8_t ide_device_got_number_str[2] = {0};
         int_to_ascii(device_number, ide_device_got_number_str);
 
-        print("Device: ", OUTPUT_COLOR);
+        print((uint8_t *)"Device: ", OUTPUT_COLOR);
         println(ide_device_got_number_str, OUTPUT_COLOR);
 
-        print("Type: ", OUTPUT_COLOR);
+        print((uint8_t *)"Type: ", OUTPUT_COLOR);
         if (ide_device_got.Type == IDE_ATA)
         {
-            println("ATA", OUTPUT_COLOR);
+            println((uint8_t *)"ATA", OUTPUT_COLOR);
         }
         else if (ide_device_got.Type == IDE_ATAPI)
         {
-            println("ATAPI", OUTPUT_COLOR);
+            println((uint8_t *)"ATAPI", OUTPUT_COLOR);
         }
         else
         {
-            println("Unknown", OUTPUT_COLOR);
+            println((uint8_t *)"Unknown", OUTPUT_COLOR);
         }
 
-        print("Model: ", OUTPUT_COLOR);
+        print((uint8_t *)"Model: ", OUTPUT_COLOR);
         println(ide_device_got.Model, OUTPUT_COLOR);
 
-        char ide_device_got_size_str[12] = "";
+        uint8_t ide_device_got_size_str[12] = "";
         int_to_ascii(ide_device_got.Size, ide_device_got_size_str);
 
         if (ide_device_got.Type == IDE_ATA)
         {
-            print("Size: ", OUTPUT_COLOR);
+            print((uint8_t *)"Size: ", OUTPUT_COLOR);
             print(ide_device_got_size_str, OUTPUT_COLOR);
-            println(" sectors", OUTPUT_COLOR);
+            println((uint8_t *)" sectors", OUTPUT_COLOR);
         }
 
-        println("", OUTPUT_COLOR);
+        println((uint8_t *)"", OUTPUT_COLOR);
     }
 }
 

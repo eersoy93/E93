@@ -11,6 +11,6 @@
 
 void end(void)
 {
-    println("Halting the CPU...", ERROR_COLOR);
+    println((uint8_t *)"Halting the CPU...", ERROR_COLOR);
     halt();
 }

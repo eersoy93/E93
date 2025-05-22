@@ -20,12 +20,12 @@ void init(void)
 {
     if (get_video_type() == VIDEO_TYPE_COLOR)
     {
-        println("Your video card is colored!", OUTPUT_COLOR);
+        println((uint8_t *)"Your video card is colored!", OUTPUT_COLOR);
 
         current_vga_mode = 0x03;
-        char current_vga_mode_str[5] = { 0 };
+        uint8_t current_vga_mode_str[5] = { 0 };
         int_to_ascii(current_vga_mode, current_vga_mode_str);
-        print("Current VGA mode: ", OUTPUT_COLOR);
+        print((uint8_t *)"Current VGA mode: ", OUTPUT_COLOR);
         println(current_vga_mode_str, OUTPUT_COLOR);
     }
     else

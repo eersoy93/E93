@@ -6,7 +6,7 @@
 
 #include "drvutils.h"
 
-void int_to_ascii(int32_t n, char str[])
+void int_to_ascii(int32_t n, uint8_t str[])
 {
     int32_t i = 0;
     int32_t sign = n;
@@ -31,7 +31,7 @@ void int_to_ascii(int32_t n, char str[])
     reverse(str);
 }
 
-void reverse(char str[])
+void reverse(uint8_t str[])
 {
     uint32_t c, i, j;
 
@@ -43,7 +43,7 @@ void reverse(char str[])
     }
 }
 
-uint16_t strlen(char str[])
+uint16_t strlen(uint8_t str[])
 {
     uint16_t i = 0;
     while (str[i] != '\0')
@@ -53,13 +53,13 @@ uint16_t strlen(char str[])
     return i;
 }
 
-char * strchr(char str[], int c)
+uint8_t * strchr(uint8_t str[], int32_t c)
 {
     while (*str != '\0')
     {
-        if (*str == (char)c)
+        if (*str == c)
         {
-            return (char *)str;
+            return (uint8_t *)str;
         }
 
         str++;
@@ -68,9 +68,9 @@ char * strchr(char str[], int c)
     return NULL;
 }
 
-char * strtok(char str[], char delim[])
+uint8_t * strtok(uint8_t str[], uint8_t delim[])
 {
-    static char *last;
+    static uint8_t *last;
     if (str == NULL)
     {
         str = last;
@@ -92,7 +92,7 @@ char * strtok(char str[], char delim[])
         return NULL;
     }
 
-    char *token = str;
+    uint8_t * token = str;
 
     // Find the end of the token
     while (*str && !strchr(delim, *str))
@@ -113,7 +113,7 @@ char * strtok(char str[], char delim[])
     return token;
 }
 
-int32_t strcmp(char str_1[], char str_2[])
+int32_t strcmp(uint8_t str_1[], uint8_t str_2[])
 {
     uint32_t i = 0;
     for (i = 0; str_1[i] == str_2[i]; i++)

@@ -22,31 +22,31 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
 
     if (magic != MULTIBOOT_VALID)
     {
-        println("Invalid magic number!", ERROR_COLOR);
+        println((uint8_t *)"Invalid magic number!", ERROR_COLOR);
 
         while(TRUE);
     }
 
     if (!(mb_info->flags & (1 << 2)))
     {
-        println("Multiboot command line is not available!", ERROR_COLOR);
+        println((uint8_t *)"Multiboot command line is not available!", ERROR_COLOR);
 
         while(TRUE);
     }
 
-    char * boot_cmdline = (char *)(mb_info->cmdline);
+    uint8_t * boot_cmdline = (uint8_t *)(mb_info->cmdline);
 
-    println("Executing the shell...", OUTPUT_COLOR);
+    println((uint8_t *)"Executing the shell...", OUTPUT_COLOR);
 
     init();
 
-    println("Welcome to E93!", OUTPUT_COLOR);
-    println("Type HELP for help.", OUTPUT_COLOR);
+    println((uint8_t *)"Welcome to E93!", OUTPUT_COLOR);
+    println((uint8_t *)"Type HELP for help.", OUTPUT_COLOR);
 
     while(TRUE)
     {
         show_prompt();
-        char * str = input();
+        uint8_t * str = input();
         command_execute(str);
     }
 
@@ -55,5 +55,5 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
 
 void show_prompt(void)
 {
-    print(">", PROMPT_COLOR);
+    print((uint8_t *)">", PROMPT_COLOR);
 }

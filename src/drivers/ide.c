@@ -123,7 +123,7 @@ void ide_read_buffer(uint8_t channel, uint8_t reg, uint32_t buffer, uint32_t qua
 
 uint8_t ide_polling(uint8_t channel, uint8_t advanced_check)
 {
-    for(int i = 0; i < 4; i++)
+    for(int32_t i = 0; i < 4; i++)
     {
         ide_read(channel, ATA_REG_ALTSTATUS);
     }
@@ -161,11 +161,11 @@ uint8_t ide_print_error(uint32_t drive, uint8_t error)
         return error;
     }
 
-    printl_color("IDE Error:\n", ERROR_COLOR);
+    printl_color((uint8_t *)"IDE Error:\n", ERROR_COLOR);
 
     if (error == 1)
     {
-        printl_color("- Device Fault!\n", ERROR_COLOR);
+        printl_color((uint8_t *)"- Device Fault!\n", ERROR_COLOR);
         error = 19;
     }
     else if (error == 2)
@@ -173,103 +173,103 @@ uint8_t ide_print_error(uint32_t drive, uint8_t error)
         uint8_t status = ide_read(IDEDevices[drive].Channel, ATA_REG_ERROR);
         if (status & ATA_ER_AMNF)
         {
-            printl_color("- No Address Mark Found!\n", ERROR_COLOR);
+            printl_color((uint8_t *)"- No Address Mark Found!\n", ERROR_COLOR);
             error = 7;
         }
         if (status & ATA_ER_TK0NF)
         {
-            printl_color("- No Media or Media Error!\n", ERROR_COLOR);
+            printl_color((uint8_t *)"- No Media or Media Error!\n", ERROR_COLOR);
             error = 3;
         }
         if (status & ATA_ER_ABRT)
         {
-            printl_color("- Command Aborted!\n", ERROR_COLOR);
+            printl_color((uint8_t *)"- Command Aborted!\n", ERROR_COLOR);
             error = 20;
         }
         if (status & ATA_ER_MCR)
         {
-            printl_color("- No Media or Media Error!\n", ERROR_COLOR);
+            printl_color((uint8_t *)"- No Media or Media Error!\n", ERROR_COLOR);
             error = 3;
 
         }
         if (status & ATA_ER_IDNF)
         {
-            printl_color("- ID mark not Found!\n", ERROR_COLOR);
+            printl_color((uint8_t *)"- ID mark not Found!\n", ERROR_COLOR);
             error = 21;
         }
         if (status & ATA_ER_MC)
         {
-            printl_color("- No Media or Media Error!\n", ERROR_COLOR);
+            printl_color((uint8_t *)"- No Media or Media Error!\n", ERROR_COLOR);
             error = 3;
         }
         if (status & ATA_ER_UNC)
         {
-            printl_color("- Uncorrectable Data Error!\n", ERROR_COLOR);
+            printl_color((uint8_t *)"- Uncorrectable Data Error!\n", ERROR_COLOR);
             error = 22;
         }
         if (status & ATA_ER_BBK)
         {
-            printl_color("- Bad Sectors!\n", ERROR_COLOR);
+            printl_color((uint8_t *)"- Bad Sectors!\n", ERROR_COLOR);
             error = 13;
         }
     }
     else if (error == 3)
     {
-        printl_color("- Reads Nothing!\n", ERROR_COLOR);
+        printl_color((uint8_t *)"- Reads Nothing!\n", ERROR_COLOR);
         error = 23;
     }
     else if (error == 4)
     {
-        printl_color("- Write Protected!\n", ERROR_COLOR);
+        printl_color((uint8_t *)"- Write Protected!\n", ERROR_COLOR);
         error = 8;
     }
 
-    char ide_device_number_str[2] = { 0 };
+    uint8_t ide_device_number_str[2] = { 0 };
 
     int_to_ascii(IDEDevices[drive].Size, ide_device_number_str);
 
-    printl_color("\n", ERROR_COLOR);
-    printl_color("- Error at device: ", ERROR_COLOR);
+    printl_color((uint8_t *)"\n", ERROR_COLOR);
+    printl_color((uint8_t *)"- Error at device: ", ERROR_COLOR);
     printl_color(ide_device_number_str, ERROR_COLOR);
 
-    printl_color("\n", ERROR_COLOR);
-    printl_color("- Error at channel: ", ERROR_COLOR);
+    printl_color((uint8_t *)"\n", ERROR_COLOR);
+    printl_color((uint8_t *)"- Error at channel: ", ERROR_COLOR);
     if (IDEDevices[drive].Channel == 0)
     {
-        printl_color("Primary\n", ERROR_COLOR);
+        printl_color((uint8_t *)"Primary\n", ERROR_COLOR);
     }
     else if (IDEDevices[drive].Channel == 1)
     {
-        printl_color("Secondary\n", ERROR_COLOR);
+        printl_color((uint8_t *)"Secondary\n", ERROR_COLOR);
     }
     else
     {
-        printl_color("Unknown\n", ERROR_COLOR);
+        printl_color((uint8_t *)"Unknown\n", ERROR_COLOR);
     }
 
-    printl_color("\n", ERROR_COLOR);
-    printl_color("- Error at drive: ", ERROR_COLOR);
+    printl_color((uint8_t *)"\n", ERROR_COLOR);
+    printl_color((uint8_t *)"- Error at drive: ", ERROR_COLOR);
     if (IDEDevices[drive].Drive == 0)
     {
-        printl_color("Master\n", ERROR_COLOR);
+        printl_color((uint8_t *)"Master\n", ERROR_COLOR);
     }
     else if (IDEDevices[drive].Drive == 1)
     {
-        printl_color("Slave\n", ERROR_COLOR);
+        printl_color((uint8_t *)"Slave\n", ERROR_COLOR);
     }
     else
     {
-        printl_color("Unknown\n", ERROR_COLOR);
+        printl_color((uint8_t *)"Unknown\n", ERROR_COLOR);
     }
 
-    printl_color("\n", ERROR_COLOR);
+    printl_color((uint8_t *)"\n", ERROR_COLOR);
 
     return error;
 }
 
 void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4)
 {
-    printl_color("Detecting IDE Devices...\n", OUTPUT_COLOR);
+    printl_color((uint8_t *)"Detecting IDE Devices...\n", OUTPUT_COLOR);
 
     uint8_t count = 0;
 
@@ -370,7 +370,7 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
             }
 
             // Get Model
-            for (int k = 0; k < 40; k += 2)
+            for (int32_t k = 0; k < 40; k += 2)
             {
                 IDEDevices[count].Model[k] = ide_buffer[ATA_IDENT_MODEL + k + 1];
                 IDEDevices[count].Model[k + 1] = ide_buffer[ATA_IDENT_MODEL + k];
@@ -532,7 +532,7 @@ uint8_t ide_ata_access(uint8_t direction, uint8_t drive, uint32_t lba, uint8_t n
         if (direction == 0)
         {
             // PIO Read
-            for (int i = 0; i < numsects; i++)
+            for (int32_t i = 0; i < numsects; i++)
             {
                 if ((error = ide_polling(channel, 1)))
                 {
@@ -548,7 +548,7 @@ uint8_t ide_ata_access(uint8_t direction, uint8_t drive, uint32_t lba, uint8_t n
         else
         {
             // PIO Write
-            for (int i = 0; i < numsects; i++)
+            for (int32_t i = 0; i < numsects; i++)
             {
                 ide_polling(channel, 0);
                 asm("pushw %ds");
@@ -557,7 +557,7 @@ uint8_t ide_ata_access(uint8_t direction, uint8_t drive, uint32_t lba, uint8_t n
                 asm("popw %ds");
                 edi += (words * 2);
             }
-            ide_write(channel, ATA_REG_COMMAND, (char []){ ATA_CMD_CACHE_FLUSH, ATA_CMD_CACHE_FLUSH, ATA_CMD_CACHE_FLUSH_EXT }[lba_mode]);
+            ide_write(channel, ATA_REG_COMMAND, (uint8_t []){ ATA_CMD_CACHE_FLUSH, ATA_CMD_CACHE_FLUSH, ATA_CMD_CACHE_FLUSH_EXT }[lba_mode]);
             ide_polling(channel, 0);
         }
     }
@@ -578,10 +578,10 @@ void ide_irq_handler(void)
 
 uint8_t ide_atapi_read(uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t selector, uint32_t edi)
 {
-    unsigned int channel  = IDEDevices[drive].Channel;
-    unsigned int slavebit = IDEDevices[drive].Drive;
-    unsigned int bus      = IDEChannels[channel].base;
-    unsigned int words    = 1024;
+    uint32_t channel  = IDEDevices[drive].Channel;
+    uint32_t slavebit = IDEDevices[drive].Drive;
+    uint32_t bus      = IDEChannels[channel].base;
+    uint32_t words    = 1024;
     uint8_t error         = 0;
 
     // Enable IRQs
@@ -605,7 +605,7 @@ uint8_t ide_atapi_read(uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t s
     ide_write(channel, ATA_REG_HDDEVSEL, slavebit << 4);
 
     // Delay 400 nanoseconds for select to complete
-    for (int i = 0; i < 4; i++)
+    for (int32_t i = 0; i < 4; i++)
     {
         ide_read(channel, ATA_REG_ALTSTATUS);
     }
@@ -630,7 +630,7 @@ uint8_t ide_atapi_read(uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t s
     asm("rep outsw" : : "c"(6), "d"(bus), "S"(atapi_packet));
 
     // Receive data
-    for (int i = 0; i < numsects; i++)
+    for (int32_t i = 0; i < numsects; i++)
     {
         ide_wait_irq();
         if ((error = ide_polling(channel, 1)))
@@ -672,7 +672,7 @@ void ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es
         }
         else if (IDEDevices[drive].Type == IDE_ATAPI)
         {
-            for (int i = 0; i < numsects; i++)
+            for (int32_t i = 0; i < numsects; i++)
             {
                 error = ide_atapi_read(drive, lba + i, 1, es, edi + (i * 2048));
             }
@@ -746,7 +746,7 @@ void ide_atapi_eject(uint8_t drive)
         ide_write(channel, ATA_REG_HDDEVSEL, slavebit << 4);
 
         // Delay 400 nanosecond for select to complete
-        for (int i = 0; i < 4; i++)
+        for (int32_t i = 0; i < 4; i++)
         {
             ide_read(channel, ATA_REG_ALTSTATUS);
         }
@@ -788,12 +788,12 @@ uint32_t ide_atapi_read_capacity(uint8_t drive)
 
     if (drive > 3 || IDEDevices[drive].Reserved == 0)  // Check if the drive presents
     {
-        printl_color("Drive not present!\n", ERROR_COLOR);
+        printl_color((uint8_t *)"Drive not present!\n", ERROR_COLOR);
         error_package = 1;
     }
     else if (IDEDevices[drive].Type == IDE_ATA)  // Check the drive isn't ATAPI
     {
-        printl_color("Drive is not ATAPI!\n", ERROR_COLOR);
+        printl_color((uint8_t *)"Drive is not ATAPI!\n", ERROR_COLOR);
         error_package = 20;
     }
     else
@@ -819,7 +819,7 @@ uint32_t ide_atapi_read_capacity(uint8_t drive)
         ide_write(channel, ATA_REG_HDDEVSEL, slavebit << 4);
 
         // Delay 400 nanosecond for select to complete
-        for (int i = 0; i < 4; i++)
+        for (int32_t i = 0; i < 4; i++)
         {
             ide_read(channel, ATA_REG_ALTSTATUS);
         }
@@ -865,48 +865,48 @@ uint32_t ide_atapi_read_capacity(uint8_t drive)
 
 void ide_print_devices(void)
 {
-    printl_color("IDE Devices:\n", OUTPUT_COLOR);
+    printl_color((uint8_t *)"IDE Devices:\n", OUTPUT_COLOR);
 
-    for (int i = 0; i < 4; i++)
+    for (int32_t i = 0; i < 4; i++)
     {
         if (IDEDevices[i].Reserved == 1)
         {
-            char ide_device_number_str[2] = { 0 };
+            uint8_t ide_device_number_str[2] = { 0 };
             int_to_ascii(i, ide_device_number_str);
 
-            printl_color("- Device: ", OUTPUT_COLOR);
+            printl_color((uint8_t *)"- Device: ", OUTPUT_COLOR);
             printl_color(ide_device_number_str, OUTPUT_COLOR);
-            printl_color("\n", OUTPUT_COLOR);
+            printl_color((uint8_t *)"\n", OUTPUT_COLOR);
 
-            printl_color("- Type: ", OUTPUT_COLOR);
+            printl_color((uint8_t *)"- Type: ", OUTPUT_COLOR);
             if (IDEDevices[i].Type == IDE_ATA)
             {
-                printl_color("ATA\n", OUTPUT_COLOR);
+                printl_color((uint8_t *)"ATA\n", OUTPUT_COLOR);
             }
             else if (IDEDevices[i].Type == IDE_ATAPI)
             {
-                printl_color("ATAPI\n", OUTPUT_COLOR);
+                printl_color((uint8_t *)"ATAPI\n", OUTPUT_COLOR);
             }
             else
             {
-                printl_color("Unknown\n", OUTPUT_COLOR);
+                printl_color((uint8_t *)"Unknown\n", OUTPUT_COLOR);
             }
 
-            printl_color("- Model: ", OUTPUT_COLOR);
+            printl_color((uint8_t *)"- Model: ", OUTPUT_COLOR);
             printl_color(IDEDevices[i].Model, OUTPUT_COLOR);
-            printl_color("\n", OUTPUT_COLOR);
+            printl_color((uint8_t *)"\n", OUTPUT_COLOR);
 
-            char ide_device_size_str[12] = "";
+            uint8_t ide_device_size_str[12] = "";
             int_to_ascii(IDEDevices[i].Size, ide_device_size_str);
 
             if (IDEDevices[i].Type == IDE_ATA)
             {
-                printl_color("- Size: ", OUTPUT_COLOR);
+                printl_color((uint8_t *)"- Size: ", OUTPUT_COLOR);
                 printl_color(ide_device_size_str, OUTPUT_COLOR);
-                printl_color(" sectors\n", OUTPUT_COLOR);
+                printl_color((uint8_t *)" sectors\n", OUTPUT_COLOR);
             }
 
-            printl_color("\n", OUTPUT_COLOR);
+            printl_color((uint8_t *)"\n", OUTPUT_COLOR);
         }
     }
 }

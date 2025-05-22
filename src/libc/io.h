@@ -11,17 +11,17 @@
 
 #include "../drivers/screen_colors.h"
 
-void print_char(char character, char attribute);
-void print(char * str, char attribute);
-void println(char * str, char attribute);
+void print_char(uint8_t character, uint8_t attribute);
+void print(uint8_t * str, uint8_t attribute);
+void println(uint8_t * str, uint8_t attribute);
 
-char read_char(void);
-char * input(void);
+uint8_t read_char(void);
+uint8_t * input(void);
 
 void cls(void);
 
-uint8_t open_file(char filename[]);
-uint8_t read_file(uint8_t file_descriptor, uint32_t offset, uint32_t size, char buffer[]);
+uint8_t open_file(uint8_t filename[]);
+uint8_t read_file(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[]);
 uint8_t close_file(uint8_t file_descriptor);
 
 #endif

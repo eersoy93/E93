@@ -95,7 +95,8 @@
 
 
 // IDE Channel Register Struct
-struct IDEChannelRegisters {
+struct IDEChannelRegisters
+{
    uint16_t base;
    uint16_t ctrl;
    uint16_t bmide;
@@ -104,7 +105,8 @@ struct IDEChannelRegisters {
 
 
 // IDE Device Information Struct
-struct ide_device {
+struct ide_device
+{
    uint8_t  Reserved;
    uint8_t  Channel;
    uint8_t  Drive;
@@ -113,7 +115,7 @@ struct ide_device {
    uint16_t Capabilities;
    uint32_t CommandSets;
    uint32_t Size;
-   char     Model[41];
+   uint8_t  Model[41];
 } IDEDevices[4];
 
 

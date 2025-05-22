@@ -10,23 +10,23 @@
 #include <stddef.h>
 #include <stdint.h>
 
-void int_to_ascii(int32_t n, char str[]);
-void hex_to_ascii(uint32_t n, char str[]);
+void int_to_ascii(int32_t n, uint8_t str[]);
+void hex_to_ascii(uint32_t n, uint8_t str[]);
 
-void reverse(char str[]);
-uint16_t strlen(char str[]);
+void reverse(uint8_t str[]);
+uint16_t strlen(uint8_t str[]);
 
-void backspace(char str[]);
-void append(char str[], char n);
-void strcat(char str_1[], char str_2[]);
-int32_t strcmp(char str_1[], char str_2[]);
-void strcpy(char str_1[], char str_2[]);
-int32_t strncmp(char str_1[], char str_2[], uint32_t n);
-char * strstr(char str[], char substr[]);
-char * strchr(char str[], int c);
-char * strrchr(char str[], int c);
-char * strpbrk(char str[], char accept[]);
-char * strtok(char str[], char delim[]);
-int atoi(char str[]);
+void backspace(uint8_t str[]);
+void append(uint8_t str[], uint8_t n);
+void strcat(uint8_t str_1[], uint8_t str_2[]);
+int32_t strcmp(uint8_t str_1[], uint8_t str_2[]);
+void strcpy(uint8_t str_1[], uint8_t str_2[]);
+int32_t strncmp(uint8_t str_1[], uint8_t str_2[], uint32_t n);
+uint8_t * strstr(uint8_t str[], uint8_t substr[]);
+uint8_t * strchr(uint8_t str[], int32_t c);
+uint8_t * strrchr(uint8_t str[], int32_t c);
+uint8_t * strpbrk(uint8_t str[], uint8_t accept[]);
+uint8_t * strtok(uint8_t str[], uint8_t delim[]);
+int32_t atoi(uint8_t str[]);
 
 #endif

@@ -6,7 +6,7 @@
 
 #include "string.h"
 
-void int_to_ascii(int32_t n, char str[])
+void int_to_ascii(int32_t n, uint8_t str[])
 {
     int32_t i = 0;
     int32_t sign = n;
@@ -31,12 +31,12 @@ void int_to_ascii(int32_t n, char str[])
     reverse(str);
 }
 
-void hex_to_ascii(uint32_t n, char str[])
+void hex_to_ascii(uint32_t n, uint8_t str[])
 {
     append(str, '0');
     append(str, 'x');
 
-    char zeroes = 0;
+    uint8_t zeroes = 0;
     uint32_t temp = 0;
     for(uint32_t i = 28; i > 0; i -= 4)
     {
@@ -69,7 +69,7 @@ void hex_to_ascii(uint32_t n, char str[])
     }
 }
 
-void reverse(char s[])
+void reverse(uint8_t s[])
 {
     uint32_t c, i, j;
     for (i = 0, j = strlen(s) - 1; i < j; i++, j--)
@@ -80,7 +80,7 @@ void reverse(char s[])
     }
 }
 
-uint16_t strlen(char s[])
+uint16_t strlen(uint8_t s[])
 {
     uint16_t i = 0;
     while (s[i] != '\0')
@@ -90,14 +90,14 @@ uint16_t strlen(char s[])
     return i;
 }
 
-void append(char str[], char n)
+void append(uint8_t str[], uint8_t n)
 {
     uint32_t len = strlen(str);
     str[len] = n;
     str[len + 1] = '\0';
 }
 
-void strcat(char str_1[], char str_2[])
+void strcat(uint8_t str_1[], uint8_t str_2[])
 {
     uint16_t len_1 = strlen(str_1);
     uint16_t len_2 = strlen(str_2);
@@ -112,13 +112,13 @@ void strcat(char str_1[], char str_2[])
     str_1[len_1 + i] = '\0';
 }
 
-void backspace(char str[])
+void backspace(uint8_t str[])
 {
     uint32_t len = strlen(str);
     str[len - 1] = '\0';
 }
 
-int32_t strcmp(char str_1[], char str_2[])
+int32_t strcmp(uint8_t str_1[], uint8_t str_2[])
 {
     uint32_t i = 0;
 
@@ -133,7 +133,7 @@ int32_t strcmp(char str_1[], char str_2[])
     return str_1[i] - str_2[i];
 }
 
-int32_t strncmp(char str_1[], char str_2[], uint32_t n)
+int32_t strncmp(uint8_t str_1[], uint8_t str_2[], uint32_t n)
 {
     uint32_t i = 0;
 
@@ -153,7 +153,7 @@ int32_t strncmp(char str_1[], char str_2[], uint32_t n)
     return str_1[i] - str_2[i];
 }
 
-void strcpy(char str_1[], char str_2[])
+void strcpy(uint8_t str_1[], uint8_t str_2[])
 {
     uint32_t i = 0;
     while (str_2[i] != '\0')
@@ -164,11 +164,11 @@ void strcpy(char str_1[], char str_2[])
     str_1[i] = '\0';
 }
 
-char * strstr(char str[], char substr[])
+uint8_t * strstr(uint8_t str[], uint8_t substr[])
 {
     if (!(substr[0]))
     {
-        return (char *)str;
+        return (uint8_t *)str;
     }
 
     for (int32_t i = 0; i < strlen(str); i++)
@@ -182,7 +182,7 @@ char * strstr(char str[], char substr[])
 
                 if (substr[j] == '\0')
                 {
-                    return (char *)&str[i];
+                    return (uint8_t *)&str[i];
                 }
             }
         }
@@ -191,11 +191,11 @@ char * strstr(char str[], char substr[])
     return 0;
 }
 
-char * strchr(char str[], int c)
+uint8_t * strchr(uint8_t str[], int32_t c)
 {
     while (*str != '\0')
     {
-        if (*str == (char)c)
+        if (*str == (uint8_t)c)
         {
             return str;
         }
@@ -206,13 +206,13 @@ char * strchr(char str[], int c)
     return NULL;
 }
 
-char * strrchr(char str[], int c)
+uint8_t * strrchr(uint8_t str[], int32_t c)
 {
-    char * last_occurrence = NULL;
+    uint8_t * last_occurrence = NULL;
     
     while (*str != '\0')
     {
-        if (*str == (char)c)
+        if (*str == (uint8_t)c)
         {
             last_occurrence = str;
         }
@@ -223,7 +223,7 @@ char * strrchr(char str[], int c)
     return last_occurrence;
 }
 
-char * strpbrk(char str[], char accept[])
+uint8_t * strpbrk(uint8_t str[], uint8_t accept[])
 {
     while (*str != '\0')
     {
@@ -236,9 +236,9 @@ char * strpbrk(char str[], char accept[])
     return NULL;
 }
 
-char * strtok(char str[], char delim[])
+uint8_t * strtok(uint8_t str[], uint8_t delim[])
 {
-    static char * last;
+    static uint8_t * last;
 
     if (str == NULL)
     {
@@ -260,7 +260,7 @@ char * strtok(char str[], char delim[])
         return NULL;
     }
 
-    char * token_start = str;
+    uint8_t * token_start = str;
 
     // Find the end of the token
     while (*str && !strchr(delim, *str))
@@ -281,7 +281,7 @@ char * strtok(char str[], char delim[])
     return token_start;
 }
 
-int atoi(char str[])
+int32_t atoi(uint8_t str[])
 {
     uint32_t result = 0;
     uint32_t sign = 1;

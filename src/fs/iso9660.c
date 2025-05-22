@@ -8,13 +8,13 @@
 #include "../cpu/drvutils.h"
 #include "../drivers/ide.h"
 
-uint8_t iso9660_open(char filename[])
+uint8_t iso9660_open(uint8_t filename[])
 {
     UNUSED(filename);
     return 0;
 }
 
-uint8_t iso9660_read(uint8_t file_descriptor, uint32_t offset, uint32_t size, char buffer[])
+uint8_t iso9660_read(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[])
 {
     UNUSED(file_descriptor);
     UNUSED(offset);

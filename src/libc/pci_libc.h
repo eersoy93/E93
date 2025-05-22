@@ -9,11 +9,11 @@
 
 #include <stdint.h>
 
-char * get_pci_vendor_str(uint8_t bus, uint8_t slot);
-char * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot);
+uint8_t * get_pci_vendor_str(uint8_t bus, uint8_t slot);
+uint8_t * get_pci_vendor_and_device_str(uint8_t bus, uint8_t slot);
 
-void get_pci_vendor_hex_str(uint8_t bus, uint8_t slot, char * vendor_hex_str);
-void get_pci_device_hex_str(uint8_t bus, uint8_t slot, char * device_hex_str);
+void get_pci_vendor_hex_str(uint8_t bus, uint8_t slot, uint8_t * vendor_hex_str);
+void get_pci_device_hex_str(uint8_t bus, uint8_t slot, uint8_t * device_hex_str);
 
 uint16_t get_pci_devices_count(void);
 

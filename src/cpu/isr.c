@@ -18,7 +18,7 @@ isr_t interrupt_handlers[256];
 
 void isr_install()
 {
-    printl_color("Initializing the ISRs...\n", OUTPUT_COLOR);
+    printl_color((uint8_t *)"Initializing the ISRs...\n", OUTPUT_COLOR);
 
     set_idt_gate(0, (uint32_t) isr0);
     set_idt_gate(1, (uint32_t) isr1);
@@ -86,52 +86,52 @@ void isr_install()
     set_idt();
 }
 
-char * isr_exception_messages[] =
+uint8_t * isr_exception_messages[] =
 {
-    "Division By Zero",
-    "Debug",
-    "Non Maskable Interrupt",
-    "Breakpoint",
-    "Overflow",
-    "Out of Bounds",
-    "Invalid Opcode",
-    "Coprocessor Not Available",
-    "Double Fault",
-    "Coprocessor Segment Overrun",
-    "Invalid Task State Segment",
-    "Segment Not Present",
-    "Stack Segment Fault",
-    "General Protection Fault",
-    "Page Fault",
-    "Reserved",
-    "x87 Floating Point Fault",
-    "Alignment Check",
-    "Machine Check",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved"
+    (uint8_t *)"Division By Zero",
+    (uint8_t *)"Debug",
+    (uint8_t *)"Non Maskable Interrupt",
+    (uint8_t *)"Breakpoint",
+    (uint8_t *)"Overflow",
+    (uint8_t *)"Out of Bounds",
+    (uint8_t *)"Invalid Opcode",
+    (uint8_t *)"Coprocessor Not Available",
+    (uint8_t *)"Double Fault",
+    (uint8_t *)"Coprocessor Segment Overrun",
+    (uint8_t *)"Invalid Task State Segment",
+    (uint8_t *)"Segment Not Present",
+    (uint8_t *)"Stack Segment Fault",
+    (uint8_t *)"General Protection Fault",
+    (uint8_t *)"Page Fault",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"x87 Floating Point Fault",
+    (uint8_t *)"Alignment Check",
+    (uint8_t *)"Machine Check",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved",
+    (uint8_t *)"Reserved"
 };
 
 void isr_handler(registers_struct_type * registers)
 {
-    printl_color("Received interrupt: ", OUTPUT_COLOR);
-    char interrupt_no_str[3];
+    printl_color((uint8_t *)"Received interrupt: ", OUTPUT_COLOR);
+    uint8_t interrupt_no_str[3];
     int_to_ascii(registers->interrupt_no, interrupt_no_str);
     printl_color(interrupt_no_str, OUTPUT_COLOR);
-    printl_color("\n", OUTPUT_COLOR);
+    printl_color((uint8_t *)"\n", OUTPUT_COLOR);
 
     printl_color(isr_exception_messages[registers->interrupt_no], OUTPUT_COLOR);
-    printl_color("\n", OUTPUT_COLOR);
+    printl_color((uint8_t *)"\n", OUTPUT_COLOR);
 }
 
 void register_interrupt_handler(uint8_t n, isr_t handler)
@@ -153,7 +153,7 @@ void irq_handler(registers_struct_type * registers)
 
 void irq_install(void)
 {
-    printl_color("Initializing the IRQs...\n", OUTPUT_COLOR);
+    printl_color((uint8_t *)"Initializing the IRQs...\n", OUTPUT_COLOR);
     asm volatile("sti");
     init_timer(50);
     init_keyboard();

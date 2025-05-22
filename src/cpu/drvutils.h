@@ -20,12 +20,12 @@ typedef uint8_t boolean;
 #define low16(address) (uint16_t)((address) & 0xFFFF)
 #define high16(address) (uint16_t)(((address) >> 16) & 0xFFFF)
 
-void int_to_ascii(int32_t n, char str[]);
-void reverse(char str[]);
-uint16_t strlen(char str[]);
-char * strchr(char str[], int c);
-char * strtok(char str[], char delim[]);
-int32_t strcmp(char str1[], char str2[]);
+void int_to_ascii(int32_t n, uint8_t str[]);
+void reverse(uint8_t str[]);
+uint16_t strlen(uint8_t str[]);
+uint8_t * strchr(uint8_t str[], int c);
+uint8_t * strtok(uint8_t str[], uint8_t delim[]);
+int32_t strcmp(uint8_t str1[], uint8_t str2[]);
 
 void memcpy(uint8_t * source, uint8_t * destination, uint32_t n_bytes);
 

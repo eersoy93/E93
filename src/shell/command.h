@@ -13,12 +13,12 @@
 struct command
 {
     uint8_t command_no;
-    char * command_name;
-    char * command_help;
+    uint8_t * command_name;
+    uint8_t * command_help;
     void (* command_function)(void);
 };
 
 void commands_help(void);
-void command_execute(char * input_command);
+void command_execute(uint8_t * input_command);
 
 #endif
