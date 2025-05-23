@@ -18,6 +18,8 @@
 
 void shell_main(uint32_t magic, struct multiboot_info * mb_info)
 {
+    uint8_t gui_mode = 0;
+
     cls();
 
     if (magic != MULTIBOOT_VALID)
@@ -35,6 +37,25 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
     }
 
     uint8_t * boot_cmdline = (uint8_t *)(mb_info->cmdline);
+    uint8_t * gui_mode_parameter = (uint8_t *)"gui_mode=";
+    uint8_t * gui_mode_str = (uint8_t *)strstr(boot_cmdline, gui_mode_parameter);
+
+    if (gui_mode_str != NULL)
+    {
+        gui_mode_str += strlen(gui_mode_parameter);
+        gui_mode = (uint8_t)atoi(gui_mode_str);
+
+        if (gui_mode == 1)
+        {
+            cls();
+            println((uint8_t *)"E93 GUI is not implemented yet!", ERROR_COLOR);
+            while(TRUE);
+        }
+        else
+        {
+            println((uint8_t *)"GUI mode is disabled!", OUTPUT_COLOR);
+        }
+    }
 
     println((uint8_t *)"Executing the shell...", OUTPUT_COLOR);
 
@@ -49,8 +70,6 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
         uint8_t * str = input();
         command_execute(str);
     }
-
-    UNUSED(boot_cmdline);
 }
 
 void show_prompt(void)
