@@ -10,11 +10,13 @@
 #include "mb_header.h"
 #include "mb_info.h"
 #include "../libc/boolean.h"
+#include "../libc/ending.h"
 #include "../libc/function.h"
 #include "../libc/init.h"
 #include "../libc/io.h"
 #include "../libc/memory.h"
 #include "../libc/string.h"
+#include "../libc/vga_libc.h"
 
 void shell_main(uint32_t magic, struct multiboot_info * mb_info)
 {
@@ -47,9 +49,9 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
 
         if (gui_mode == 1)
         {
-            cls();
-            println((uint8_t *)"E93 GUI is not implemented yet!", ERROR_COLOR);
-            while(TRUE);
+            switch_vga_mode(0x12);
+            draw_string(0, 0, (uint8_t *)"E93 GUI is not implemented yet!", 15, 0);
+            end();
         }
         else
         {
