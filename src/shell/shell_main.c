@@ -7,6 +7,7 @@
 #include "shell_main.h"
 
 #include "command.h"
+#include "gui.h"
 #include "mb_header.h"
 #include "mb_info.h"
 #include "../libc/boolean.h"
@@ -20,7 +21,7 @@
 
 void shell_main(uint32_t magic, struct multiboot_info * mb_info)
 {
-    uint8_t gui_mode = 0;
+    uint8_t mode = 0;
 
     cls();
 
@@ -28,49 +29,65 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
     {
         println((uint8_t *)"Invalid magic number!", ERROR_COLOR);
 
-        while(TRUE);
+        end();
     }
 
     if (!(mb_info->flags & (1 << 2)))
     {
         println((uint8_t *)"Multiboot command line is not available!", ERROR_COLOR);
 
-        while(TRUE);
+        end();
     }
 
     uint8_t * boot_cmdline = (uint8_t *)(mb_info->cmdline);
-    uint8_t * gui_mode_parameter = (uint8_t *)"gui_mode=";
-    uint8_t * gui_mode_str = (uint8_t *)strstr(boot_cmdline, gui_mode_parameter);
+    uint8_t * mode_parameter = (uint8_t *)"mode=";
+    uint8_t * mode_str = (uint8_t *)strstr(boot_cmdline, mode_parameter);
 
-    if (gui_mode_str != NULL)
+    if (mode_str != NULL)
     {
-        gui_mode_str += strlen(gui_mode_parameter);
-        gui_mode = (uint8_t)atoi(gui_mode_str);
+        mode_str += strlen(mode_parameter);
+        mode = (uint8_t)atoi(mode_str);
 
-        if (gui_mode == 1)
+        if (mode == CLI_MODE)
         {
-            switch_vga_mode(0x12);
-            draw_string(0, 0, (uint8_t *)"E93 GUI is not implemented yet!", 15, 0);
+            println((uint8_t *)"CLI mode enabled!", OUTPUT_COLOR);
+
+            init(CLI_MODE);
+
+            println((uint8_t *)"Welcome to E93!", OUTPUT_COLOR);
+            println((uint8_t *)"Type HELP for help.", OUTPUT_COLOR);
+
+            while(TRUE)
+            {
+                show_prompt();
+                uint8_t * str = input();
+                command_execute(str);
+            }
+
+            end();
+        }
+        else if (mode == GUI_MODE)
+        {
+            println((uint8_t *)"GUI mode enabled!", OUTPUT_COLOR);
+
+            init(GUI_MODE);
+
+            gui_init();
+
             end();
         }
         else
         {
-            println((uint8_t *)"GUI mode is disabled!", OUTPUT_COLOR);
+            println((uint8_t *)"Invalid mode parameter specified!", ERROR_COLOR);
+
+            end();
         }
     }
-
-    println((uint8_t *)"Executing the shell...", OUTPUT_COLOR);
-
-    init();
-
-    println((uint8_t *)"Welcome to E93!", OUTPUT_COLOR);
-    println((uint8_t *)"Type HELP for help.", OUTPUT_COLOR);
-
-    while(TRUE)
+    else
     {
-        show_prompt();
-        uint8_t * str = input();
-        command_execute(str);
+        println((uint8_t *)"Mode parameter not found in boot command line!", ERROR_COLOR);
+
+        end();
     }
 }
 

@@ -9,6 +9,9 @@
 
 #include <stdint.h>
 
-void init(void);
+#define CLI_MODE 0
+#define GUI_MODE 1
+
+void init(uint8_t mode);
 
 #endif

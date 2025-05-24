@@ -2,7 +2,7 @@ default=0
 timeout=10
 
 title E93
-kernel /boot/E93.elf gui_mode=0
+kernel /boot/E93.elf mode=0
 
 title E93 (GUI mode)
-kernel /boot/E93.elf gui_mode=1
+kernel /boot/E93.elf mode=1
