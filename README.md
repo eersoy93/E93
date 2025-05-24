@@ -71,9 +71,9 @@ After building, you can run:
 
 Copyright (c) 2022-2025 Erdem Ersoy (eersoy93).
 
-Licensed with MIT License. See LICENSE file for details.
+Licensed with GPLv2 License. See LICENSE file for license text.
 
-**NOTE:** bin/stage2_eltorito, shell/mb_header.h and shell/mb_info.h is GNU GPLv2 licensed because GNU GRUB 0.97 is licensed with GNU GPLv2.
+**NOTE:** bin/stage2_eltorito, shell/mb_header.h and shell/mb_info.h is GNU GPLv2 licensed and these are from GNU GRUB 0.97.
 
 **NOTE 2:** The copyright of GNU GRUB 0.97 (from https://www.gnu.org/software/grub/):
 
