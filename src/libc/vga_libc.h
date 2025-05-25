@@ -1,7 +1,7 @@
 /* DESCRIPTION: E93 C Library VGA Definitions Header File
  * AUTHOR: Erdem Ersoy (eersoy93)
  * COPYRIGHT: Copyright (c) 2025 Erdem Ersoy (eersoy93).
- * LICENSE: Licensed with MIT License. See LICENSE file for details.
+ * LICENSE: Licensed with GPLv2 License. See LICENSE file for details.
  */
 
 #ifndef VGA_LIBC_H
