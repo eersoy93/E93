@@ -27,6 +27,7 @@ uint8_t * strchr(uint8_t str[], int c);
 uint8_t * strtok(uint8_t str[], uint8_t delim[]);
 int32_t strcmp(uint8_t str1[], uint8_t str2[]);
 
+int8_t memcmp(uint8_t * source, uint8_t * destination, uint32_t n_bytes);
 void memcpy(uint8_t * source, uint8_t * destination, uint32_t n_bytes);
 
 #endif

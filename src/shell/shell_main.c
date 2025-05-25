@@ -57,6 +57,28 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
             println((uint8_t *)"Welcome to E93!", OUTPUT_COLOR);
             println((uint8_t *)"Type HELP for help.", OUTPUT_COLOR);
 
+            uint8_t buffer[0x1000] = {0};
+            uint8_t fd = open_file((uint8_t *)"TEST.TXT");
+            if (fd != 0xFF)
+            {
+                uint32_t bytes_read = read_file(fd, 0, 0x1000 - 1, buffer); // Use uint32_t for size
+                if (bytes_read != 0xFF && bytes_read > 0)
+                {
+                    buffer[bytes_read] = 0; // Null terminate for safe printing
+                    println(buffer, OUTPUT_COLOR);
+                }
+                else
+                {
+                    close_file(fd);
+                    println((uint8_t *)"Failed to read file!", ERROR_COLOR);
+                }
+                close_file(fd);
+            }
+            else
+            {
+                println((uint8_t *)"Failed to open file!", ERROR_COLOR);
+            }
+
             while(TRUE)
             {
                 show_prompt();

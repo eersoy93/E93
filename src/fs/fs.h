@@ -9,6 +9,14 @@
 
 #include <stdint.h>
 
-int8_t open_files_list[127] = { 0 };
+typedef struct
+{
+    uint8_t in_use;
+    uint32_t extent_lba;    // Logical block address of file start
+    uint32_t size;          // File size in bytes
+    uint32_t offset;        // Current offset in the file
+} iso9660_file_handle_t;
+
+static iso9660_file_handle_t open_files[127];
 
 #endif

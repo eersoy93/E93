@@ -126,6 +126,19 @@ int32_t strcmp(uint8_t str_1[], uint8_t str_2[])
     return str_1[i] - str_2[i];
 }
 
+int8_t memcmp(uint8_t * source, uint8_t * destination, uint32_t n_bytes)
+{
+    uint32_t i = 0;
+    for (i = 0; i < n_bytes; i++)
+    {
+        if (*(source + i) != *(destination + i))
+        {
+            return (*(source + i) > *(destination + i)) ? 1 : -1;
+        }
+    }
+    return 0;
+}
+
 void memcpy(uint8_t * source, uint8_t * destination, uint32_t n_bytes)
 {
     uint32_t i = 0;
