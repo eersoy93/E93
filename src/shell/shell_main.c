@@ -58,10 +58,10 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
             println((uint8_t *)"Type HELP for help.", OUTPUT_COLOR);
 
             uint8_t buffer[0x1000] = {0};
-            uint8_t fd = open_file((uint8_t *)"TEST.TXT");
-            if (fd != 0xFF)
+            int8_t fd = open_file((uint8_t *)"TEST.TXT");
+            if (fd != -1)
             {
-                uint32_t bytes_read = read_file(fd, 0, 0x1000 - 1, buffer); // Use uint32_t for size
+                int32_t bytes_read = read_file(fd, 0, 0x1000 - 1, buffer); // Use uint32_t for size
                 if (bytes_read != 0xFF && bytes_read > 0)
                 {
                     buffer[bytes_read] = 0; // Null terminate for safe printing
@@ -69,9 +69,9 @@ void shell_main(uint32_t magic, struct multiboot_info * mb_info)
                 }
                 else
                 {
-                    close_file(fd);
                     println((uint8_t *)"Failed to read file!", ERROR_COLOR);
                 }
+
                 close_file(fd);
             }
             else

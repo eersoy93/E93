@@ -8,17 +8,19 @@
 #include "iso9660.h"
 #include "../cpu/drvutils.h"
 #include "../drivers/ide.h"
+#include "../drivers/screen.h"
 
 // Helper function finds a free file handle slot
-static int alloc_file_handle()
+static int8_t alloc_file_handle()
 {
-    for (int i = 0; i < 127; ++i)
+    for (int8_t i = 0; i < 127; ++i)
     {
         if (!open_files[i].in_use)
         {
             return i;
         }
     }
+
     return -1;
 }
 
@@ -97,7 +99,8 @@ static uint8_t * next_path_component(uint8_t * path, uint8_t * out_len)
 
     if (*path == 0)
     {
-        *out_len = 0; return NULL;
+        *out_len = 0;
+        return NULL; // No more components
     }
 
     uint8_t * start = path;
@@ -116,10 +119,12 @@ uint8_t iso9660_open(uint8_t filename[])
 {
     static uint8_t sector[ISO9660_SECTOR_SIZE];
 
-    // Read sector 16 (Primary Volume Descriptor)
-    ide_read_sectors(1, 1, 16, 0, (uint32_t)sector);
+    printl_color((uint8_t *)"Reading sectors!\n", OUTPUT_COLOR);
+    ide_read_sectors(0, 1, 16, 0, (uint32_t)sector);
 
     iso9660_pvd_t * pvd = (iso9660_pvd_t *)sector;
+    printl_color((uint8_t *)"ISO9660 Volume Descriptor ID: ", OUTPUT_COLOR);
+    printl_color((uint8_t *)(pvd->id), OUTPUT_COLOR);
     if (pvd->type != ISO9660_VD_PRIMARY)
     {
         // Not a primary volume descriptor
@@ -139,18 +144,26 @@ uint8_t iso9660_open(uint8_t filename[])
     int depth = 0;
     while (depth++ < max_depth)
     {
-        uint8_t *comp = next_path_component(path, &comp_len);
+        printl_color((uint8_t *)"Current directory: ", OUTPUT_COLOR);
+        printl_color(cur_dir.file_identifier, OUTPUT_COLOR);
+        uint8_t * comp = next_path_component(path, &comp_len);
         if (!comp || comp_len == 0)
         {
             // Path ended, open this file/dir
-            int handle = alloc_file_handle();
-            if (handle < 0) return 0xFF;
+            int8_t handle = alloc_file_handle();
+            if (handle < 0)
+            {
+                return 0xFF;
+            }
+
             open_files[handle].in_use = 1;
             open_files[handle].extent_lba = cur_dir.extent_location_le;
             open_files[handle].size = cur_dir.data_length_le;
             open_files[handle].offset = 0;
+
             return handle;
         }
+
         // Search for this component in current directory
         iso9660_dir_record_t found;
         if (!find_in_directory(cur_dir.extent_location_le, cur_dir.data_length_le, comp, comp_len, &found))

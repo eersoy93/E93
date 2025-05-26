@@ -99,42 +99,42 @@ void cls(void)
     set_cursor_column_and_row(0, 0);
 }
 
-uint8_t open_file(uint8_t filename[])
+int8_t open_file(uint8_t filename[])
 {
-    uint8_t file_descriptor = iso9660_open(filename);
+    int8_t file_descriptor = iso9660_open(filename);
 
-    if (file_descriptor == 0xFF)
+    if (file_descriptor == -1)
     {
         print((uint8_t *)"Error: File not found or could not be opened: ", ERROR_COLOR);
         println(filename, ERROR_COLOR); // Show which filename failed
-        return 0xFF;
+        return file_descriptor;
     }
 
     return file_descriptor;
 }
 
-uint32_t read_file(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[])
+int32_t read_file(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[])
 {
-    uint8_t bytes_read = iso9660_read(file_descriptor, offset, size, buffer);
+    int32_t bytes_read = iso9660_read(file_descriptor, offset, size, buffer);
 
-    if (bytes_read == 0xFF) // Error
+    if (bytes_read == -1) // Error
     {
         println((uint8_t *)"Error: File could not be read!", ERROR_COLOR);
-        return 0xFF;
+        return bytes_read;
     }
 
     return bytes_read; // Number of bytes read, or 0 for EOF
 }
 
-uint8_t close_file(uint8_t file_descriptor)
+int8_t close_file(uint8_t file_descriptor)
 {
-    uint8_t close_status = iso9660_close(file_descriptor);
+    int8_t close_status = iso9660_close(file_descriptor);
 
-    if (close_status == 0xFF) // Assuming 0xFF indicates an error
+    if (close_status == -1) // Assuming 0xFF indicates an error
     {
         println((uint8_t *)"Error: File could not be closed!", ERROR_COLOR);
-        return 0xFF;
+        return close_status;
     }
 
-    return 0;
+    return close_status;
 }

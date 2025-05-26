@@ -20,8 +20,8 @@ uint8_t * input(void);
 
 void cls(void);
 
-uint8_t open_file(uint8_t filename[]);
-uint32_t read_file(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[]);
-uint8_t close_file(uint8_t file_descriptor);
+int8_t open_file(uint8_t filename[]);
+int32_t read_file(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[]);
+int8_t close_file(uint8_t file_descriptor);
 
 #endif

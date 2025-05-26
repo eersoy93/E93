@@ -93,6 +93,8 @@
 #define ATA_SR_IDX                0x02
 #define ATA_SR_ERR                0x01
 
+// IDE IRQ Timeout
+#define IDE_IRQ_TIMEOUT 100
 
 // IDE Channel Register Struct
 struct IDEChannelRegisters
