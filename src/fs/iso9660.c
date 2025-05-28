@@ -115,7 +115,7 @@ static uint8_t * next_path_component(uint8_t * path, uint8_t * out_len)
     return start;
 }
 
-uint8_t iso9660_open(uint8_t filename[])
+int8_t iso9660_open(uint8_t filename[])
 {
     static uint8_t sector[ISO9660_SECTOR_SIZE];
 
@@ -128,7 +128,7 @@ uint8_t iso9660_open(uint8_t filename[])
     if (pvd->type != ISO9660_VD_PRIMARY)
     {
         // Not a primary volume descriptor
-        return 0xFF; // Fail
+        return -1;
     }
 
     // Root dir record is at pvd->root_directory_record[0..33]
@@ -185,7 +185,7 @@ uint8_t iso9660_open(uint8_t filename[])
     UNUSED(dir_size);
 }
 
-uint8_t iso9660_read(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[])
+int8_t iso9660_read(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[])
 {
     if (file_descriptor >= 127 || !open_files[file_descriptor].in_use)
     {
@@ -230,7 +230,7 @@ uint8_t iso9660_read(uint8_t file_descriptor, uint32_t offset, uint32_t size, ui
     return size; // Return actual bytes read
 }
 
-uint8_t iso9660_close(uint8_t file_descriptor)
+int8_t iso9660_close(uint8_t file_descriptor)
 {
     if (file_descriptor >= 127 || !open_files[file_descriptor].in_use)
     {

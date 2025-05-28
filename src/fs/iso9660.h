@@ -138,8 +138,8 @@ typedef struct {
 // ISO9660 File System Constants
 #define ISO9660_SECTOR_SIZE 2048
 
-uint8_t iso9660_open(uint8_t filename[]);
-uint8_t iso9660_read(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[]);
-uint8_t iso9660_close(uint8_t file_descriptor);
+int8_t iso9660_open(uint8_t filename[]);
+int8_t iso9660_read(uint8_t file_descriptor, uint32_t offset, uint32_t size, uint8_t buffer[]);
+int8_t iso9660_close(uint8_t file_descriptor);
 
 #endif

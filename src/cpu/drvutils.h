@@ -29,5 +29,6 @@ int32_t strcmp(uint8_t str1[], uint8_t str2[]);
 
 int8_t memcmp(uint8_t * source, uint8_t * destination, uint32_t n_bytes);
 void memcpy(uint8_t * source, uint8_t * destination, uint32_t n_bytes);
+void memset(uint8_t * destination, uint8_t value, uint32_t n_bytes);
 
 #endif

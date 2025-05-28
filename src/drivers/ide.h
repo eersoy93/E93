@@ -143,12 +143,11 @@ uint8_t ide_polling(uint8_t channel, uint8_t advanced_check);
 
 uint8_t ide_print_error(uint32_t drive, uint8_t error);
 
-void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4);
+void init_ide(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4);
 
 uint8_t ide_ata_access(uint8_t direction, uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t selector, uint32_t edi);
 
 void ide_wait_irq(void);
-void ide_irq_handler(void);
 
 uint8_t ide_atapi_read(uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t selector, uint32_t edi);
 

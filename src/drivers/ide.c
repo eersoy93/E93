@@ -5,11 +5,28 @@
  */
 
 #include "../cpu/drvutils.h"
+#include "../cpu/isr.h"
 #include "../cpu/ports.h"
 #include "../cpu/timer.h"
 #include "screen.h"
 
 #include "ide.h"
+
+static void ide_callback(registers_struct_type * registers)
+{
+    ide_irq_invoked = 1;
+    UNUSED(registers);
+}
+
+void ide_wait_irq(void)
+{
+    int32_t timeout = 500;
+    while (!ide_irq_invoked && --timeout > 0)
+    {
+        wait_timer(1);
+    }
+    ide_irq_invoked = 0;
+}
 
 uint8_t ide_read(uint8_t channel, uint8_t reg)
 {
@@ -267,11 +284,14 @@ uint8_t ide_print_error(uint32_t drive, uint8_t error)
     return error;
 }
 
-void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4)
+void init_ide(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32_t BAR4)
 {
-    printl_color((uint8_t *)"Detecting IDE Devices...\n", OUTPUT_COLOR);
+    printl_color((uint8_t *)"Initializing the IDE Devices...\n", OUTPUT_COLOR);
 
     uint8_t count = 0;
+
+    // Register the IRQ handler for primary IDE (IRQ14)
+    register_interrupt_handler(IRQ14, ide_callback);
 
     // Detect IDE Channels
     IDEChannels[ATA_PRIMARY].base = (BAR0 & 0xFFFFFFFC) + 0x1F0 * (!BAR0);
@@ -281,7 +301,7 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
     IDEChannels[ATA_PRIMARY].bmide = (BAR4 & 0xFFFFFFFC) + 0;
     IDEChannels[ATA_SECONDARY].bmide = (BAR4 & 0xFFFFFFFC) + 8;
 
-    // Disable IRQs
+    // Disable IRQs during detection
     ide_write(ATA_PRIMARY, ATA_REG_CONTROL, 2);
     ide_write(ATA_SECONDARY, ATA_REG_CONTROL, 2);
 
@@ -310,7 +330,8 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
                 continue;
             }
 
-            while (1)
+            int32_t timeout = 1000;
+            while (timeout--)
             {
                 status = ide_read(i, ATA_REG_STATUS);
                 if ((status & ATA_SR_ERR))
@@ -370,6 +391,7 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
             }
 
             // Get Model
+            memset(IDEDevices[count].Model, 0, 41);
             for (int32_t k = 0; k < 40; k += 2)
             {
                 IDEDevices[count].Model[k] = ide_buffer[ATA_IDENT_MODEL + k + 1];
@@ -380,6 +402,10 @@ void ide_init(uint32_t BAR0, uint32_t BAR1, uint32_t BAR2, uint32_t BAR3, uint32
             count++;
         }
     }
+
+    // Enable IRQs after detection
+    ide_write(ATA_PRIMARY, ATA_REG_CONTROL, 0x00);
+    ide_write(ATA_SECONDARY, ATA_REG_CONTROL, 0x00);
 }
 
 uint8_t ide_ata_access(uint8_t direction, uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t selector, uint32_t edi)
@@ -565,151 +591,145 @@ uint8_t ide_ata_access(uint8_t direction, uint8_t drive, uint32_t lba, uint8_t n
     return 0;
 }
 
- // ms, or whatever units wait_timer uses
-
-void ide_wait_irq(void)
-{
-    uint32_t timeout = IDE_IRQ_TIMEOUT;
-
-    while (!ide_irq_invoked && timeout--)
-    {
-        wait_timer(1);
-    }
-
-    // Optionally: Reset the flag ONCE after loop
-    ide_irq_invoked = 0;
-}
-
-void ide_irq_handler(void)
-{
-    ide_irq_invoked = 1;
-}
-
 uint8_t ide_atapi_read(uint8_t drive, uint32_t lba, uint8_t numsects, uint16_t selector, uint32_t edi)
 {
+    // Check if drive is present and is ATAPI
+    if (drive > 3 || IDEDevices[drive].Reserved == 0)
+    {
+        return 1;  // Device not present
+    }
+
+    if (IDEDevices[drive].Type != IDE_ATAPI)
+    {
+        return 2;  // Not an ATAPI device
+    }
+
+    uint8_t error = 0;
     uint32_t channel  = IDEDevices[drive].Channel;
     uint32_t slavebit = IDEDevices[drive].Drive;
     uint32_t bus      = IDEChannels[channel].base;
     uint32_t words    = 2048 / 2; // 2048 bytes per ATAPI sector, 2 bytes per word
-    uint8_t  error    = 0;
 
-    printl_color((uint8_t *)"Enabling IRQs...\n", OUTPUT_COLOR);
-    // Enable IRQs
-    ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN = (ide_irq_invoked = 0x00));
+    // Enable IRQs and clear the IRQ-invoked flag
+    ide_irq_invoked = 0;
+    ide_write(channel, ATA_REG_CONTROL, 0); // 0 = IRQs enabled
 
-    printl_color((uint8_t *)"Setting up ATAPI packet...\n", OUTPUT_COLOR);
-    // Setup SCSI packet
+    // Prepare the ATAPI packet (12 bytes)
+    uint8_t atapi_packet[12] = {0};
     atapi_packet[0] = ATAPI_CMD_READ;
-    atapi_packet[1] = 0x00;
     atapi_packet[2] = (lba >> 24) & 0xFF;
     atapi_packet[3] = (lba >> 16) & 0xFF;
     atapi_packet[4] = (lba >> 8) & 0xFF;
     atapi_packet[5] = (lba >> 0) & 0xFF;
-    atapi_packet[6] = 0x00;
-    atapi_packet[7] = 0x00;
-    atapi_packet[8] = 0x00;
     atapi_packet[9] = numsects;
-    atapi_packet[10] = 0x00;
-    atapi_packet[11] = 0x00;
 
-    printl_color((uint8_t *)"Sending ATAPI packet...\n", OUTPUT_COLOR);
     // Select the drive
     ide_write(channel, ATA_REG_HDDEVSEL, slavebit << 4);
 
-    printl_color((uint8_t *)"Waiting for BSY to clear...\n", OUTPUT_COLOR);
-    // Delay 400 nanoseconds for select to complete
-    for (int32_t i = 0; i < 4; i++)
+    // 400ns delay after drive select (read ALTSTATUS 4 times)
+    for (int i = 0; i < 4; i++)
     {
         ide_read(channel, ATA_REG_ALTSTATUS);
     }
 
-    printl_color((uint8_t *)"Inform the controller...\n", OUTPUT_COLOR);
-    // Inform the controller that we use PIO mode
+    // PIO mode: inform the controller
     ide_write(channel, ATA_REG_FEATURES, 0);
 
-    // Tell the controller the size of buffer
+    // Set buffer size for the controller (lower then upper byte)
     ide_write(channel, ATA_REG_LBA1, (words * 2) & 0xFF);
     ide_write(channel, ATA_REG_LBA2, (words * 2) >> 8);
 
-    // Send the packet command
+    // Send PACKET command
     ide_write(channel, ATA_REG_COMMAND, ATA_CMD_PACKET);
 
-    printl_color((uint8_t *)"Waiting for the drive to be ready...\n", OUTPUT_COLOR);
-    // Wait for the drive to be ready
-    if ((error = ide_polling(channel, 1)))
+    // Wait for the device to be ready (DRQ=1)
+    error = ide_polling(channel, 1);
+    if (error)
     {
         return error;
     }
-    printl_color((uint8_t *)"Sending ATAPI packet data...\n", OUTPUT_COLOR);
 
-    // Send the packet data
-    asm("rep outsw" : : "c"(6), "d"(bus), "S"(atapi_packet));
+    // Send the ATAPI packet (12 bytes = 6 words)
+    asm volatile("rep outsw" : : "c"(6), "d"(bus), "S"(atapi_packet));
 
-    printl_color((uint8_t *)"Receiving the data...\n", OUTPUT_COLOR);
-    // Receive data
-    // Ensure IRQs are enabled before waiting for them
-    ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN = (ide_irq_invoked = 0x00));
+    // Enable IRQs before receiving data (already enabled, but repeat for clarity)
+    ide_irq_invoked = 0;
+    ide_write(channel, ATA_REG_CONTROL, 0);
 
-    for (int32_t i = 0; i < numsects; i++)
+    for (int i = 0; i < numsects; i++)
     {
-        printl_color((uint8_t *)"Waiting for IRQ...\n", OUTPUT_COLOR);
-        ide_wait_irq();
-        printl_color((uint8_t *)"Waiting for BSY and DRQ to clear...\n", OUTPUT_COLOR);
-        if ((error = ide_polling(channel, 1)))
-        {
+        ide_wait_irq(); // Wait for IRQ from drive
+
+        // Wait for the device to be ready (DRQ=1, BSY=0)
+        error = ide_polling(channel, 1);
+        if (error)
             return error;
-        }
-        asm("pushw %es");
-        asm("mov %%ax, %%es" : : "a"(selector));
-        asm("rep insw" : : "c"(words), "d"(bus), "D"(edi));
-        asm("popw %es");
-        edi += (words * 2);
+
+        // Copy 2048 bytes from data port to [es:edi]
+        asm volatile(
+            "pushw %%es;"
+            "movw %w0, %%ax;"
+            "movw %%ax, %%es;"
+            "rep insw;"
+            "popw %%es;"
+            : 
+            : "r"(selector), "c"(words), "d"(bus), "D"(edi)
+            : "ax", "memory"
+        );
+
+        edi += words * 2; // Advance edi for next sector (2048 bytes)
     }
 
-    printl_color((uint8_t *)"Waiting for an IRQ...\n", OUTPUT_COLOR);
-    // Waiting for an IRQ
+    // (Optional: final IRQ, depending on drive. Most drives do not need this.)
     ide_wait_irq();
 
-    printl_color((uint8_t *)"Waiting for BSY and DRQ to clear...\n", OUTPUT_COLOR);
-    // Waiting for BSY and DRQ to clear
+    // Wait for BSY and DRQ to clear
     while (ide_read(channel, ATA_REG_STATUS) & (ATA_SR_BSY | ATA_SR_DRQ));
 
-    return 0;
+    return 0; // Success
 }
+
 
 void ide_read_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi)
 {
     printl_color((uint8_t *)"Reading sectors...\n", OUTPUT_COLOR);
-    if (drive > 3 || IDEDevices[drive].Reserved == 0)  // Check if the drive presents
+
+    // Check if the drive exists
+    if (drive > 3 || IDEDevices[drive].Reserved == 0)
     {
         error_package = 1;
+        ide_print_error(drive, error_package);
+        return;
     }
-    else if (((lba + numsects) > IDEDevices[drive].Size) && (IDEDevices[drive].Type == IDE_ATA))  // Check if inputs are valid
+    // Check if request is within the drive's size
+    if ((IDEDevices[drive].Type == IDE_ATA) && ((lba + numsects) > IDEDevices[drive].Size))
     {
         error_package = 2;
+        ide_print_error(drive, error_package);
+        return;
     }
-    else  // Read in PIO mode through polling an IRQs
+
+    uint8_t error = 0;
+
+    if (IDEDevices[drive].Type == IDE_ATA)
     {
-        uint8_t error = 0;
-        if (IDEDevices[drive].Type == IDE_ATA)
+        error = ide_ata_access(ATA_READ, drive, lba, numsects, es, edi);
+        error_package = ide_print_error(drive, error);
+    }
+    else if (IDEDevices[drive].Type == IDE_ATAPI)
+    {
+        printl_color((uint8_t *)"Reading ATAPI sectors...\n", OUTPUT_COLOR);
+        for (int32_t i = 0; i < numsects; i++)
         {
-            error = ide_ata_access(ATA_READ, drive, lba, numsects, es, edi);
-        }
-        else if (IDEDevices[drive].Type == IDE_ATAPI)
-        {
-            printl_color((uint8_t *)"Reading ATAPI sectors...\n", OUTPUT_COLOR);
-            for (int32_t i = 0; i < numsects; i++)
-            {
-                printl_color((uint8_t *)"Reading ATAPI sector...\n", OUTPUT_COLOR);
-                error = ide_atapi_read(drive, lba + i, 1, es, edi + (i * 2048));
-                uint8_t error_str[127] = { 0 };
-                printl_color((uint8_t *)error_str, OUTPUT_COLOR);
-            }
+            printl_color((uint8_t *)"Reading ATAPI sector...\n", OUTPUT_COLOR);
+            error = ide_atapi_read(drive, lba + i, 1, es, edi + (i * 2048));
+            // You may want to check/print errors here as well, or break on error
+            if (error) break;
         }
         error_package = ide_print_error(drive, error);
     }
-    error_package = ide_print_error(drive, error_package);
 }
+
 
 void ide_write_sectors(uint8_t drive, uint8_t numsects, uint32_t lba, uint16_t es, uint32_t edi)
 {
@@ -754,9 +774,12 @@ void ide_atapi_eject(uint8_t drive)
     {
         error_package = 20;
     }
-    else {  // Eject the drive
+    else
+    {  // Eject the drive
         // Enable IRQs
-        ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN = (ide_irq_invoked = 0x00));
+        ide_irq_invoked = 0;
+        IDEChannels[channel].nIEN = 0;
+        ide_write(channel, ATA_REG_CONTROL, 0);
 
         // Select SCSI packet
         atapi_packet[0] = ATAPI_CMD_EJECT;
@@ -829,7 +852,9 @@ uint32_t ide_atapi_read_capacity(uint8_t drive)
     else
     {   // Read the capacity of the drive
         // Enable IRQs
-        ide_write(channel, ATA_REG_CONTROL, IDEChannels[channel].nIEN = (ide_irq_invoked = 0x00));
+        ide_irq_invoked = 0;
+        IDEChannels[channel].nIEN = 0;
+        ide_write(channel, ATA_REG_CONTROL, 0);
 
         // Make ATAPI packet
         atapi_packet[0]  = ATAPI_CMD_READ_CAPACITY;

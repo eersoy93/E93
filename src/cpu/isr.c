@@ -118,7 +118,6 @@ uint8_t * isr_exception_messages[] =
     (uint8_t *)"Reserved",
     (uint8_t *)"Reserved",
     (uint8_t *)"Reserved",
-    (uint8_t *)"Reserved",
     (uint8_t *)"Reserved"
 };
 
@@ -157,4 +156,5 @@ void irq_install(void)
     asm volatile("sti");
     init_timer(50);
     init_keyboard();
+    init_ide(0x1F0, 0x3F6, 0x170, 0x376, 0x000);
 }

@@ -147,3 +147,12 @@ void memcpy(uint8_t * source, uint8_t * destination, uint32_t n_bytes)
         *(destination + i) = *(source + i);
     }
 }
+
+void memset(uint8_t * destination, uint8_t value, uint32_t n_bytes)
+{
+    uint32_t i = 0;
+    for (i = 0; i < n_bytes; i++)
+    {
+        *(destination + i) = value;
+    }
+}
